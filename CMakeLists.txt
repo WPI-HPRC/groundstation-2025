@@ -154,6 +154,8 @@ add_executable(groundstation-2025
         Frontend/Widgets/TimeDateWidgets/payloaduptimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
+        Frontend/Widgets/TimeDateWidgets/flighttimewidget.h
+        Frontend/Widgets/TimeDateWidgets/flighttimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
         Frontend/Widgets/TimeDateWidgets/DateWidget.ui

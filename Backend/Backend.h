@@ -209,6 +209,8 @@ signals:
     void newGroundDateTime(std::tm* currentDate);
     void newGroundFlightTime(uint32_t launchTime);
     void newRocketFlightTime(uint32_t launchTime);
+    void newRocketUptime(uint_fast64_t currentRocketTime);
+    void newPayloadUptime(uint_fast64_t currentPayloadTime);
 
     void throughputTestDataAvailable(float, uint, uint);
     void telemetryAvailable(Backend::Telemetry);
