@@ -552,14 +552,22 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
     }
     emit telemetryAvailable(telemetry);
 
-    if(groundFlightTime->isValid() // if we haven't started the launch-elapsed timer
+    if(groundFlightTime.isValid() // if we haven't started the launch-elapsed timer
     && telemetry.data.rocketData->state > 0) // and we're in a non-prelaunch state
     {
-        groundFlightTime->start(); // start a timer within the application
+        groundFlightTime.start(); // start a timer within the application
         rocketTimestampStart = telemetry.data.rocketData->timestamp; // get our start value for rocket time
     }
 
-    emit newGroundFlightTime(groundFlightTime->elapsed());
+    if(groundFlightTime.isValid())
+    {
+        emit newGroundFlightTime(groundFlightTime.elapsed());
+    }
+    else
+    {
+        emit newGroundFlightTime(0);
+    }
+
     emit newRocketFlightTime((telemetry.data.rocketData->timestamp)-rocketTimestampStart);
 }
 
