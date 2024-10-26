@@ -814,7 +814,4 @@ Backend::Backend(QObject *parent) : QObject(parent)
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
-//    stateMaxValues = QList<MaxValues>(6);
-
-//    dummyLogger = new DataLogger();
 }

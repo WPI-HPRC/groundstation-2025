@@ -37,9 +37,8 @@ SerialPortList::SerialPortList(QWidget *parent) : QTableWidget(parent)
     thread = new QThread;
     SerialPortManager::getInstance().moveToThread(thread);
     thread->start();
-     */
+    */
 }
-
 void SerialPortList::serialPortsFound(const QList<QSerialPortInfo>& ports)
 {
     this->serialPorts.clear();

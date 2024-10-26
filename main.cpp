@@ -15,6 +15,11 @@ int main(int argc, char *argv[])
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
 
+    GraphWindow graphWindow;
+    graphWindow.showNormal();
+    graphWindow.update();
+    graphWindow.setWindowTitle("Graph View");
+
     Backend &backend = Backend::getInstance();
     backend.start();
 

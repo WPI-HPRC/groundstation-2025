@@ -87,12 +87,11 @@ endforeach()
 # Include directories for generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${PROTO_HDRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt6 COMPONENTS
         Core
@@ -229,6 +228,14 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
         Backend/APRS/KissClient.h
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
+        Utility/DataSimulator.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.h
+        Frontend/Windows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Widgets/GraphWidget.cpp
+        Frontend/Widgets/GraphWidget.h
+
 )
 
 # Link Protobuf and Qt6 libraries
@@ -245,7 +252,9 @@ target_link_libraries(groundstation-2025
         Qt6::WebEngineWidgets
         Qt6::WebView
         Qt6::WebChannel
+        Qt6::Charts
         ${Protobuf_LIBRARIES}
+
 )
 
 # Include all generated files in the target
