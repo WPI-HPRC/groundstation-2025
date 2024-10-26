@@ -106,6 +106,7 @@ find_package(Qt6 COMPONENTS
         WebView
         WebChannel
         WebEngineWidgets
+        Charts
         REQUIRED)
 
 # Add the executable
@@ -257,6 +258,7 @@ target_link_libraries(groundstation-2025
         Qt6::Charts
         ${Protobuf_LIBRARIES}
 
+        Qt6::Charts
 )
 
 # Include all generated files in the target

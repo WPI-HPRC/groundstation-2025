@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     Backend &backend = Backend::getInstance();
     backend.start();
 
+
     int code = QApplication::exec();
 
     backend.aprsHandler.stop();
