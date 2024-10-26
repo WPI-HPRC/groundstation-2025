@@ -701,7 +701,7 @@ void Backend::start()
     getPorts();
 
     webServer = new WebServer(8001);
-  
+
     QString simulationFile = "../Utility/DataSimulator/SimulationData/SamplePayloadData.csv";
 
     payloadDataSimulator = new DataSimulator(
@@ -773,6 +773,4 @@ Backend::Backend(QObject *parent) : QObject(parent)
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
-
-//    dummyLogger = new DataLogger();
 }

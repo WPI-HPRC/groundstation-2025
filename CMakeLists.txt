@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 project(gs_backend_2024_2025)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(ABSL_PROPAGATE_CXX_STD, ON)
 
 # Add Protobuf as a subdirectory
@@ -70,12 +70,11 @@ endforeach()
 # Include directories for generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${PROTO_HDRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt6 COMPONENTS
         Core
@@ -194,6 +193,13 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
+        Utility/DataSimulator.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.h
+        Frontend/Windows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Widgets/GraphWidget.cpp
+        Frontend/Widgets/GraphWidget.h
+
 )
 
 # Link Protobuf and Qt6 libraries
@@ -207,7 +213,9 @@ target_link_libraries(gs_backend_2024_2025
         Qt6::3DExtras
         Qt6::3DInput
         Qt6::3DRender
+        Qt6::Charts
         ${Protobuf_LIBRARIES}
+
 )
 
 # Include all generated files in the target
