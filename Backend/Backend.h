@@ -83,8 +83,6 @@ public:
         float maxAngularVelocity;
 
         uint32_t maxRocketServoPosition;
-
-        uint8_t maxGpsSatellitesConnected;
     };
 
     enum RadioModuleType
@@ -192,6 +190,9 @@ signals:
     void combinedCountStats(RadioCountStats);
     void droppedPackets(uint32_t);
 
+    void newMaxRocketValues(const MaxValues &);
+    void newMaxPayloadValues(const MaxValues &);
+
 private:
     explicit Backend(QObject *parent = nullptr);
 
@@ -203,6 +204,9 @@ private:
     static QMap<std::string, ConversionFunction> geeConversions_Metric;
 
     RadioModule *getModuleWithName(const QString& name);
+    void updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData);
+    void updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData);
+    void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};
     DataLogger *dataLogger{};
@@ -225,8 +229,8 @@ private:
 
     QMutex mutex;
 
-    MaxValues maxRocketValues;
-    MaxValues maxPayloadValues;
+    MaxValues maxRocketValues{};
+    MaxValues maxPayloadValues{};
 };
 
 
