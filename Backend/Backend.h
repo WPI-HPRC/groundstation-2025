@@ -165,6 +165,9 @@ public slots:
     void updateThroughputSpeeds();
     void updateRSSIInfo();
 
+    void resetMaxRocketValues();
+    void resetMaxPayloadValues();
+
 signals:
     void foundSerialPorts(QList<QSerialPortInfo>);
     void serialPortOpened(QSerialPortInfo, bool);

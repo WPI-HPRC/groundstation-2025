@@ -431,6 +431,18 @@ void Backend::updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData)
     }
 }
 
+void Backend::resetMaxRocketValues()
+{
+    maxRocketValues = {};
+    emit newMaxRocketValues(maxRocketValues);
+}
+
+void Backend::resetMaxPayloadValues()
+{
+    maxPayloadValues = {};
+    emit newMaxPayloadValues(maxPayloadValues);
+}
+
 void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
 {
     if (!groundFlightTime.isValid() // if we haven't started the launch-elapsed timer

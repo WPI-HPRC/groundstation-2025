@@ -13,11 +13,13 @@ MaxValueWidget::MaxValueWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->MaxValueTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->MaxValueTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->MaxValueTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->MaxValueTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     connect(&Backend::getInstance(), &Backend::newMaxRocketValues, this, &MaxValueWidget::newRocketValues);
     connect(&Backend::getInstance(), &Backend::newMaxPayloadValues, this, &MaxValueWidget::newPayloadValues);
+
+    connect(ui->ResetRocketButton, &QPushButton::released, &Backend::getInstance(), &Backend::resetMaxRocketValues);
+    connect(ui->ResetPayloadButton, &QPushButton::released, &Backend::getInstance(), &Backend::resetMaxPayloadValues);
 }
 
 MaxValueWidget::~MaxValueWidget()
