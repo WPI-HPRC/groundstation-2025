@@ -405,12 +405,6 @@ void Backend::updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData)
         newMaxValue = true;
     }
 
-    if(payloadData.servoposition() > maxPayloadValues.maxRocketServoPosition)
-    {
-        maxPayloadValues.maxRocketServoPosition = payloadData.servoposition();
-        newMaxValue = true;
-    }
-
     auto acceleration = (float)sqrt(pow(payloadData.accelx(), 2) + pow(payloadData.accely(), 2) + pow(payloadData.accelz(), 2));
     if(acceleration > maxPayloadValues.maxAcceleration)
     {

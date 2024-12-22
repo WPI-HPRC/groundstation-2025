@@ -145,6 +145,7 @@ void Raw_Telemetry::updateTable1(int row, int column, const QString &value){ //f
         cell->setText(value);
     }
 }
+
 void Raw_Telemetry::updateTable2(int row, int column, const QString &value){ //function to update Column 2
     QTableWidget *widget = ui->Column_2;
     auto *cell = (QLabel *)widget->cellWidget(row, column);

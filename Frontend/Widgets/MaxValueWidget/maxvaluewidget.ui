@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MaxValueWidget</class>
+ <widget class="QWidget" name="MaxValueWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>626</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MaxValueWidget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="5" column="0">
+    <widget class="QTableWidget" name="MaxValueTable">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>false</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>Apogee</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Acceleration</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Velocity</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Angular Velocity</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Temperature</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Min Temperature</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Pressure</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Min Pressure</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Servo Position</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Rocket</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Payload</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
