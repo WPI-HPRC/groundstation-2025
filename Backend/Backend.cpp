@@ -313,6 +313,7 @@ void Backend::linkTestComplete(LinkTestResults results, int iterationsLeft)
 
 void Backend::receiveTelemetry(Backend::Telemetry telemetry)
 {
+
     if(convertToEnglish)
     {
         if (telemetry.packetType == GroundStation::Rocket)

@@ -57,6 +57,7 @@ public:
                 throughput
                 );
     };
+
     struct Telemetry
     {
         GroundStation::PacketType packetType;
@@ -65,6 +66,25 @@ public:
             HPRC::RocketTelemetryPacket *rocketData;
             HPRC::PayloadTelemetryPacket *payloadData;
         } data;
+    };
+
+    struct MaxValues
+    {
+        float maxAltitude;
+
+        float minPressure;
+        float maxPressure;
+
+        float minTemperature;
+        float maxTemperature;
+
+        float maxAcceleration;
+        float maxVelocity;
+        float maxAngularVelocity;
+
+        uint32_t maxRocketServoPosition;
+
+        uint8_t maxGpsSatellitesConnected;
     };
 
     enum RadioModuleType
@@ -204,6 +224,9 @@ private:
     RadioCountStats lastPayloadCount;
 
     QMutex mutex;
+
+    MaxValues maxRocketValues;
+    MaxValues maxPayloadValues;
 };
 
 
