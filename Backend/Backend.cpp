@@ -466,8 +466,6 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
 
 void Backend::receiveTelemetry(Backend::Telemetry telemetry)
 {
-    emit telemetryAvailable(telemetry);
-
     if(telemetry.packetType == GroundStation::Rocket)
     {
         updateMaxRocketValues(*telemetry.data.rocketData);
@@ -503,6 +501,7 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
             doConversions(telemetry.data.payloadData, geeConversions_Metric);
         }
     }
+    emit telemetryAvailable(telemetry);
 }
 
 void Backend::setBaudRate(const QString &name, int baudRate)
