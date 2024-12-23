@@ -8,11 +8,13 @@
 
 namespace Utility::UnitConversion
 {
+    // Physical Constants
     static constexpr float MetersToFeet = 3.28084;
     static constexpr float GsToMeters = 9.80665;
     static constexpr float PascalsToPSI = 0.000145038;
     static constexpr float MillibarsToPascals = 100;
 
+    // Methods
     static constexpr float meters2feet(float meters) { return meters*MetersToFeet; }
     static constexpr float feet2meters(float feet) { return feet/MetersToFeet; }
 
@@ -27,6 +29,9 @@ namespace Utility::UnitConversion
 
     static constexpr float mbar2psi(float mbar) { return mbar * MillibarsToPascals * PascalsToPSI; }
     static constexpr float psi2mbar(float pa) { return pa / PascalsToPSI / MillibarsToPascals; }
+
+    static constexpr float cel2far(float cel) { return (cel * 1.8) + 32; }
+    static constexpr float far2cel(float far) { return (far - 32) / 1.8; }
 };
 
 

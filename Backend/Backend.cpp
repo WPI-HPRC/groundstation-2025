@@ -23,7 +23,9 @@ QMap<std::string, Backend::ConversionFunction> Backend::metricToEnglish = {
         {"posy", &Utility::UnitConversion::meters2feet},
         {"posz", &Utility::UnitConversion::meters2feet},
 
-        {"pressure", &Utility::UnitConversion::mbar2psi}
+        {"pressure", &Utility::UnitConversion::mbar2psi},
+
+        {"temperature", &Utility::UnitConversion::cel2far}
 };
 
 QMap<std::string, Backend::ConversionFunction> Backend::geeConversions_English = {
