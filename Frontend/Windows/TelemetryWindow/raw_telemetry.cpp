@@ -16,6 +16,12 @@ Raw_Telemetry::Raw_Telemetry(QWidget *parent) :
 {
     ui->setupUi(this);
     connect (&Backend::getInstance(), &Backend::telemetryAvailable, this, &Raw_Telemetry::telemetryAvailable);
+
+    connect(ui->PrecisionSlider, &QSlider::valueChanged, this, [](int value)
+    {
+        Backend::getInstance().telemetryDecimalPlaces = value;
+    });
+
 }
 Raw_Telemetry::~Raw_Telemetry() {
     delete ui;
