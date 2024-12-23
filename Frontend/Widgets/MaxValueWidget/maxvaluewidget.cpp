@@ -48,14 +48,15 @@ void MaxValueWidget::updateMaxValues(Backend::MaxValues values, int tableColumn)
         values.maxAcceleration = Utility::UnitConversion::gs2meters(values.maxAcceleration);
     }
 
-    updateTable(0, tableColumn, QString::number(values.maxAltitude));
-    updateTable(1, tableColumn, QString::number(values.maxAcceleration));
-    updateTable(2, tableColumn, QString::number(values.maxVelocity));
-    updateTable(3, tableColumn, QString::number(values.maxAngularVelocity));
-    updateTable(4, tableColumn, QString::number(values.maxTemperature));
-    updateTable(5, tableColumn, QString::number(values.minTemperature));
-    updateTable(6, tableColumn, QString::number(values.maxPressure));
-    updateTable(7, tableColumn, QString::number(values.minPressure));
+    int decimalPlaces = Backend::getInstance().maxValueDecimalPlaces;
+    updateTable(0, tableColumn, QString::number(values.maxAltitude, 'f', decimalPlaces));
+    updateTable(1, tableColumn, QString::number(values.maxAcceleration, 'f', decimalPlaces));
+    updateTable(2, tableColumn, QString::number(values.maxVelocity, 'f', decimalPlaces));
+    updateTable(3, tableColumn, QString::number(values.maxAngularVelocity, 'f', decimalPlaces));
+    updateTable(4, tableColumn, QString::number(values.maxTemperature, 'f', decimalPlaces));
+    updateTable(5, tableColumn, QString::number(values.minTemperature, 'f', decimalPlaces));
+    updateTable(6, tableColumn, QString::number(values.maxPressure, 'f', decimalPlaces));
+    updateTable(7, tableColumn, QString::number(values.minPressure, 'f', decimalPlaces));
     updateTable(8, tableColumn, tableColumn == 0 ? QString::number(values.maxRocketServoPosition) : "-");
 }
 
