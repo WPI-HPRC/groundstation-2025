@@ -68,12 +68,12 @@ void MaxValueWidget::updateMaxValues(Backend::MaxValues values, int tableColumn)
 
 void MaxValueWidget::newRocketValues(Backend::MaxValues rocketValues)
 {
-    updateMaxValues(rocketValues, 0);
+    updateMaxValues(rocketValues, 1);
 }
 
 void MaxValueWidget::newPayloadValues(Backend::MaxValues payloadValues)
 {
-    updateMaxValues(payloadValues, 1);
+    updateMaxValues(payloadValues, 2);
 }
 
 void MaxValueWidget::updateTable(int row, int column, const QString &value)
