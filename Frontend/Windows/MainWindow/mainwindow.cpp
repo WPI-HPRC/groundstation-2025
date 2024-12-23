@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
         {
             Backend::getInstance().convertToEnglish = false;
         }
+        Backend::getInstance().forceMaxValuesUpdate();
     });
 
     connect(ui->GeeConversion, &QCheckBox::checkStateChanged, this, [](Qt::CheckState state)
@@ -37,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
         {
             Backend::getInstance().convertFromGees = false;
         }
+        Backend::getInstance().forceMaxValuesUpdate();
     });
 }
 

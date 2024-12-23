@@ -153,6 +153,7 @@ public:
     bool convertToEnglish = false;
     bool convertFromGees = false;
     int maxValueDecimalPlaces = 3;
+    void forceMaxValuesUpdate();
 
     RadioModule *groundStationModem;
 

@@ -20,6 +20,12 @@ MaxValueWidget::MaxValueWidget(QWidget *parent) :
 
     connect(ui->ResetRocketButton, &QPushButton::released, &Backend::getInstance(), &Backend::resetMaxRocketValues);
     connect(ui->ResetPayloadButton, &QPushButton::released, &Backend::getInstance(), &Backend::resetMaxPayloadValues);
+
+    connect(ui->PrecisionSlider, &QSlider::valueChanged, this, [](int value)
+    {
+        Backend::getInstance().maxValueDecimalPlaces = value;
+        Backend::getInstance().forceMaxValuesUpdate();
+    });
 }
 
 MaxValueWidget::~MaxValueWidget()
