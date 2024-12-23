@@ -27,30 +27,46 @@ MaxValueWidget::~MaxValueWidget()
     delete ui;
 }
 
+void MaxValueWidget::updateMaxValues(Backend::MaxValues values, int tableColumn)
+{
+    if(Backend::getInstance().convertToEnglish)
+    {
+        using namespace Utility::UnitConversion;
+        values.maxAltitude = meters2feet(values.maxAltitude);
+        if(Backend::getInstance().convertFromGees)
+        {
+            values.maxAcceleration = gs2feet(values.maxAcceleration);
+        }
+        values.maxVelocity = meters2feet(values.maxVelocity);
+        values.maxTemperature = cel2far(values.maxTemperature);
+        values.minTemperature = cel2far(values.minTemperature);
+        values.maxPressure = mbar2psi(values.maxPressure);
+        values.minPressure = mbar2psi(values.minPressure);
+    }
+    else if(Backend::getInstance().convertFromGees)
+    {
+        values.maxAcceleration = Utility::UnitConversion::gs2meters(values.maxAcceleration);
+    }
+
+    updateTable(0, tableColumn, QString::number(values.maxAltitude));
+    updateTable(1, tableColumn, QString::number(values.maxAcceleration));
+    updateTable(2, tableColumn, QString::number(values.maxVelocity));
+    updateTable(3, tableColumn, QString::number(values.maxAngularVelocity));
+    updateTable(4, tableColumn, QString::number(values.maxTemperature));
+    updateTable(5, tableColumn, QString::number(values.minTemperature));
+    updateTable(6, tableColumn, QString::number(values.maxPressure));
+    updateTable(7, tableColumn, QString::number(values.minPressure));
+    updateTable(8, tableColumn, tableColumn == 0 ? QString::number(values.maxRocketServoPosition) : "-");
+}
+
 void MaxValueWidget::newRocketValues(Backend::MaxValues rocketValues)
 {
-    updateTable(0, 0, QString::number(rocketValues.maxAltitude));
-    updateTable(1, 0, QString::number(rocketValues.maxAcceleration));
-    updateTable(2, 0, QString::number(rocketValues.maxVelocity));
-    updateTable(3, 0, QString::number(rocketValues.maxAngularVelocity));
-    updateTable(4, 0, QString::number(rocketValues.maxTemperature));
-    updateTable(5, 0, QString::number(rocketValues.minTemperature));
-    updateTable(6, 0, QString::number(rocketValues.maxPressure));
-    updateTable(7, 0, QString::number(rocketValues.minPressure));
-    updateTable(8, 0, QString::number(rocketValues.maxRocketServoPosition));
+    updateMaxValues(rocketValues, 0);
 }
 
 void MaxValueWidget::newPayloadValues(Backend::MaxValues payloadValues)
 {
-    updateTable(0, 1, QString::number(payloadValues.maxAltitude));
-    updateTable(1, 1, QString::number(payloadValues.maxAcceleration));
-    updateTable(2, 1, QString::number(payloadValues.maxVelocity));
-    updateTable(3, 1, QString::number(payloadValues.maxAngularVelocity));
-    updateTable(4, 1, QString::number(payloadValues.maxTemperature));
-    updateTable(5, 1, QString::number(payloadValues.minTemperature));
-    updateTable(6, 1, QString::number(payloadValues.maxPressure));
-    updateTable(7, 1, QString::number(payloadValues.minPressure));
-    updateTable(8, 1, "-");
+    updateMaxValues(payloadValues, 1);
 }
 
 void MaxValueWidget::updateTable(int row, int column, const QString &value)

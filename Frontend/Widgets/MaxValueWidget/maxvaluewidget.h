@@ -31,6 +31,7 @@ public slots:
 private:
     Ui::MaxValueWidget *ui;
     void updateTable(int row, int column, const QString &value);
+    void updateMaxValues(Backend::MaxValues values, int tableColumn);
 
 
 };
