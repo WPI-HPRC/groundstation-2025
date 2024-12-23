@@ -16,6 +16,12 @@ Raw_Telemetry::Raw_Telemetry(QWidget *parent) :
 {
     ui->setupUi(this);
     connect (&Backend::getInstance(), &Backend::telemetryAvailable, this, &Raw_Telemetry::telemetryAvailable);
+
+    connect(ui->PrecisionSlider, &QSlider::valueChanged, this, [](int value)
+    {
+        Backend::getInstance().telemetryDecimalPlaces = value;
+    });
+
 }
 Raw_Telemetry::~Raw_Telemetry() {
     delete ui;
@@ -44,21 +50,22 @@ void Raw_Telemetry::telemetryAvailable(Backend::Telemetry telemetry){
 
 void Raw_Telemetry::processRocketTelemetryData(const HPRC::RocketTelemetryPacket &data)
 {   //Rocket Column1 Update
-    updateTable1(0, 1, QString::number(data.accelx()));
-    updateTable1(1,1, QString::number(data.accely()));
-    updateTable1(2,1, QString::number(data.accelz()));
-    updateTable1(3,1,QString::number(data.velx()));
-    updateTable1(4,1,QString::number(data.vely()));
-    updateTable1(5,1,QString::number(data.velz()));
-    updateTable1(6,1,QString::number(data.posx()));
-    updateTable1(7,1,QString::number(data.posx()));
-    updateTable1(8,1,QString::number(data.posz()));
-    updateTable1(9,1,QString::number(data.magx()));
-    updateTable1(10,1,QString::number(data.magy()));
-    updateTable1(11,1,QString::number(data.magz()));
-    updateTable1(12,1,QString::number(data.gyrox()));
-    updateTable1(13,1,QString::number(data.gyroy()));
-    updateTable1(14,1,QString::number(data.gyroz()));
+    int decimalPlaces = Backend::getInstance().telemetryDecimalPlaces;
+    updateTable1(0, 1, QString::number(data.accelx(), 'f', decimalPlaces));
+    updateTable1(1,1, QString::number(data.accely(), 'f', decimalPlaces));
+    updateTable1(2,1, QString::number(data.accelz(), 'f', decimalPlaces));
+    updateTable1(3,1,QString::number(data.velx(), 'f', decimalPlaces));
+    updateTable1(4,1,QString::number(data.vely(), 'f', decimalPlaces));
+    updateTable1(5,1,QString::number(data.velz(), 'f', decimalPlaces));
+    updateTable1(6,1,QString::number(data.posx(), 'f', decimalPlaces));
+    updateTable1(7,1,QString::number(data.posx(), 'f', decimalPlaces));
+    updateTable1(8,1,QString::number(data.posz(), 'f', decimalPlaces));
+    updateTable1(9,1,QString::number(data.magx(), 'f', decimalPlaces));
+    updateTable1(10,1,QString::number(data.magy(), 'f', decimalPlaces));
+    updateTable1(11,1,QString::number(data.magz(), 'f', decimalPlaces));
+    updateTable1(12,1,QString::number(data.gyrox(), 'f', decimalPlaces));
+    updateTable1(13,1,QString::number(data.gyroy(), 'f', decimalPlaces));
+    updateTable1(14,1,QString::number(data.gyroz(), 'f', decimalPlaces));
 
     //Rocket Column2 update
     updateTable2(0,1,QString::number(data.epochtime()));
@@ -75,48 +82,49 @@ void Raw_Telemetry::processRocketTelemetryData(const HPRC::RocketTelemetryPacket
     //...
 
     //Rocket Column3 update
-    updateTable3(0,1, QString::number(data.i()));
-    updateTable3(1,1, QString::number(data.j()));
-    updateTable3(2,1, QString::number(data.k()));
-    updateTable3(3,1, QString::number(data.w()));
-    updateTable3(4,1,QString::number(data.gpslat()));
-    updateTable3(5,1,QString::number(data.gpslong()));
-    updateTable3(6,1,QString::number(data.gpsaltmsl()));
-    updateTable3(7,1,QString::number(data.gpsaltagl()));
-    updateTable3(8,1,QString::number(data.altitude()));
-    updateTable3(9,1,QString::number(data.pressure()));
+    updateTable3(0,1, QString::number(data.i(), 'f', decimalPlaces));
+    updateTable3(1,1, QString::number(data.j(), 'f', decimalPlaces));
+    updateTable3(2,1, QString::number(data.k(), 'f', decimalPlaces));
+    updateTable3(3,1, QString::number(data.w(), 'f', decimalPlaces));
+    updateTable3(4,1,QString::number(data.gpslat(), 'f', decimalPlaces));
+    updateTable3(5,1,QString::number(data.gpslong(), 'f', decimalPlaces));
+    updateTable3(6,1,QString::number(data.gpsaltmsl(), 'f', decimalPlaces));
+    updateTable3(7,1,QString::number(data.gpsaltagl(), 'f', decimalPlaces));
+    updateTable3(8,1,QString::number(data.altitude(), 'f', decimalPlaces));
+    updateTable3(9,1,QString::number(data.pressure(), 'f', decimalPlaces));
 }
 
 void Raw_Telemetry::processPayloadTelemetryData(const HPRC::PayloadTelemetryPacket &data)
 {
+    int decimalPlaces = Backend::getInstance().telemetryDecimalPlaces;
     //Payload Column1 Update
-    updateTable1(0,2,QString::number(data.accelx()));
-    updateTable1(1,2,QString::number(data.accely()));
-    updateTable1(2,2,QString::number(data.accelz()));
-    updateTable1(3,2,QString::number(data.velx()));
-    updateTable1(4,2,QString::number(data.vely()));
-    updateTable1(5,2,QString::number(data.velz()));
-    updateTable1(6,2,QString::number(data.posx()));
-    updateTable1(7,2,QString::number(data.posy()));
-    updateTable1(8,2,QString::number(data.posz()));
-    updateTable1(9,2,QString::number(data.magx()));
-    updateTable1(10,2,QString::number(data.magy()));
-    updateTable1(11,2,QString::number(data.magz()));
-    updateTable1(12,2,QString::number(data.gyrox()));
-    updateTable1(13,2,QString::number(data.gyroy()));
-    updateTable1(14,2,QString::number(data.gyroz()));
+    updateTable1(0,2,QString::number(data.accelx(), 'f', decimalPlaces));
+    updateTable1(1,2,QString::number(data.accely(), 'f', decimalPlaces));
+    updateTable1(2,2,QString::number(data.accelz(), 'f', decimalPlaces));
+    updateTable1(3,2,QString::number(data.velx(), 'f', decimalPlaces));
+    updateTable1(4,2,QString::number(data.vely(), 'f', decimalPlaces));
+    updateTable1(5,2,QString::number(data.velz(), 'f', decimalPlaces));
+    updateTable1(6,2,QString::number(data.posx(), 'f', decimalPlaces));
+    updateTable1(7,2,QString::number(data.posy(), 'f', decimalPlaces));
+    updateTable1(8,2,QString::number(data.posz(), 'f', decimalPlaces));
+    updateTable1(9,2,QString::number(data.magx(), 'f', decimalPlaces));
+    updateTable1(10,2,QString::number(data.magy(), 'f', decimalPlaces));
+    updateTable1(11,2,QString::number(data.magz(), 'f', decimalPlaces));
+    updateTable1(12,2,QString::number(data.gyrox(), 'f', decimalPlaces));
+    updateTable1(13,2,QString::number(data.gyroy(), 'f', decimalPlaces));
+    updateTable1(14,2,QString::number(data.gyroz(), 'f', decimalPlaces));
 
     //Payload Column3 update
-    updateTable3(0,2,QString::number(data.i()));
-    updateTable3(1,2,QString::number(data.j()));
-    updateTable3(2,2,QString::number(data.k()));
-    updateTable3(3,2,QString::number(data.w()));
-    updateTable3(4,2,QString::number(data.gpslat()));
-    updateTable3(5,2,QString::number(data.gpslong()));
-    updateTable3(6,2,QString::number(data.gpsaltmsl()));
-    updateTable3(7,2,QString::number(data.gpsaltagl()));
-    updateTable3(8,2,QString::number(data.altitude()));
-    updateTable3(9,2,QString::number(data.pressure()));
+    updateTable3(0,2,QString::number(data.i(), 'f', decimalPlaces));
+    updateTable3(1,2,QString::number(data.j(), 'f', decimalPlaces));
+    updateTable3(2,2,QString::number(data.k(), 'f', decimalPlaces));
+    updateTable3(3,2,QString::number(data.w(), 'f', decimalPlaces));
+    updateTable3(4,2,QString::number(data.gpslat(), 'f', decimalPlaces));
+    updateTable3(5,2,QString::number(data.gpslong(), 'f', decimalPlaces));
+    updateTable3(6,2,QString::number(data.gpsaltmsl(), 'f', decimalPlaces));
+    updateTable3(7,2,QString::number(data.gpsaltagl(), 'f', decimalPlaces));
+    updateTable3(8,2,QString::number(data.altitude(), 'f', decimalPlaces));
+    updateTable3(9,2,QString::number(data.pressure(), 'f', decimalPlaces));
 
     //Payload Column2 update
     updateTable2(0,2,QString::number(data.epochtime()));
@@ -145,6 +153,7 @@ void Raw_Telemetry::updateTable1(int row, int column, const QString &value){ //f
         cell->setText(value);
     }
 }
+
 void Raw_Telemetry::updateTable2(int row, int column, const QString &value){ //function to update Column 2
     QTableWidget *widget = ui->Column_2;
     auto *cell = (QLabel *)widget->cellWidget(row, column);
