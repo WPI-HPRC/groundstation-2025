@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MaxValueWidget</class>
+ <widget class="QWidget" name="MaxValueWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>626</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MaxValueWidget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QPushButton" name="ResetRocketButton">
+     <property name="text">
+      <string>Reset Rocket</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="ResetPayloadButton">
+     <property name="text">
+      <string>Reset Payload</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="0" colspan="4">
+    <widget class="QTableWidget" name="MaxValueTable">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>false</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>Max Altitude</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Acceleration</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Velocity</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Angular Velocity</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Temperature</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Min Temperature</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Pressure</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Min Pressure</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Max Servo Position</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Rocket</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Payload</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

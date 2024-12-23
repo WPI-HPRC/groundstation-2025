@@ -189,6 +189,24 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_6">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Max Values</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6">
+    <layout class="QGridLayout" name="gridLayout_8">
+     <item row="0" column="0">
+      <widget class="MaxValueWidget" name="widget_2" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -248,6 +266,12 @@
    <class>LogWindow</class>
    <extends>QWidget</extends>
    <header>Frontend/Windows/LogWindow/logwindow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MaxValueWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/MaxValueWidget/maxvaluewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

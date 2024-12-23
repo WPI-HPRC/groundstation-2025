@@ -191,6 +191,9 @@ add_executable(gs_backend_2024_2025
         Utility/UnitConversions.h
         Frontend/Widgets/RadioPerformanceWidgets/throughputdisplaywidget.cpp
         Frontend/Widgets/RadioPerformanceWidgets/throughputdisplaywidget.h
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
 )
 
 # Link Protobuf and Qt6 libraries

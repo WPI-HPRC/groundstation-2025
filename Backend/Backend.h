@@ -57,6 +57,7 @@ public:
                 throughput
                 );
     };
+
     struct Telemetry
     {
         GroundStation::PacketType packetType;
@@ -65,6 +66,23 @@ public:
             HPRC::RocketTelemetryPacket *rocketData;
             HPRC::PayloadTelemetryPacket *payloadData;
         } data;
+    };
+
+    struct MaxValues
+    {
+        float maxAltitude;
+
+        float minPressure;
+        float maxPressure;
+
+        float minTemperature;
+        float maxTemperature;
+
+        float maxAcceleration;
+        float maxVelocity;
+        float maxAngularVelocity;
+
+        uint32_t maxRocketServoPosition;
     };
 
     enum RadioModuleType
@@ -147,6 +165,9 @@ public slots:
     void updateThroughputSpeeds();
     void updateRSSIInfo();
 
+    void resetMaxRocketValues();
+    void resetMaxPayloadValues();
+
 signals:
     void foundSerialPorts(QList<QSerialPortInfo>);
     void serialPortOpened(QSerialPortInfo, bool);
@@ -172,6 +193,9 @@ signals:
     void combinedCountStats(RadioCountStats);
     void droppedPackets(uint32_t);
 
+    void newMaxRocketValues(const MaxValues &);
+    void newMaxPayloadValues(const MaxValues &);
+
 private:
     explicit Backend(QObject *parent = nullptr);
 
@@ -183,6 +207,9 @@ private:
     static QMap<std::string, ConversionFunction> geeConversions_Metric;
 
     RadioModule *getModuleWithName(const QString& name);
+    void updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData);
+    void updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData);
+    void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};
     DataLogger *dataLogger{};
@@ -204,6 +231,9 @@ private:
     RadioCountStats lastPayloadCount;
 
     QMutex mutex;
+
+    MaxValues maxRocketValues{};
+    MaxValues maxPayloadValues{};
 };
 
 

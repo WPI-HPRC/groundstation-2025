@@ -23,7 +23,9 @@ QMap<std::string, Backend::ConversionFunction> Backend::metricToEnglish = {
         {"posy", &Utility::UnitConversion::meters2feet},
         {"posz", &Utility::UnitConversion::meters2feet},
 
-        {"pressure", &Utility::UnitConversion::mbar2psi}
+        {"pressure", &Utility::UnitConversion::mbar2psi},
+
+        {"temperature", &Utility::UnitConversion::cel2far}
 };
 
 QMap<std::string, Backend::ConversionFunction> Backend::geeConversions_English = {
@@ -311,11 +313,167 @@ void Backend::linkTestComplete(LinkTestResults results, int iterationsLeft)
     emit linkTestDataAvailable(results, iterationsLeft);
 }
 
+void Backend::updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData)
+{
+    bool newMaxValue = false;
+    if(rocketData.altitude() > maxRocketValues.maxAltitude)
+    {
+        maxRocketValues.maxAltitude = rocketData.altitude();
+        newMaxValue = true;
+    }
+
+    if(rocketData.pressure() > maxRocketValues.maxPressure || maxRocketValues.maxPressure == 0)
+    {
+        maxRocketValues.maxPressure = rocketData.pressure();
+        newMaxValue = true;
+    }
+    else if(rocketData.pressure() < maxRocketValues.minPressure || maxRocketValues.minPressure == 0)
+    {
+        maxRocketValues.minPressure = rocketData.pressure();
+        newMaxValue = true;
+    }
+
+    if(rocketData.temperature() > maxRocketValues.maxTemperature || maxRocketValues.maxTemperature == 0)
+    {
+        maxRocketValues.maxTemperature = rocketData.temperature();
+        newMaxValue = true;
+    }
+    else if(rocketData.temperature() < maxRocketValues.minTemperature || maxRocketValues.minTemperature == 0)
+    {
+        maxRocketValues.minTemperature = rocketData.temperature();
+        newMaxValue = true;
+    }
+
+    if(rocketData.servoposition() > maxRocketValues.maxRocketServoPosition)
+    {
+        maxRocketValues.maxRocketServoPosition = rocketData.servoposition();
+        newMaxValue = true;
+    }
+
+    auto acceleration = (float)sqrt(pow(rocketData.accelx(), 2) + pow(rocketData.accely(), 2) + pow(rocketData.accelz(), 2));
+    if(acceleration > maxRocketValues.maxAcceleration)
+    {
+        maxRocketValues.maxAcceleration = acceleration;
+        newMaxValue = true;
+    }
+
+    auto velocity = (float)sqrt(pow(rocketData.velx(), 2) + pow(rocketData.vely(), 2) + pow(rocketData.velz(), 2));
+    if(velocity > maxRocketValues.maxVelocity)
+    {
+        maxRocketValues.maxVelocity = velocity;
+        newMaxValue = true;
+    }
+
+    auto angularVelocity = (float)sqrt(pow(rocketData.gyrox(), 2) + pow(rocketData.gyroy(), 2) + pow(rocketData.gyroz(), 2));
+    if(angularVelocity > maxRocketValues.maxAngularVelocity)
+    {
+        maxRocketValues.maxAngularVelocity = angularVelocity;
+        newMaxValue = true;
+    }
+    if(newMaxValue)
+    {
+        emit newMaxRocketValues(maxRocketValues);
+    }
+}
+
+void Backend::updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData)
+{
+    bool newMaxValue = false;
+    if(payloadData.altitude() > maxPayloadValues.maxAltitude)
+    {
+        maxPayloadValues.maxAltitude = payloadData.altitude();
+        newMaxValue = true;
+    }
+
+    if(payloadData.pressure() > maxPayloadValues.maxPressure || maxPayloadValues.maxPressure == 0)
+    {
+        maxPayloadValues.maxPressure = payloadData.pressure();
+        newMaxValue = true;
+    }
+    else if(payloadData.pressure() < maxPayloadValues.minPressure || maxPayloadValues.minPressure == 0)
+    {
+        maxPayloadValues.minPressure = payloadData.pressure();
+        newMaxValue = true;
+    }
+
+    if(payloadData.temperature() > maxPayloadValues.maxTemperature || maxPayloadValues.maxTemperature == 0)
+    {
+        maxPayloadValues.maxTemperature = payloadData.temperature();
+        newMaxValue = true;
+    }
+    else if(payloadData.temperature() < maxPayloadValues.minTemperature || maxPayloadValues.minTemperature == 0)
+    {
+        maxPayloadValues.minTemperature = payloadData.temperature();
+        newMaxValue = true;
+    }
+
+    auto acceleration = (float)sqrt(pow(payloadData.accelx(), 2) + pow(payloadData.accely(), 2) + pow(payloadData.accelz(), 2));
+    if(acceleration > maxPayloadValues.maxAcceleration)
+    {
+        maxPayloadValues.maxAcceleration = acceleration;
+        newMaxValue = true;
+    }
+
+    auto velocity = (float)sqrt(pow(payloadData.velx(), 2) + pow(payloadData.vely(), 2) + pow(payloadData.velz(), 2));
+    if(velocity > maxPayloadValues.maxVelocity)
+    {
+        maxPayloadValues.maxVelocity = velocity;
+        newMaxValue = true;
+    }
+
+    auto angularVelocity = (float)sqrt(pow(payloadData.gyrox(), 2) + pow(payloadData.gyroy(), 2) + pow(payloadData.gyroz(), 2));
+    if(angularVelocity > maxPayloadValues.maxAngularVelocity)
+    {
+        maxPayloadValues.maxAngularVelocity = angularVelocity;
+        newMaxValue = true;
+    }
+    if(newMaxValue)
+    {
+        emit newMaxPayloadValues(maxPayloadValues);
+    }
+}
+
+void Backend::resetMaxRocketValues()
+{
+    maxRocketValues = {};
+    emit newMaxRocketValues(maxRocketValues);
+}
+
+void Backend::resetMaxPayloadValues()
+{
+    maxPayloadValues = {};
+    emit newMaxPayloadValues(maxPayloadValues);
+}
+
+void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
+{
+    if (!groundFlightTime.isValid() // if we haven't started the launch-elapsed timer
+        && (rocketData.state() > 0)) // and we're in a non-prelaunch state
+    {
+        std::cout << "Launched!" << std::endl;
+        groundFlightTime.start(); // start a timer within the application
+        rocketTimestampStart = rocketData.timestamp(); // get our start value for rocket time
+    }
+    if (groundFlightTime.isValid())
+    {
+        emit newGroundFlightTime(groundFlightTime.elapsed());
+        emit newRocketFlightTime((rocketData.timestamp()) - rocketTimestampStart);
+    }
+    else
+    {
+        emit newGroundFlightTime(0);
+        emit newRocketFlightTime(0);
+    }
+}
+
 void Backend::receiveTelemetry(Backend::Telemetry telemetry)
 {
-    if(convertToEnglish)
+    if(telemetry.packetType == GroundStation::Rocket)
     {
-        if (telemetry.packetType == GroundStation::Rocket)
+        updateMaxRocketValues(*telemetry.data.rocketData);
+        updateTimes(*telemetry.data.rocketData);
+
+        if(convertToEnglish)
         {
             doConversions(telemetry.data.rocketData, metricToEnglish);
             if(convertFromGees)
@@ -323,7 +481,16 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
                 doConversions(telemetry.data.rocketData, geeConversions_English);
             }
         }
-        else if (telemetry.packetType == GroundStation::Payload)
+        else if(convertFromGees)
+        {
+            doConversions(telemetry.data.rocketData, geeConversions_Metric);
+        }
+    }
+    else if (telemetry.packetType == GroundStation::Payload)
+    {
+        updateMaxPayloadValues(*telemetry.data.payloadData);
+
+        if(convertToEnglish)
         {
             doConversions(telemetry.data.payloadData, metricToEnglish);
             if(convertFromGees)
@@ -331,39 +498,12 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
                 doConversions(telemetry.data.payloadData, geeConversions_English);
             }
         }
-    }
-    else if(convertFromGees)
-    {
-        if (telemetry.packetType == GroundStation::Rocket)
-        {
-            doConversions(telemetry.data.rocketData, geeConversions_Metric);
-        }
-        else if (telemetry.packetType == GroundStation::Payload)
+        else if(convertFromGees)
         {
             doConversions(telemetry.data.payloadData, geeConversions_Metric);
         }
     }
-
     emit telemetryAvailable(telemetry);
-
-    if(!groundFlightTime.isValid() // if we haven't started the launch-elapsed timer
-    && (telemetry.data.rocketData->state() > 0)) // and we're in a non-prelaunch state
-    {
-        std::cout << "Launched!" << std::endl;
-        groundFlightTime.start(); // start a timer within the application
-        rocketTimestampStart = telemetry.data.rocketData->timestamp(); // get our start value for rocket time
-    }
-
-    if(groundFlightTime.isValid())
-    {
-        emit newGroundFlightTime(groundFlightTime.elapsed());
-        emit newRocketFlightTime((telemetry.data.rocketData->timestamp())-rocketTimestampStart);
-    }
-    else
-    {
-        emit newGroundFlightTime(0);
-        emit newRocketFlightTime(0);
-    }
 }
 
 void Backend::setBaudRate(const QString &name, int baudRate)
