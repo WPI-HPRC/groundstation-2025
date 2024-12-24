@@ -10,7 +10,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QThread>
-#include <Utility/SerialPortManager.h>
+#include "Utility/SerialPortManager.h"
 
 class SerialPortList: public QTableWidget
 {
