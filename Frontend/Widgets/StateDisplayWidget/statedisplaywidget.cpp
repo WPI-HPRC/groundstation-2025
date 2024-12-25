@@ -22,6 +22,15 @@ StateDisplayWidget::StateDisplayWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->TimeWidget->setLabel("T+");
+
+    /*
+    // Make it so setting the widget to be invisible doesn't effect its geometry.
+    // From https://stackoverflow.com/questions/10794532/how-to-make-a-qt-widget-invisible-without-changing-the-position-of-the-other-qt
+    QSizePolicy sp_retain = ui->TimeWidget->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    ui->TimeWidget->setSizePolicy(sp_retain);
+*/
+    
     ui->TimeWidget->setVisible(false);
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &StateDisplayWidget::telemetryAvailable);
@@ -48,16 +57,16 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
     }
     ui->StateName->setText(RocketStateNames.at(data.state()));
 
-    ui->AccelerationLabel->setText(QString::asprintf("Acceleration: %0.2f %s",
+    ui->AccelerationLabel->setText(QString::asprintf("%0.2f %s",
                                                      sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz()),
                                                      accelerationLabel
                                                      ));
-    ui->VelocityLabel->setText(QString::asprintf("Velocity: %0.2f %s",
+    ui->VelocityLabel->setText(QString::asprintf("%0.2f %s",
                                                      sqrt(data.velx()*data.velx() + data.vely()*data.vely() + data.velz()*data.velz()),
                                                     velocityLabel
     ));
 
-    ui->AltitudeLabel->setText(QString::asprintf("Altitude: %0.2f %s",
+    ui->AltitudeLabel->setText(QString::asprintf("%0.2f %s",
                                                  data.altitude(),
                                                  altitude
     ));
