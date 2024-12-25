@@ -25,6 +25,11 @@ void RocketFlightTimeWidget::newTime(uint32_t newRocketFlightTime)
     ui->FlightTime->setEnabled(true);
 }
 
+void RocketFlightTimeWidget::setLabel(QString label)
+{
+    ui->Label->setText(label);
+}
+
 RocketFlightTimeWidget::~RocketFlightTimeWidget() {
     delete ui;
 }
