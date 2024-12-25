@@ -63,7 +63,7 @@ void MaxValueWidget::updateMaxValues(Backend::MaxValues values, int tableColumn)
     updateTable(5, tableColumn, QString::number(values.minTemperature, 'f', decimalPlaces));
     updateTable(6, tableColumn, QString::number(values.maxPressure, 'f', decimalPlaces));
     updateTable(7, tableColumn, QString::number(values.minPressure, 'f', decimalPlaces));
-    updateTable(8, tableColumn, tableColumn == 0 ? QString::number(values.maxRocketServoPosition) : "-");
+    updateTable(8, tableColumn, tableColumn == 1 ? QString::number(values.maxRocketServoPosition) : "-");
 }
 
 void MaxValueWidget::newRocketValues(Backend::MaxValues rocketValues)
