@@ -160,6 +160,11 @@ public:
 
     DataLogger *dummyLogger;
 
+    HPRC::RocketTelemetryPacket lastRocketPacket{};
+    HPRC::PayloadTelemetryPacket lastPayloadPacket{};
+
+    float groundLevelAltitude = 0;
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);

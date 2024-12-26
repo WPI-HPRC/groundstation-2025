@@ -26,24 +26,6 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="7" column="1">
-    <widget class="QLabel" name="VelocityLabelTitle">
-     <property name="font">
-      <font>
-       <pointsize>15</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Velocity</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="1" colspan="3">
     <widget class="QLabel" name="StateName">
      <property name="font">
@@ -63,7 +45,25 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="5" column="1">
+    <widget class="QLabel" name="AltitudeLabelTitle">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Altitude (AGL)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Orientation::Vertical</enum>
@@ -75,18 +75,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="6" column="3">
-    <widget class="QLabel" name="AccelerationLabel">
-     <property name="font">
-      <font>
-       <pointsize>15</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>0 G</string>
-     </property>
-    </widget>
    </item>
    <item row="4" column="1" colspan="3">
     <widget class="RocketFlightTimeWidget" name="TimeWidget" native="true">
@@ -101,7 +89,65 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="8" column="1">
+    <widget class="QLabel" name="VelocityLabelTitle">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Velocity</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2" rowspan="5">
+    <widget class="Line" name="line">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Sunken</enum>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QLabel" name="AccelerationLabel">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0 G</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QLabel" name="AglLabel">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0 m</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
     <widget class="QLabel" name="AccelerationLabelTitle">
      <property name="font">
       <font>
@@ -119,7 +165,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="3">
+   <item row="8" column="3">
     <widget class="QLabel" name="VelocityLabel">
      <property name="font">
       <font>
@@ -131,26 +177,20 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="AltitudeLabelTitle">
+   <item row="6" column="1">
+    <widget class="QLabel" name="label">
      <property name="font">
       <font>
        <pointsize>15</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Altitude</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
-     <property name="margin">
-      <number>0</number>
+      <string>Altitude (MSL)</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="3">
-    <widget class="QLabel" name="AltitudeLabel">
+   <item row="6" column="3">
+    <widget class="QLabel" name="MslLabel">
      <property name="font">
       <font>
        <pointsize>15</pointsize>
@@ -158,22 +198,6 @@
      </property>
      <property name="text">
       <string>0 m</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2" rowspan="4">
-    <widget class="Line" name="line">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Sunken</enum>
-     </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
      </property>
     </widget>
    </item>

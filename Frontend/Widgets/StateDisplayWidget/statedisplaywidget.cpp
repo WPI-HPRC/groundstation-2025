@@ -66,9 +66,14 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
                                                     velocityLabel
     ));
 
-    ui->AltitudeLabel->setText(QString::asprintf("%0.2f %s",
-                                                 data.altitude(),
+    ui->AglLabel->setText(QString::asprintf("%0.2f %s",
+                                                 data.state() == 0 ? 0 : data.altitude() - Backend::getInstance().groundLevelAltitude,
                                                  altitude
+    ));
+
+    ui->MslLabel->setText(QString::asprintf("%0.2f %s",
+                                            data.altitude(),
+                                            altitude
     ));
 }
 

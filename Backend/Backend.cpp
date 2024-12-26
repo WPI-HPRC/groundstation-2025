@@ -476,37 +476,45 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
 {
     if(telemetry.packetType == GroundStation::Rocket)
     {
-        updateMaxRocketValues(*telemetry.data.rocketData);
-        updateTimes(*telemetry.data.rocketData);
+        HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
+        updateMaxRocketValues(*packet);
+        updateTimes(*packet);
 
+        if(lastRocketPacket.state() == 0 && packet->state() == 1)
+        {
+            groundLevelAltitude = lastRocketPacket.altitude();
+        }
+
+        lastRocketPacket = *packet;
         if(convertToEnglish)
         {
-            doConversions(telemetry.data.rocketData, metricToEnglish);
+            doConversions(packet, metricToEnglish);
             if(convertFromGees)
             {
-                doConversions(telemetry.data.rocketData, geeConversions_English);
+                doConversions(packet, geeConversions_English);
             }
         }
         else if(convertFromGees)
         {
-            doConversions(telemetry.data.rocketData, geeConversions_Metric);
+            doConversions(packet, geeConversions_Metric);
         }
     }
     else if (telemetry.packetType == GroundStation::Payload)
     {
-        updateMaxPayloadValues(*telemetry.data.payloadData);
-
+        HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
+        updateMaxPayloadValues(*packet);
+        lastPayloadPacket = *packet;
         if(convertToEnglish)
         {
-            doConversions(telemetry.data.payloadData, metricToEnglish);
+            doConversions(packet, metricToEnglish);
             if(convertFromGees)
             {
-                doConversions(telemetry.data.payloadData, geeConversions_English);
+                doConversions(packet, geeConversions_English);
             }
         }
         else if(convertFromGees)
         {
-            doConversions(telemetry.data.payloadData, geeConversions_Metric);
+            doConversions(packet, geeConversions_Metric);
         }
     }
     emit telemetryAvailable(telemetry);
