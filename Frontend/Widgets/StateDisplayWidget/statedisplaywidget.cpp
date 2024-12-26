@@ -33,7 +33,7 @@ StateDisplayWidget::StateDisplayWidget(QWidget *parent) :
     
     ui->TimeWidget->setVisible(false);
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &StateDisplayWidget::telemetryAvailable);
+    telemetryConnection = connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &StateDisplayWidget::telemetryAvailable);
 }
 
 void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
@@ -45,7 +45,7 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
 
     const char *accelerationLabel = Backend::getInstance().convertFromGees ? (Backend::getInstance().convertToEnglish ? "ft/s/s" : "m/s/s") : "G";
     const char *velocityLabel = Backend::getInstance().convertToEnglish ? "ft/s" : "m/s";
-    const char *altitude = Backend::getInstance().convertToEnglish ? "ft" : "m";
+    const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
     HPRC::RocketTelemetryPacket data = *telemetry.data.rocketData;
     if(data.state() == 0)
     {
@@ -68,12 +68,12 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
 
     ui->AglLabel->setText(QString::asprintf("%0.2f %s",
                                                  data.state() == 0 ? 0 : data.altitude() - Backend::getInstance().groundLevelAltitude,
-                                                 altitude
+                                                 altitudeLabel
     ));
 
     ui->MslLabel->setText(QString::asprintf("%0.2f %s",
                                             data.altitude(),
-                                            altitude
+                                            altitudeLabel
     ));
 }
 

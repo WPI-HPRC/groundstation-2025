@@ -316,10 +316,14 @@ void Backend::linkTestComplete(LinkTestResults results, int iterationsLeft)
 void Backend::updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket& rocketData)
 {
     bool newMaxValue = false;
-    if(rocketData.altitude() > maxValues.maxAltitude)
+    if(rocketData.altitude() > maxValues.maxAltitude || maxValues.maxAltitude == 0)
     {
         maxValues.maxAltitude = rocketData.altitude();
         newMaxValue = true;
+    }
+    if(rocketData.altitude() < maxValues.minAltitude || maxValues.minAltitude == 0)
+    {
+        maxValues.minAltitude = rocketData.altitude();
     }
 
     if(rocketData.pressure() > maxValues.maxPressure || maxValues.maxPressure == 0)
@@ -327,7 +331,7 @@ void Backend::updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::R
         maxValues.maxPressure = rocketData.pressure();
         newMaxValue = true;
     }
-    else if(rocketData.pressure() < maxValues.minPressure || maxValues.minPressure == 0)
+    if(rocketData.pressure() < maxValues.minPressure || maxValues.minPressure == 0)
     {
         maxValues.minPressure = rocketData.pressure();
         newMaxValue = true;
@@ -338,7 +342,7 @@ void Backend::updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::R
         maxValues.maxTemperature = rocketData.temperature();
         newMaxValue = true;
     }
-    else if(rocketData.temperature() < maxValues.minTemperature || maxValues.minTemperature == 0)
+    if(rocketData.temperature() < maxValues.minTemperature || maxValues.minTemperature == 0)
     {
         maxValues.minTemperature = rocketData.temperature();
         newMaxValue = true;
@@ -351,17 +355,25 @@ void Backend::updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::R
     }
 
     auto acceleration = (float)sqrt(pow(rocketData.accelx(), 2) + pow(rocketData.accely(), 2) + pow(rocketData.accelz(), 2));
-    if(acceleration > maxValues.maxAcceleration)
+    if(acceleration > maxValues.maxAcceleration || maxValues.maxAcceleration == 0)
     {
         maxValues.maxAcceleration = acceleration;
         newMaxValue = true;
     }
+    if(acceleration < maxValues.minAcceleration || maxValues.minAcceleration == 0)
+    {
+        maxValues.minAcceleration = acceleration;
+    }
 
     auto velocity = (float)sqrt(pow(rocketData.velx(), 2) + pow(rocketData.vely(), 2) + pow(rocketData.velz(), 2));
-    if(velocity > maxValues.maxVelocity)
+    if(velocity > maxValues.maxVelocity || maxValues.maxVelocity == 0)
     {
         maxValues.maxVelocity = velocity;
         newMaxValue = true;
+    }
+    if(velocity < maxValues.minVelocity || maxValues.minVelocity == 0)
+    {
+        maxValues.minVelocity = velocity;
     }
 
     auto angularVelocity = (float)sqrt(pow(rocketData.gyrox(), 2) + pow(rocketData.gyroy(), 2) + pow(rocketData.gyroz(), 2));
@@ -487,6 +499,8 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
         if(lastRocketPacket.state() != packet->state())
         {
             stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+            currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
+            emit rocketStateChanged(currentStateMaxValues, packet);
             currentStateMaxValues = {};
         }
 

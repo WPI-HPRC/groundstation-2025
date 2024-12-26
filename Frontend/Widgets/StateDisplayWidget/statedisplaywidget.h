@@ -26,6 +26,9 @@ public:
 
     explicit StateDisplayWidget(QWidget *parent = nullptr);
 
+    void setMaxValues(Backend::MaxValues values, int state, int flightTime);
+    QMetaObject::Connection telemetryConnection;
+
     ~StateDisplayWidget() override;
 
 public slots:

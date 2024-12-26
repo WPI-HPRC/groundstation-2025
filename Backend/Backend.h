@@ -213,6 +213,8 @@ signals:
     void newMaxRocketValues(const MaxValues &);
     void newMaxPayloadValues(const MaxValues &);
 
+    void rocketStateChanged(const MaxValues &, const HPRC::RocketTelemetryPacket *);
+
 private:
     explicit Backend(QObject *parent = nullptr);
 
