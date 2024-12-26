@@ -313,123 +313,123 @@ void Backend::linkTestComplete(LinkTestResults results, int iterationsLeft)
     emit linkTestDataAvailable(results, iterationsLeft);
 }
 
-void Backend::updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData)
+void Backend::updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket& rocketData)
 {
     bool newMaxValue = false;
-    if(rocketData.altitude() > maxRocketValues.maxAltitude)
+    if(rocketData.altitude() > maxValues.maxAltitude)
     {
-        maxRocketValues.maxAltitude = rocketData.altitude();
+        maxValues.maxAltitude = rocketData.altitude();
         newMaxValue = true;
     }
 
-    if(rocketData.pressure() > maxRocketValues.maxPressure || maxRocketValues.maxPressure == 0)
+    if(rocketData.pressure() > maxValues.maxPressure || maxValues.maxPressure == 0)
     {
-        maxRocketValues.maxPressure = rocketData.pressure();
+        maxValues.maxPressure = rocketData.pressure();
         newMaxValue = true;
     }
-    else if(rocketData.pressure() < maxRocketValues.minPressure || maxRocketValues.minPressure == 0)
+    else if(rocketData.pressure() < maxValues.minPressure || maxValues.minPressure == 0)
     {
-        maxRocketValues.minPressure = rocketData.pressure();
-        newMaxValue = true;
-    }
-
-    if(rocketData.temperature() > maxRocketValues.maxTemperature || maxRocketValues.maxTemperature == 0)
-    {
-        maxRocketValues.maxTemperature = rocketData.temperature();
-        newMaxValue = true;
-    }
-    else if(rocketData.temperature() < maxRocketValues.minTemperature || maxRocketValues.minTemperature == 0)
-    {
-        maxRocketValues.minTemperature = rocketData.temperature();
+        maxValues.minPressure = rocketData.pressure();
         newMaxValue = true;
     }
 
-    if(rocketData.servoposition() > maxRocketValues.maxRocketServoPosition)
+    if(rocketData.temperature() > maxValues.maxTemperature || maxValues.maxTemperature == 0)
     {
-        maxRocketValues.maxRocketServoPosition = rocketData.servoposition();
+        maxValues.maxTemperature = rocketData.temperature();
+        newMaxValue = true;
+    }
+    else if(rocketData.temperature() < maxValues.minTemperature || maxValues.minTemperature == 0)
+    {
+        maxValues.minTemperature = rocketData.temperature();
+        newMaxValue = true;
+    }
+
+    if(rocketData.servoposition() > maxValues.maxRocketServoPosition)
+    {
+        maxValues.maxRocketServoPosition = rocketData.servoposition();
         newMaxValue = true;
     }
 
     auto acceleration = (float)sqrt(pow(rocketData.accelx(), 2) + pow(rocketData.accely(), 2) + pow(rocketData.accelz(), 2));
-    if(acceleration > maxRocketValues.maxAcceleration)
+    if(acceleration > maxValues.maxAcceleration)
     {
-        maxRocketValues.maxAcceleration = acceleration;
+        maxValues.maxAcceleration = acceleration;
         newMaxValue = true;
     }
 
     auto velocity = (float)sqrt(pow(rocketData.velx(), 2) + pow(rocketData.vely(), 2) + pow(rocketData.velz(), 2));
-    if(velocity > maxRocketValues.maxVelocity)
+    if(velocity > maxValues.maxVelocity)
     {
-        maxRocketValues.maxVelocity = velocity;
+        maxValues.maxVelocity = velocity;
         newMaxValue = true;
     }
 
     auto angularVelocity = (float)sqrt(pow(rocketData.gyrox(), 2) + pow(rocketData.gyroy(), 2) + pow(rocketData.gyroz(), 2));
-    if(angularVelocity > maxRocketValues.maxAngularVelocity)
+    if(angularVelocity > maxValues.maxAngularVelocity)
     {
-        maxRocketValues.maxAngularVelocity = angularVelocity;
+        maxValues.maxAngularVelocity = angularVelocity;
         newMaxValue = true;
     }
-    if(newMaxValue)
+    if(newMaxValue && (&maxValues == &maxRocketValues))
     {
-        emit newMaxRocketValues(maxRocketValues);
+        emit newMaxRocketValues(maxValues);
     }
 }
 
-void Backend::updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData)
+void Backend::updateMaxPayloadValues(Backend::MaxValues &maxValues, HPRC::PayloadTelemetryPacket payloadData)
 {
     bool newMaxValue = false;
-    if(payloadData.altitude() > maxPayloadValues.maxAltitude)
+    if(payloadData.altitude() > maxValues.maxAltitude)
     {
-        maxPayloadValues.maxAltitude = payloadData.altitude();
+        maxValues.maxAltitude = payloadData.altitude();
         newMaxValue = true;
     }
 
-    if(payloadData.pressure() > maxPayloadValues.maxPressure || maxPayloadValues.maxPressure == 0)
+    if(payloadData.pressure() > maxValues.maxPressure || maxValues.maxPressure == 0)
     {
-        maxPayloadValues.maxPressure = payloadData.pressure();
+        maxValues.maxPressure = payloadData.pressure();
         newMaxValue = true;
     }
-    else if(payloadData.pressure() < maxPayloadValues.minPressure || maxPayloadValues.minPressure == 0)
+    else if(payloadData.pressure() < maxValues.minPressure || maxValues.minPressure == 0)
     {
-        maxPayloadValues.minPressure = payloadData.pressure();
+        maxValues.minPressure = payloadData.pressure();
         newMaxValue = true;
     }
 
-    if(payloadData.temperature() > maxPayloadValues.maxTemperature || maxPayloadValues.maxTemperature == 0)
+    if(payloadData.temperature() > maxValues.maxTemperature || maxValues.maxTemperature == 0)
     {
-        maxPayloadValues.maxTemperature = payloadData.temperature();
+        maxValues.maxTemperature = payloadData.temperature();
         newMaxValue = true;
     }
-    else if(payloadData.temperature() < maxPayloadValues.minTemperature || maxPayloadValues.minTemperature == 0)
+    else if(payloadData.temperature() < maxValues.minTemperature || maxValues.minTemperature == 0)
     {
-        maxPayloadValues.minTemperature = payloadData.temperature();
+        maxValues.minTemperature = payloadData.temperature();
         newMaxValue = true;
     }
 
     auto acceleration = (float)sqrt(pow(payloadData.accelx(), 2) + pow(payloadData.accely(), 2) + pow(payloadData.accelz(), 2));
-    if(acceleration > maxPayloadValues.maxAcceleration)
+    if(acceleration > maxValues.maxAcceleration)
     {
-        maxPayloadValues.maxAcceleration = acceleration;
+        maxValues.maxAcceleration = acceleration;
         newMaxValue = true;
     }
 
     auto velocity = (float)sqrt(pow(payloadData.velx(), 2) + pow(payloadData.vely(), 2) + pow(payloadData.velz(), 2));
-    if(velocity > maxPayloadValues.maxVelocity)
+    if(velocity > maxValues.maxVelocity)
     {
-        maxPayloadValues.maxVelocity = velocity;
+        maxValues.maxVelocity = velocity;
         newMaxValue = true;
     }
 
     auto angularVelocity = (float)sqrt(pow(payloadData.gyrox(), 2) + pow(payloadData.gyroy(), 2) + pow(payloadData.gyroz(), 2));
-    if(angularVelocity > maxPayloadValues.maxAngularVelocity)
+    if(angularVelocity > maxValues.maxAngularVelocity)
     {
-        maxPayloadValues.maxAngularVelocity = angularVelocity;
+        maxValues.maxAngularVelocity = angularVelocity;
         newMaxValue = true;
     }
-    if(newMaxValue)
+    if(newMaxValue && (&maxPayloadValues == &maxValues))
     {
-        emit newMaxPayloadValues(maxPayloadValues);
+        emit newMaxPayloadValues(maxValues);
     }
 }
 
@@ -477,13 +477,20 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
     if(telemetry.packetType == GroundStation::Rocket)
     {
         HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
-        updateMaxRocketValues(*packet);
+        updateMaxRocketValues(maxRocketValues, *packet);
         updateTimes(*packet);
 
         if(lastRocketPacket.state() == 0 && packet->state() == 1)
         {
             groundLevelAltitude = lastRocketPacket.altitude();
         }
+        if(lastRocketPacket.state() != packet->state())
+        {
+            stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+            currentStateMaxValues = {};
+        }
+
+        updateMaxRocketValues(currentStateMaxValues, *packet);
 
         lastRocketPacket = *packet;
         if(convertToEnglish)
@@ -502,7 +509,7 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
     else if (telemetry.packetType == GroundStation::Payload)
     {
         HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
-        updateMaxPayloadValues(*packet);
+        updateMaxPayloadValues(maxPayloadValues, *packet);
         lastPayloadPacket = *packet;
         if(convertToEnglish)
         {
@@ -781,6 +788,7 @@ Backend::Backend(QObject *parent) : QObject(parent)
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
+//    stateMaxValues = QList<MaxValues>(6);
 
 //    dummyLogger = new DataLogger();
 }

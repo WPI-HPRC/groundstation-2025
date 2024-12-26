@@ -71,6 +71,7 @@ public:
     struct MaxValues
     {
         float maxAltitude;
+        float minAltitude;
 
         float minPressure;
         float maxPressure;
@@ -79,10 +80,16 @@ public:
         float maxTemperature;
 
         float maxAcceleration;
+        float minAcceleration;
+
         float maxVelocity;
+        float minVelocity;
+
         float maxAngularVelocity;
+        float minAngularVelocity;
 
         uint32_t maxRocketServoPosition;
+        uint32_t minRocketServoPosition;
     };
 
     enum RadioModuleType
@@ -164,6 +171,8 @@ public:
     HPRC::PayloadTelemetryPacket lastPayloadPacket{};
 
     float groundLevelAltitude = 0;
+    MaxValues currentStateMaxValues;
+    QList<MaxValues> stateMaxValues;
 
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
@@ -215,8 +224,8 @@ private:
     static QMap<std::string, ConversionFunction> geeConversions_Metric;
 
     RadioModule *getModuleWithName(const QString& name);
-    void updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData);
-    void updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData);
+    void updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket& rocketData);
+    void updateMaxPayloadValues(Backend::MaxValues &maxValues, HPRC::PayloadTelemetryPacket payloadData);
     void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};
