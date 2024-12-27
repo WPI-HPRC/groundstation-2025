@@ -27,7 +27,7 @@ public:
     ~TimelineWidget() override;
 
 public slots:
-    void rocketStateChanged(const Backend::MaxValues &, const HPRC::RocketTelemetryPacket *);
+    void rocketStateChanged(const Backend::MaxValues &, int lastState, int newState);
 
 private:
     Ui::TimelineWidget *ui;

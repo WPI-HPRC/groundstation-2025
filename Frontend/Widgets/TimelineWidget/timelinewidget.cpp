@@ -32,13 +32,30 @@ TimelineWidget::~TimelineWidget()
     delete ui;
 }
 
-void TimelineWidget::rocketStateChanged(const Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket *lastPacket)
+void TimelineWidget::rocketStateChanged(const Backend::MaxValues &maxValues, int lastState, int newState)
 {
-    if(lastPacket->state() > NUM_STATES)
+    qDebug() << "Reached" << newState;
+    if(newState > NUM_STATES)
     {
         return;
     }
-   stateWidgets.at(NUM_STATES - lastPacket->state())->setMaxValues(maxValues, lastPacket->state());
-   stateWidgets.at(NUM_STATES - lastPacket->state())->setEnabled(true);
-   stateWidgets.at(NUM_STATES - lastPacket->state())->showValues();
+
+    if(newState == 0)
+    {
+        for (StateSummaryWidget *widget : stateWidgets)
+        {
+            widget->hideValues();
+            widget->setEnabled(false);
+        }
+        return;
+    }
+
+    for(int i = NUM_STATES; i > newState; i--)
+    {
+        stateWidgets.at(NUM_STATES - i)->hideValues();
+        stateWidgets.at(NUM_STATES - i)->setEnabled(false);
+    }
+   stateWidgets.at(NUM_STATES - lastState-1)->setMaxValues(maxValues, newState);
+   stateWidgets.at(NUM_STATES - lastState-1)->setEnabled(true);
+   stateWidgets.at(NUM_STATES - lastState-1)->showValues();
 }

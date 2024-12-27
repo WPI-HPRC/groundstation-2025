@@ -499,11 +499,19 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
         }
         if(lastRocketPacket.state() != packet->state())
         {
-            if(packet->state() < stateMaxValues.size())
+            // Reset things when we reach prelaunch state
+
+            if(packet->state() == 0)
+            {
+                stateMaxValues.clear();
+            }
+
+            currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
+            emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
+
+            if(lastRocketPacket.state() != 6)
             {
                 stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
-                currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-                emit rocketStateChanged(currentStateMaxValues, packet);
                 currentStateMaxValues = {};
             }
         }
