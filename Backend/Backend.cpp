@@ -499,10 +499,13 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
         }
         if(lastRocketPacket.state() != packet->state())
         {
-            stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
-            currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-            emit rocketStateChanged(currentStateMaxValues, packet);
-            currentStateMaxValues = {};
+            if(packet->state() < stateMaxValues.size())
+            {
+                stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+                currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
+                emit rocketStateChanged(currentStateMaxValues, packet);
+                currentStateMaxValues = {};
+            }
         }
 
         updateMaxRocketValues(currentStateMaxValues, *packet);
