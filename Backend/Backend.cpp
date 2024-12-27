@@ -475,7 +475,8 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
     if (groundFlightTime.isValid())
     {
         emit newGroundFlightTime(groundFlightTime.elapsed());
-        emit newRocketFlightTime((rocketData.timestamp()) - rocketTimestampStart);
+        rocketFlightTime = rocketData.timestamp() - rocketTimestampStart;
+        emit newRocketFlightTime(rocketFlightTime);
     }
     else
     {

@@ -7,16 +7,6 @@
 #include "statedisplaywidget.h"
 #include "ui_StateDisplayWidget.h"
 
-QList<QString> StateDisplayWidget::RocketStateNames = {
-        "Pre-Launch",
-        "Launch",
-        "Coast",
-        "Drogue Descent",
-        "Main Descent",
-        "Recovery",
-        "Abort"
-};
-
 StateDisplayWidget::StateDisplayWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::StateDisplayWidget)
 {
@@ -55,7 +45,7 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
     {
         ui->TimeWidget->setVisible(true);
     }
-    ui->StateName->setText(RocketStateNames.at(data.state()));
+    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(data.state()));
 
     ui->AccelerationLabel->setText(QString::asprintf("%0.2f %s",
                                                      sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz()),

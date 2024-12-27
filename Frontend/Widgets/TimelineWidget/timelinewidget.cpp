@@ -7,16 +7,19 @@
 #include "timelinewidget.h"
 #include "ui_TimelineWidget.h"
 
+#define NUM_STATES 4
 
 TimelineWidget::TimelineWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::TimelineWidget)
 {
     ui->setupUi(this);
 
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < NUM_STATES; i++)
     {
         auto *stateWidget = new StateSummaryWidget(this);
         stateWidget->setEnabled(false);
+        stateWidget->setTitle(Backend::getInstance().RocketStateNames.at(NUM_STATES - i));
+        stateWidget->hideValues();
         ui->gridLayout->addWidget(stateWidget, i+1, 0);
         stateWidgets.append(stateWidget);
     }
@@ -31,6 +34,11 @@ TimelineWidget::~TimelineWidget()
 
 void TimelineWidget::rocketStateChanged(const Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket *lastPacket)
 {
-   stateWidgets.at(4 - lastPacket->state())->setMaxValues(maxValues, lastPacket->state(), 0);
-   stateWidgets.at(4 - lastPacket->state())->setEnabled(true);
+    if(lastPacket->state() > NUM_STATES)
+    {
+        return;
+    }
+   stateWidgets.at(NUM_STATES - lastPacket->state())->setMaxValues(maxValues, lastPacket->state());
+   stateWidgets.at(NUM_STATES - lastPacket->state())->setEnabled(true);
+   stateWidgets.at(NUM_STATES - lastPacket->state())->showValues();
 }

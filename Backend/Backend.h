@@ -174,6 +174,18 @@ public:
     MaxValues currentStateMaxValues;
     QList<MaxValues> stateMaxValues;
 
+    const QList<QString> RocketStateNames = {
+            "Pre-Launch",
+            "Launch",
+            "Coast",
+            "Drogue Descent",
+            "Main Descent",
+            "Recovery",
+            "Abort"
+    };
+
+    uint32_t rocketFlightTime = 0;
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);

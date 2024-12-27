@@ -22,8 +22,6 @@ Q_OBJECT
 
 public:
 
-    static QList<QString> RocketStateNames;
-
     explicit StateDisplayWidget(QWidget *parent = nullptr);
 
     void setMaxValues(Backend::MaxValues values, int state, int flightTime);

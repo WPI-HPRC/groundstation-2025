@@ -20,10 +20,11 @@ class StateSummaryWidget : public QWidget
 Q_OBJECT
 
 public:
-    static QList<QString> RocketStateNames;
-
     explicit StateSummaryWidget(QWidget *parent = nullptr);
-    void setMaxValues(Backend::MaxValues values, int state, int flightTime);
+    void setMaxValues(Backend::MaxValues values, int state);
+    void hideValues();
+    void showValues();
+    void setTitle(const QString &title);
 
     ~StateSummaryWidget() override;
 

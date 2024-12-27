@@ -7,24 +7,27 @@
 #include "statesummarywidget.h"
 #include "ui_StateSummaryWidget.h"
 
-QList<QString> StateSummaryWidget::RocketStateNames = {
-        "Pre-Launch",
-        "Launch",
-        "Coast",
-        "Drogue Descent",
-        "Main Descent",
-        "Recovery",
-        "Abort"
-};
 
 StateSummaryWidget::StateSummaryWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::StateSummaryWidget)
 {
     ui->setupUi(this);
+
+    QSizePolicy sp_retain = ui->Frame3->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    ui->Frame3->setSizePolicy(sp_retain);
+
+    sp_retain = ui->AltitudeLabel->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    ui->AltitudeLabel->setSizePolicy(sp_retain);
+
+    sp_retain = ui->TimeLabel->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    ui->TimeLabel->setSizePolicy(sp_retain);
 }
 
 
-void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state, int flightTime)
+void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state)
 {
     if(Backend::getInstance().convertToEnglish)
     {
@@ -49,15 +52,13 @@ void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state, int 
     const char *velocityLabel = Backend::getInstance().convertToEnglish ? "ft/s" : "m/s";
     const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
 
-    ui->StateName->setText(RocketStateNames.at(state));
+    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(state));
 
-    ui->AccelerationLabel->setText(QString::asprintf("%0.2f - %0.2f %s",
-                                                     values.minAcceleration,
+    ui->AccelerationLabel->setText(QString::asprintf("%0.2f %s",
                                                      values.maxAcceleration,
                                                      accelerationLabel
     ));
-    ui->VelocityLabel->setText(QString::asprintf("%0.2f - %0.2f %s",
-                                                 values.minVelocity,
+    ui->VelocityLabel->setText(QString::asprintf("%0.2f %s",
                                                  values.maxVelocity,
                                                  velocityLabel
     ));
@@ -66,6 +67,32 @@ void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state, int 
                               values.minAltitude - Backend::getInstance().groundLevelAltitude,
                               altitudeLabel
     ));
+
+    uint32_t rocketFlightTime = Backend::getInstance().rocketFlightTime;
+    uint_fast16_t hours = rocketFlightTime / (60 * 60 * 1000);
+    uint_fast8_t minutes = rocketFlightTime / (60*1000) % 60;
+    uint_fast8_t seconds = rocketFlightTime / 1000 % 60;
+    uint_fast16_t milliseconds = rocketFlightTime % 1000;
+    ui->TimeLabel->setText(QString::asprintf("T+%02d:%02d:%02d.%03d",hours, minutes, seconds, milliseconds));
+}
+
+void StateSummaryWidget::hideValues()
+{
+    ui->Frame3->setVisible(false);
+    ui->TimeLabel->setVisible(false);
+    ui->AltitudeLabel->setVisible(false);
+}
+
+void StateSummaryWidget::showValues()
+{
+    ui->Frame3->setVisible(true);
+    ui->TimeLabel->setVisible(true);
+    ui->AltitudeLabel->setVisible(true);
+}
+
+void StateSummaryWidget::setTitle(const QString &title)
+{
+    ui->StateName->setText(title);
 }
 
 StateSummaryWidget::~StateSummaryWidget()

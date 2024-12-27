@@ -97,7 +97,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3" rowspan="4">
+       <item row="0" column="3" rowspan="5">
         <widget class="StateDisplayWidget" name="StateWidget" native="true">
          <property name="minimumSize">
           <size>
