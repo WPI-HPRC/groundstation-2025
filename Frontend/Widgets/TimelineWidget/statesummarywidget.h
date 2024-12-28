@@ -25,6 +25,7 @@ public:
     void hideValues();
     void showValues();
     void setTitle(const QString &title);
+    void setStart(Backend::MaxValues values);
 
     ~StateSummaryWidget() override;
 

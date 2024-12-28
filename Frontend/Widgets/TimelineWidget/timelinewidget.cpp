@@ -7,7 +7,7 @@
 #include "timelinewidget.h"
 #include "ui_TimelineWidget.h"
 
-#define NUM_STATES 4
+#define NUM_STATES 6
 
 TimelineWidget::TimelineWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::TimelineWidget)
@@ -17,8 +17,8 @@ TimelineWidget::TimelineWidget(QWidget *parent) :
     for(int i = 0; i < NUM_STATES; i++)
     {
         auto *stateWidget = new StateSummaryWidget(this);
-        stateWidget->setEnabled(false);
-        stateWidget->setTitle(Backend::getInstance().RocketStateNames.at(NUM_STATES - i));
+        stateWidget->setEnabled(i == NUM_STATES-1);
+        stateWidget->setTitle(Backend::getInstance().RocketStateNames.at(NUM_STATES - i - 1));
         stateWidget->hideValues();
         ui->gridLayout->addWidget(stateWidget, i+1, 0);
         stateWidgets.append(stateWidget);
@@ -34,28 +34,24 @@ TimelineWidget::~TimelineWidget()
 
 void TimelineWidget::rocketStateChanged(const Backend::MaxValues &maxValues, int lastState, int newState)
 {
-    qDebug() << "Reached" << newState;
-    if(newState > NUM_STATES)
+    // Abort State is always the last one
+    if(newState >= NUM_STATES)
     {
         return;
     }
 
-    if(newState == 0)
-    {
-        for (StateSummaryWidget *widget : stateWidgets)
-        {
-            widget->hideValues();
-            widget->setEnabled(false);
-        }
-        return;
-    }
-
-    for(int i = NUM_STATES; i > newState; i--)
+    for(int i = NUM_STATES-1; i > newState; i--)
     {
         stateWidgets.at(NUM_STATES - i)->hideValues();
         stateWidgets.at(NUM_STATES - i)->setEnabled(false);
     }
-   stateWidgets.at(NUM_STATES - lastState-1)->setMaxValues(maxValues, newState);
-   stateWidgets.at(NUM_STATES - lastState-1)->setEnabled(true);
-   stateWidgets.at(NUM_STATES - lastState-1)->showValues();
+
+    if(newState > 0)
+    {
+        stateWidgets.at(NUM_STATES - lastState - 1)->setMaxValues(maxValues, lastState);
+        stateWidgets.at(NUM_STATES - lastState - 1)->showValues();
+        stateWidgets.at(NUM_STATES - newState - 1)->setStart(maxValues);
+    }
+    qDebug() << "Setting enabled and time for new state " << Backend::getInstance().RocketStateNames.at(newState);
+    stateWidgets.at(NUM_STATES - newState - 1)->setEnabled(true);
 }

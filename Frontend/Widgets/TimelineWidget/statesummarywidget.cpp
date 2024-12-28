@@ -50,7 +50,6 @@ void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state)
 
     const char *accelerationLabel = Backend::getInstance().convertFromGees ? (Backend::getInstance().convertToEnglish ? "ft/s/s" : "m/s/s") : "G";
     const char *velocityLabel = Backend::getInstance().convertToEnglish ? "ft/s" : "m/s";
-    const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
 
     ui->StateName->setText(Backend::getInstance().RocketStateNames.at(state));
 
@@ -62,18 +61,6 @@ void StateSummaryWidget::setMaxValues(Backend::MaxValues values, int state)
                                                  values.maxVelocity,
                                                  velocityLabel
     ));
-    ui->AltitudeLabel->setText(
-            QString::asprintf("%0.2f %s",
-                              values.minAltitude - Backend::getInstance().groundLevelAltitude,
-                              altitudeLabel
-    ));
-
-    uint32_t rocketFlightTime = Backend::getInstance().rocketFlightTime;
-    uint_fast16_t hours = rocketFlightTime / (60 * 60 * 1000);
-    uint_fast8_t minutes = rocketFlightTime / (60*1000) % 60;
-    uint_fast8_t seconds = rocketFlightTime / 1000 % 60;
-    uint_fast16_t milliseconds = rocketFlightTime % 1000;
-    ui->TimeLabel->setText(QString::asprintf("T+%02d:%02d:%02d.%03d",hours, minutes, seconds, milliseconds));
 }
 
 void StateSummaryWidget::hideValues()
@@ -86,13 +73,31 @@ void StateSummaryWidget::hideValues()
 void StateSummaryWidget::showValues()
 {
     ui->Frame3->setVisible(true);
-    ui->TimeLabel->setVisible(true);
-    ui->AltitudeLabel->setVisible(true);
 }
 
 void StateSummaryWidget::setTitle(const QString &title)
 {
     ui->StateName->setText(title);
+}
+
+void StateSummaryWidget::setStart(Backend::MaxValues values)
+{
+    uint32_t rocketFlightTime = Backend::getInstance().rocketFlightTime;
+    uint_fast16_t hours = rocketFlightTime / (60 * 60 * 1000);
+    uint_fast8_t minutes = rocketFlightTime / (60*1000) % 60;
+    uint_fast8_t seconds = rocketFlightTime / 1000 % 60;
+    uint_fast16_t milliseconds = rocketFlightTime % 1000;
+    ui->TimeLabel->setText(QString::asprintf("T+%02d:%02d:%02d.%03d",hours, minutes, seconds, milliseconds));
+    ui->TimeLabel->setVisible(true);
+
+
+    const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
+    ui->AltitudeLabel->setText(
+            QString::asprintf("%0.2f %s",
+                              values.minAltitude - Backend::getInstance().groundLevelAltitude,
+                              altitudeLabel
+            ));
+    ui->AltitudeLabel->setVisible(true);
 }
 
 StateSummaryWidget::~StateSummaryWidget()
