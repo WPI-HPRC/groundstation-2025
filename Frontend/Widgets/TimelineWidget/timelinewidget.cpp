@@ -52,6 +52,5 @@ void TimelineWidget::rocketStateChanged(const Backend::MaxValues &maxValues, int
         stateWidgets.at(NUM_STATES - lastState - 1)->showValues();
         stateWidgets.at(NUM_STATES - newState - 1)->setStart(maxValues);
     }
-    qDebug() << "Setting enabled and time for new state " << Backend::getInstance().RocketStateNames.at(newState);
     stateWidgets.at(NUM_STATES - newState - 1)->setEnabled(true);
 }
