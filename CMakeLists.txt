@@ -194,6 +194,15 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
+        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.cpp
+        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.h
+        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.ui
+        Frontend/Widgets/TimelineWidget/timelinewidget.cpp
+        Frontend/Widgets/TimelineWidget/timelinewidget.h
+        Frontend/Widgets/TimelineWidget/timelinewidget.ui
+        Frontend/Widgets/TimelineWidget/statesummarywidget.cpp
+        Frontend/Widgets/TimelineWidget/statesummarywidget.h
+        Frontend/Widgets/TimelineWidget/statesummarywidget.ui
 )
 
 # Link Protobuf and Qt6 libraries
