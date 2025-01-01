@@ -27,6 +27,8 @@ public:
     void setTitle(const QString &title);
     void setStart(Backend::MaxValues values);
 
+    void setPreLaunch();
+
     ~StateSummaryWidget() override;
 
 private:

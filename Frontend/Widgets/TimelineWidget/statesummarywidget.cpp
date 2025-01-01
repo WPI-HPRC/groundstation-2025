@@ -68,6 +68,7 @@ void StateSummaryWidget::hideValues()
     ui->Frame3->setVisible(false);
     ui->TimeLabel->setVisible(false);
     ui->AltitudeLabel->setVisible(false);
+    ui->ProgressBar->setStyleSheet("");
 }
 
 void StateSummaryWidget::showValues()
@@ -98,6 +99,14 @@ void StateSummaryWidget::setStart(Backend::MaxValues values)
                               altitudeLabel
             ));
     ui->AltitudeLabel->setVisible(true);
+    ui->ProgressBar->setStyleSheet("color: #AF283A");
+}
+
+void StateSummaryWidget::setPreLaunch()
+{
+    QSizePolicy sp_retain = ui->TimeLabel->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(false);
+    ui->TimeLabel->setSizePolicy(sp_retain);
 }
 
 StateSummaryWidget::~StateSummaryWidget()
