@@ -9,6 +9,7 @@
 #include <QWebChannel>
 #include <QWebEngineView>
 #include "Frontend/Widgets/MapWidget/JSInterface.h"
+#include "Backend/Backend.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -29,6 +30,9 @@ public:
     QWebEngineView *mapView;
     QWebChannel *mapWebChannel;
     JsInterface *jsInterface;
+
+public slots:
+    void telemetryAvailable(Backend::Telemetry telemetry);
 
 private:
     Ui::MapWidget *ui;

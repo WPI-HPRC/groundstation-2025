@@ -28,8 +28,8 @@ L.tileLayer(`qrc:/Maps/Maps/${currentMap.name}/{z}/{x}/{y}.jpg`, { maxZoom: curr
 // Create a line tracking the path of the payload
 const pathConfig = {
     color: "#2222ff",
-    dashArray: [11,11],
-    opacity: 0.8,
+    // dashArray: [11,11],
+    opacity: 0.6,
     smoothFactor: 1.0,
 }
 const path = L.polyline([], pathConfig)
@@ -41,7 +41,7 @@ const payloadConfig = {
     radius: 10,
     fillOpacity: 0.3
 }
-const payloadPosition = [32.99020169835385 + 0.01, -106.97596734602624 + 0.01]
+const payloadPosition = [0, 0]
 const payload = L.circleMarker(payloadPosition, payloadConfig)
 payload.addTo(map)
 
@@ -55,16 +55,22 @@ const targetPosition = [32.99020169835385 - 0.01, -106.97596734602624 - 0.01]
 const target = L.circleMarker(targetPosition, targetConfig)
 target.addTo(map)
 
-// Uncomment to test the path system
-/*setInterval(() => {
-    const point = payload.getLatLng()
-    path.addLatLng(point)
-    const rand1 = Math.random() * 2 - 1
-    const rand2 = Math.random() * 2 - 1
-    payload.setLatLng(L.latLng(point.lat + 0.005 * rand1, point.lng + 0.005 * rand2))
-}, 200)*/
+function runPathTest() {
+    setInterval(() => {
+        const point = payload.getLatLng()
+        path.addLatLng(point)
+        const rand1 = Math.random() * 2 - 1
+        const rand2 = Math.random() * 2 - 1
+        payload.setLatLng(L.latLng(point.lat + 0.005 * rand1, point.lng + 0.005 * rand2))
+    }, 200)
+}
 
 function addPayloadPoint(lat, lng) {
+    if(payload.getLatLng().lat === 0) {
+        payload.setLatLng(L.latLng(lat, lng))
+        return
+    }
+
     const currentPoint = payload.getLatLng()
 
     // Add the last payload point to the path, and update it

@@ -33,8 +33,25 @@ MapWidget::MapWidget(QWidget *parent) :
 
     // Connect each instance of the widget to the payload update signal
     auto *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MapWidget::repaint);
-    timer->start(2000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
+    timer->start(500);
+
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &MapWidget::telemetryAvailable);
+}
+
+void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
+{
+    if(telemetry.packetType == GroundStation::Payload)
+    {
+        HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
+        if(packet->gpslock())
+        {
+            double latitude = packet->gpslat()/10e6;
+            double longitude = packet->gpslong()/10e6;
+
+            jsInterface->payloadPoint(latitude, longitude);
+        }
+    }
 }
 
 MapWidget::~MapWidget()
