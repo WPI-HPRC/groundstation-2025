@@ -45,16 +45,6 @@ const payloadPosition = [0, 0]
 const payload = L.circleMarker(payloadPosition, payloadConfig)
 payload.addTo(map)
 
-// Create the target marker
-const targetConfig = {
-    color: "#ff2222",
-    radius: 10,
-    fillOpacity: 0.3
-}
-const targetPosition = [32.99020169835385 - 0.01, -106.97596734602624 - 0.01]
-const target = L.circleMarker(targetPosition, targetConfig)
-target.addTo(map)
-
 function runPathTest() {
     setInterval(() => {
         const point = payload.getLatLng()
@@ -80,12 +70,6 @@ function addPayloadPoint(lat, lng) {
     payload.setLatLng(latLng)
 }
 
-function addTargetPoint(lat, lng) {
-    const latLng = L.latLng(lat, lng)
-
-    target.setLatLng(latLng)
-}
-
 function reset() {
     // TODO
 }
@@ -103,10 +87,5 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     // Connect to the payload point signal
     qtLeaflet.updatePayloadPoint.connect(function (latitude, longitude) {
         addPayloadPoint(latitude, longitude)
-    })
-
-    // Connect to the target point signal
-    qtLeaflet.updateTargetPoint.connect(function (latitude, longitude) {
-        addTargetPoint(latitude, longitude)
     })
 })

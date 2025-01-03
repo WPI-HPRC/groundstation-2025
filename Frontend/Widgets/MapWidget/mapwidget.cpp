@@ -49,7 +49,7 @@ void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
             double latitude = packet->gpslat()/10e6;
             double longitude = packet->gpslong()/10e6;
 
-            jsInterface->payloadPoint(latitude, longitude);
+            jsInterface->newPayloadPosition(latitude, longitude);
         }
     }
 }
