@@ -14,77 +14,108 @@
    <string>GpsWidget</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0" colspan="5">
-    <widget class="MapWidget" name="TheMapWidget" native="true"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="ClearButton">
-     <property name="text">
-      <string>Clear Map</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QWidget" name="MapSelectionContainer" native="true">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QRadioButton" name="albans">
-        <property name="text">
-         <string>St Albans</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">MapSelectionGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="spaceport">
-        <property name="text">
-         <string>Spaceport America</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">MapSelectionGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="wpi">
-        <property name="text">
-         <string>WPI</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">MapSelectionGroup</string>
-        </attribute>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="0">
-    <widget class="QCheckBox" name="AutoChooseMap">
-     <property name="text">
-      <string>Choose Map Automatically</string>
-     </property>
-     <property name="checked">
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
       <bool>true</bool>
      </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>593</width>
+        <height>302</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="AutoChooseMap">
+         <property name="text">
+          <string>Choose Map Automatically</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QWidget" name="MapSelectionContainer" native="true">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QRadioButton" name="albans">
+            <property name="text">
+             <string>St Albans</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">MapSelectionGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="spaceport">
+            <property name="text">
+             <string>Spaceport America</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">MapSelectionGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="wpi">
+            <property name="text">
+             <string>WPI</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">MapSelectionGroup</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="ClearButton">
+         <property name="text">
+          <string>Clear Map</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <widget class="MapWidget" name="TheMapWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item row="0" column="4">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
