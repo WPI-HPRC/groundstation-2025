@@ -12,7 +12,12 @@ void JsInterface::chooseMap()
         return;
     }
     emit autoChooseMap();
+}
+
+void JsInterface::mapChosen(const QString &name)
+{
     mapHasBeenChosen = true;
+    emit mapWasChosen(name);
 }
 
 void JsInterface::newPayloadPosition(double lat, double lng) {

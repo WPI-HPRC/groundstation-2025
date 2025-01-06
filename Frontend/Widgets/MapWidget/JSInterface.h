@@ -21,12 +21,14 @@ public slots:
     void log(const QString& str);
     void newPayloadPosition(double lat, double lng);
     void newRocketPosition(double lat, double lng);
+    void mapChosen(const QString &name);
 
 signals:
     void addPoint(const QString &, double, double);
     void setMap(const QString &);
     void autoChooseMap();
     void reset();
+    void mapWasChosen(const QString &);
 };
 
 

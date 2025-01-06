@@ -138,7 +138,7 @@ function autoChooseMap()
     }
     if(chosenMapName) {
         setMap(chosenMapName)
-        qtLeaflet.log(`Chose map ${chosenMapName}`)
+        qtLeaflet.mapChosen(chosenMapName)
     }
 }
 

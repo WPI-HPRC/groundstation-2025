@@ -12,17 +12,47 @@ GpsWidget::GpsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->AlbansMap, &QRadioButton::released, this, [this]()
+    connect(ui->albans, &QRadioButton::released, this, [this]()
     {
         this->ui->TheMapWidget->jsInterface->setMapName("albans");
     });
-    connect(ui->SpaceportMap, &QRadioButton::released, this, [this]()
+    connect(ui->spaceport, &QRadioButton::released, this, [this]()
     {
         this->ui->TheMapWidget->jsInterface->setMapName("spaceport");
     });
-    connect(ui->WpiMap, &QRadioButton::released, this, [this]()
+    connect(ui->wpi, &QRadioButton::released, this, [this]()
     {
         this->ui->TheMapWidget->jsInterface->setMapName("wpi");
+    });
+    connect(ui->AutoChooseMap, &QCheckBox::toggled, this, [this](bool checked)
+    {
+        if(checked)
+        {
+            this->ui->MapSelectionContainer->setEnabled(false);
+            this->ui->TheMapWidget->jsInterface->mapHasBeenChosen = false;
+            this->ui->TheMapWidget->jsInterface->chooseMap();
+        }
+        else
+        {
+            this->ui->MapSelectionContainer->setEnabled(true);
+            this->ui->TheMapWidget->jsInterface->mapHasBeenChosen = true;
+            QString mapName = "";
+            if(!this->ui->MapSelectionGroup->checkedButton())
+            {
+                this->ui->MapSelectionGroup->buttons().at(0)->setChecked(true);
+            }
+            mapName = this->ui->MapSelectionGroup->checkedButton()->objectName();
+
+            this->ui->TheMapWidget->jsInterface->setMapName(mapName);
+        }
+    });
+    connect(ui->TheMapWidget->jsInterface, &JsInterface::mapWasChosen, this, [this](const QString &mapName)
+    {
+       auto *button = ui->MapSelectionContainer->findChild<QRadioButton *>(mapName);
+       if(button)
+       {
+           button->setChecked(true);
+       }
     });
     connect(ui->ClearButton, &QPushButton::released, this, [this]()
     {
