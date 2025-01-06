@@ -41,16 +41,6 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="AutoChooseMap">
-         <property name="text">
-          <string>Choose Map Automatically</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QWidget" name="MapSelectionContainer" native="true">
          <property name="enabled">
@@ -90,6 +80,25 @@
          </layout>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="RocketGpsIndicator" name="RocketGps" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>10</width>
+           <height>10</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="3">
+        <widget class="MapWidget" name="TheMapWidget" native="true"/>
+       </item>
        <item row="0" column="2">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -103,15 +112,38 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <widget class="QPushButton" name="ClearButton">
          <property name="text">
           <string>Clear Map</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="3">
-        <widget class="MapWidget" name="TheMapWidget" native="true"/>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="AutoChooseMap">
+         <property name="text">
+          <string>Choose Map Automatically</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="PayloadGpsIndicator" name="PayloadGps" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>10</width>
+           <height>10</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -124,6 +156,18 @@
    <class>MapWidget</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/MapWidget/mapwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RocketGpsIndicator</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PayloadGpsIndicator</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -33,7 +33,11 @@ endforeach()
 set(PROTO_SRCS
         Frontend/Widgets/MapWidget/gpswidget.cpp
         Frontend/Widgets/MapWidget/gpswidget.h
-        Frontend/Widgets/MapWidget/gpswidget.ui)
+        Frontend/Widgets/MapWidget/gpswidget.ui
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
