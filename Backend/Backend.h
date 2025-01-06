@@ -71,6 +71,7 @@ public:
     struct MaxValues
     {
         float maxAltitude;
+        float minAltitude;
 
         float minPressure;
         float maxPressure;
@@ -79,10 +80,16 @@ public:
         float maxTemperature;
 
         float maxAcceleration;
+        float minAcceleration;
+
         float maxVelocity;
+        float minVelocity;
+
         float maxAngularVelocity;
+        float minAngularVelocity;
 
         uint32_t maxRocketServoPosition;
+        uint32_t minRocketServoPosition;
     };
 
     enum RadioModuleType
@@ -160,6 +167,25 @@ public:
 
     DataLogger *dummyLogger;
 
+    HPRC::RocketTelemetryPacket lastRocketPacket{};
+    HPRC::PayloadTelemetryPacket lastPayloadPacket{};
+
+    float groundLevelAltitude = 0;
+    MaxValues currentStateMaxValues;
+    QList<MaxValues> stateMaxValues;
+
+    const QList<QString> RocketStateNames = {
+            "Pre-Launch",
+            "Launch",
+            "Coast",
+            "Drogue Descent",
+            "Main Descent",
+            "Recovery",
+            "Abort"
+    };
+
+    uint32_t rocketFlightTime = 0;
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);
@@ -199,6 +225,8 @@ signals:
     void newMaxRocketValues(const MaxValues &);
     void newMaxPayloadValues(const MaxValues &);
 
+    void rocketStateChanged(const MaxValues &, int lastState, int newState);
+
 private:
     explicit Backend(QObject *parent = nullptr);
 
@@ -210,8 +238,8 @@ private:
     static QMap<std::string, ConversionFunction> geeConversions_Metric;
 
     RadioModule *getModuleWithName(const QString& name);
-    void updateMaxRocketValues(const HPRC::RocketTelemetryPacket& rocketData);
-    void updateMaxPayloadValues(HPRC::PayloadTelemetryPacket payloadData);
+    void updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket& rocketData);
+    void updateMaxPayloadValues(Backend::MaxValues &maxValues, HPRC::PayloadTelemetryPacket payloadData);
     void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};

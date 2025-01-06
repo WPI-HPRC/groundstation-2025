@@ -17,7 +17,7 @@
 #include <QLabel>
 
 #include "Backend/Backend.h"
-#include "Frontend/Widgets/SerialPortList.h"
+#include "Frontend/Widgets/SerialPortList/SerialPortList.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

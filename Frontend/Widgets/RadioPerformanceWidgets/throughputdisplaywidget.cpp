@@ -73,7 +73,7 @@ void ThroughputDisplayWidget::chooseType(RadioPerformanceStat::StatType stat, Ra
         }
         case RadioPerformanceStat::StatType::Count:
         {
-            ui->DataLabel->setText("Total Received Count:");
+            ui->DataLabel->setText("Received:");
             switch (currentDataType)
             {
                 case RadioPerformanceStat::DataType::Packets:

@@ -79,6 +79,7 @@ void Raw_Telemetry::processRocketTelemetryData(const HPRC::RocketTelemetryPacket
         updateTable2(3,1,"no");
     }
     updateTable2(4,1,QString::number(data.satellites()));
+    updateTable2(5,1,QString::number(data.servoposition()));
     //...
 
     //Rocket Column3 update
