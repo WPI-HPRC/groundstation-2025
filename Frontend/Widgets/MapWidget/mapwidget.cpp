@@ -34,7 +34,7 @@ MapWidget::MapWidget(QWidget *parent) :
     // Connect each instance of the widget to the payload update signal
     auto *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
-    timer->start(500);
+    timer->start(2000);
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &MapWidget::telemetryAvailable);
 }

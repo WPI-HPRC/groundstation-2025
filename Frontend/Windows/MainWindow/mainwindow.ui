@@ -320,6 +320,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_8">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+   </property>
    <property name="windowTitle">
     <string>Map</string>
    </property>
