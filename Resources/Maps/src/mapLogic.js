@@ -25,25 +25,46 @@ for (const [mapName, mapInfo] of Object.entries(maps)) {
 
 let currentMap;
 let map = L.map("map").setView([0,0], 1)
-
-// Create a line tracking the path of the payload
-const pathConfig = {
-    color: "#2222ff",
-    // dashArray: [11,11],
-    opacity: 0.6,
-    smoothFactor: 1.0,
-}
 let path;
 
-// Create the payload marker
-const payloadConfig = {
-    color: "#2222ff",
-    radius: 10,
-    fillOpacity: 0.3
+let markers = {
+    rocket: {
+        position: [0, 0],
+        pathConfig: {
+            color: "#AF283A",
+            smoothFactor: 1.0,
+            opacity: 0.6,
+        },
+        markerConfig: {
+            color: "#AF283A",
+            radius: 10,
+            fillOpacity: 0.3
+        },
+        marker: null,
+        path: null
+    },
+    payload: {
+        position: [0, 0],
+        pathConfig: {
+            color: "#3A28AF",
+            smoothFactor: 1.0,
+            opacity: 0.6,
+        },
+        markerConfig: {
+            color: "#3A28AF",
+            radius: 10,
+            fillOpacity: 0.3
+        },
+        marker: null,
+        path: null
+    }
 }
-const payloadPosition = [0, 0]
-const payload = L.circleMarker(payloadPosition, payloadConfig)
-payload.addTo(map)
+
+markers.rocket.marker = L.circleMarker(markers.rocket.position, markers.rocket.markerConfig)
+markers.payload.marker = L.circleMarker(markers.payload.position, markers.payload.markerConfig)
+
+markers.rocket.marker.addTo(map)
+markers.payload.marker.addTo(map)
 
 reset()
 
@@ -66,29 +87,36 @@ function setMap(name) {
     map.setView(currentMap.center, currentMap.maxZoom)
 }
 
-function addPayloadPoint(lat, lng) {
-    // So we don't draw a point at (0, 0)
-    if(payload.getLatLng().lat === 0) {
-        payload.setLatLng(L.latLng(lat, lng))
+function addPoint(name, lat, lng) {
+    let marker = markers[name]
+    if(!marker) {
         return
     }
 
-    const currentPoint = payload.getLatLng()
+    // So we don't draw a point at (0, 0)
+    if(marker.marker.getLatLng().lat === 0) {
+        marker.marker.setLatLng(L.latLng(lat, lng))
+        return
+    }
+
+    const currentPoint = marker.marker.getLatLng()
 
     // Add the last payload point to the path, and update it
-    path.addLatLng(currentPoint)
+    marker.path.addLatLng(currentPoint)
 
     const latLng = L.latLng(lat, lng)
-    payload.setLatLng(latLng)
+    marker.marker.setLatLng(latLng)
 }
 
 function reset() {
-    payload.setLatLng([0, 0])
-    if(path) {
-        path.remove()
+    for (const [markerName, marker] of Object.entries(markers)) {
+        marker.marker.setLatLng([0, 0])
+        if(marker.path) {
+            marker.path.remove()
+        }
+        marker.path = L.polyline([], marker.pathConfig)
+        marker.path.addTo(map)
     }
-    path = L.polyline([], pathConfig)
-    path.addTo(map)
 }
 
 function centerMap(lat, lng) {
@@ -102,8 +130,8 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     window.qtLeaflet = channel.objects.qtLeaflet
 
     // Connect to the payload point signal
-    qtLeaflet.updatePayloadPoint.connect(function (latitude, longitude) {
-        addPayloadPoint(latitude, longitude)
+    qtLeaflet.updatePayloadPoint.connect((name, latitude, longitude) => {
+        addPoint(name, latitude, longitude)
     })
     qtLeaflet.setMap.connect((name) => {
         setMap(name)

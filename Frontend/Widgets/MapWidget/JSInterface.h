@@ -19,7 +19,7 @@ public slots:
     void newPayloadPosition(double lat, double lng);
 
 signals:
-    void updatePayloadPoint(double, double);
+    void updatePayloadPoint(const QString &, double, double);
     void setMap(const QString &);
     void reset();
 };

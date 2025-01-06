@@ -6,7 +6,7 @@
 #include <QDebug>
 
 void JsInterface::newPayloadPosition(double lat, double lng) {
-    emit updatePayloadPoint(lat, lng);
+    emit updatePayloadPoint("payload", lat, lng);
 }
 
 void JsInterface::log(const QString& str) {
