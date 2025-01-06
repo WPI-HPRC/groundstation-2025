@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
-#include "Frontend/Widgets/MapWidget/mapwidget.h"
+#include "Frontend/Widgets/MapWidget/gpswidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
 
-    MapWidget mapWidget;
-    mapWidget.show();
+    GpsWidget gpsWidget;
+    gpsWidget.show();
 
     Backend &backend = Backend::getInstance();
     backend.start();

@@ -8,13 +8,17 @@
 
 class JsInterface: public QObject
 {
+
+public:
+    void setMapName(const QString &name);
     Q_OBJECT
 public slots:
     void log(const QString& str);
     void newPayloadPosition(double lat, double lng);
 
 signals:
-    void updatePayloadPoint(double lat, double lng);
+    void updatePayloadPoint(double, double);
+    void setMap(const QString &);
 };
 
 

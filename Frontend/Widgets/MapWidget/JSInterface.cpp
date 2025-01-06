@@ -12,3 +12,9 @@ void JsInterface::newPayloadPosition(double lat, double lng) {
 void JsInterface::log(const QString& str) {
     qDebug() << "Log from JS: " << str;
 }
+
+void JsInterface::setMapName(const QString &name)
+{
+    emit setMap(name);
+    qDebug("Trying to set map");
+}

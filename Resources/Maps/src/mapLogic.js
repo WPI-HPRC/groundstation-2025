@@ -19,11 +19,12 @@ const maps = {
     },
 }
 
-let currentMap = maps["spaceport"]
+for (const [mapName, mapInfo] of Object.entries(maps)) {
+    mapInfo["mapTiles"] = L.tileLayer(`qrc:/Maps/Maps/${mapInfo.name}/{z}/{x}/{y}.jpg`, { maxZoom: mapInfo.maxZoom, minZoom: mapInfo.minZoom })
+}
 
-const map = L.map("map").setView(currentMap.center, currentMap.maxZoom)
-
-L.tileLayer(`qrc:/Maps/Maps/${currentMap.name}/{z}/{x}/{y}.jpg`, { maxZoom: currentMap.maxZoom, minZoom: currentMap.minZoom }).addTo(map)
+let currentMap;
+let map = L.map("map").setView([0,0], 1)
 
 // Create a line tracking the path of the payload
 const pathConfig = {
@@ -55,7 +56,19 @@ function runPathTest() {
     }, 200)
 }
 
+function setMap(name) {
+    if(currentMap) {
+        currentMap.mapTiles.remove()
+    }
+    currentMap = maps[name]
+    currentMap.mapTiles.addTo(map)
+    map.setView(currentMap.center, currentMap.maxZoom)
+
+    window.qtLeaflet.log(`Centering ${currentMap.name} on ${currentMap.center} with zoom ${currentMap.maxZoom}`)
+}
+
 function addPayloadPoint(lat, lng) {
+    // So we don't draw a point at (0, 0)
     if(payload.getLatLng().lat === 0) {
         payload.setLatLng(L.latLng(lat, lng))
         return
@@ -87,5 +100,8 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     // Connect to the payload point signal
     qtLeaflet.updatePayloadPoint.connect(function (latitude, longitude) {
         addPayloadPoint(latitude, longitude)
+    })
+    qtLeaflet.setMap.connect((name) => {
+        setMap(name)
     })
 })

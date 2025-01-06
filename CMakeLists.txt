@@ -30,7 +30,10 @@ foreach(PROTO_FILE ${PROTO_FILES})
 endforeach()
 
 # Create lists for the generated sources and headers
-set(PROTO_SRCS)
+set(PROTO_SRCS
+        Frontend/Widgets/MapWidget/gpswidget.cpp
+        Frontend/Widgets/MapWidget/gpswidget.h
+        Frontend/Widgets/MapWidget/gpswidget.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

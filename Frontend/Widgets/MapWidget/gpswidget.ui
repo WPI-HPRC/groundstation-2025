@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GpsWidget</class>
+ <widget class="QWidget" name="GpsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>619</width>
+    <height>328</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GpsWidget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="checkBox">
+     <property name="text">
+      <string>Choose Map Automatically</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QRadioButton" name="SpaceportMap">
+     <property name="text">
+      <string>Spaceport America</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">MapSelectionGroup</string>
+     </attribute>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QRadioButton" name="AlbansMap">
+     <property name="text">
+      <string>St Albans</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">MapSelectionGroup</string>
+     </attribute>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="5">
+    <widget class="MapWidget" name="TheMapWidget" native="true"/>
+   </item>
+   <item row="0" column="3">
+    <widget class="QRadioButton" name="WpiMap">
+     <property name="text">
+      <string>WPI</string>
+     </property>
+     <attribute name="buttonGroup">
+      <string notr="true">MapSelectionGroup</string>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MapWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/MapWidget/mapwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="MapSelectionGroup"/>
+ </buttongroups>
+</ui>
