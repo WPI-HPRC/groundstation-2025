@@ -11,6 +11,8 @@ class JsInterface: public QObject
 
 public:
     void setMapName(const QString &name);
+    void doReset();
+
     Q_OBJECT
 public slots:
     void log(const QString& str);
@@ -19,6 +21,7 @@ public slots:
 signals:
     void updatePayloadPoint(double, double);
     void setMap(const QString &);
+    void reset();
 };
 
 

@@ -67,6 +67,13 @@
      </attribute>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="ClearButton">
+     <property name="text">
+      <string>Clear Map</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

@@ -24,6 +24,11 @@ GpsWidget::GpsWidget(QWidget *parent) :
     {
         this->ui->TheMapWidget->jsInterface->setMapName("wpi");
     });
+    connect(ui->ClearButton, &QPushButton::released, this, [this]()
+    {
+        this->ui->TheMapWidget->jsInterface->reset();
+    });
+
 }
 
 GpsWidget::~GpsWidget()

@@ -16,5 +16,9 @@ void JsInterface::log(const QString& str) {
 void JsInterface::setMapName(const QString &name)
 {
     emit setMap(name);
-    qDebug("Trying to set map");
+}
+
+void JsInterface::doReset()
+{
+    emit reset();
 }

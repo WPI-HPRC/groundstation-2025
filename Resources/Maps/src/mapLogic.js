@@ -33,8 +33,7 @@ const pathConfig = {
     opacity: 0.6,
     smoothFactor: 1.0,
 }
-const path = L.polyline([], pathConfig)
-path.addTo(map)
+let path;
 
 // Create the payload marker
 const payloadConfig = {
@@ -45,6 +44,8 @@ const payloadConfig = {
 const payloadPosition = [0, 0]
 const payload = L.circleMarker(payloadPosition, payloadConfig)
 payload.addTo(map)
+
+reset()
 
 function runPathTest() {
     setInterval(() => {
@@ -63,8 +64,6 @@ function setMap(name) {
     currentMap = maps[name]
     currentMap.mapTiles.addTo(map)
     map.setView(currentMap.center, currentMap.maxZoom)
-
-    window.qtLeaflet.log(`Centering ${currentMap.name} on ${currentMap.center} with zoom ${currentMap.maxZoom}`)
 }
 
 function addPayloadPoint(lat, lng) {
@@ -84,7 +83,12 @@ function addPayloadPoint(lat, lng) {
 }
 
 function reset() {
-    // TODO
+    payload.setLatLng([0, 0])
+    if(path) {
+        path.remove()
+    }
+    path = L.polyline([], pathConfig)
+    path.addTo(map)
 }
 
 function centerMap(lat, lng) {
@@ -104,4 +108,7 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     qtLeaflet.setMap.connect((name) => {
         setMap(name)
     })
+    qtLeaflet.reset.connect(() => {
+        reset()
+    });
 })
