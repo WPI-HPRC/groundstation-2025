@@ -1930,7 +1930,7 @@
   <customwidget>
    <class>SerialPortList</class>
    <extends>QTableWidget</extends>
-   <header>Frontend/Widgets/SerialPortList.h</header>
+   <header>Frontend/Widgets/SerialPortList/SerialPortList.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
