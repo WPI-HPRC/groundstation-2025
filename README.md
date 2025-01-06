@@ -1,1 +1,1 @@
-Repository for WPI HPRC's Ground Station for 2024-2025.
+Repository for WPI HPRC's Ground Station 2024-2025.
