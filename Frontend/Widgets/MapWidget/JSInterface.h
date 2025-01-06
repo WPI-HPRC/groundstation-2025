@@ -12,15 +12,20 @@ class JsInterface: public QObject
 public:
     void setMapName(const QString &name);
     void doReset();
+    void chooseMap();
+
+    bool mapHasBeenChosen = false;
 
     Q_OBJECT
 public slots:
     void log(const QString& str);
     void newPayloadPosition(double lat, double lng);
+    void newRocketPosition(double lat, double lng);
 
 signals:
-    void updatePayloadPoint(const QString &, double, double);
+    void addPoint(const QString &, double, double);
     void setMap(const QString &);
+    void autoChooseMap();
     void reset();
 };
 

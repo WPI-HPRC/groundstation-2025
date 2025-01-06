@@ -29,7 +29,6 @@ let path;
 
 let markers = {
     rocket: {
-        position: [0, 0],
         pathConfig: {
             color: "#AF283A",
             smoothFactor: 1.0,
@@ -44,7 +43,6 @@ let markers = {
         path: null
     },
     payload: {
-        position: [0, 0],
         pathConfig: {
             color: "#3A28AF",
             smoothFactor: 1.0,
@@ -60,8 +58,8 @@ let markers = {
     }
 }
 
-markers.rocket.marker = L.circleMarker(markers.rocket.position, markers.rocket.markerConfig)
-markers.payload.marker = L.circleMarker(markers.payload.position, markers.payload.markerConfig)
+markers.rocket.marker = L.circleMarker([0, 0], markers.rocket.markerConfig)
+markers.payload.marker = L.circleMarker([0, 0], markers.payload.markerConfig)
 
 markers.rocket.marker.addTo(map)
 markers.payload.marker.addTo(map)
@@ -119,6 +117,31 @@ function reset() {
     }
 }
 
+function autoChooseMap()
+{
+    let chosenMapName = null
+    for (const [markerName, marker] of Object.entries(markers)) {
+        // Find the first marker with a GPS coordinate
+        if(marker.marker.getLatLng().lat === 0) {
+            continue
+        }
+
+        let minDistSquared = 10000000
+        chosenMapName = Object.entries(maps)[0][0]
+        for (const [mapName, mapInfo] of Object.entries(maps)) {
+            let distSquared = (mapInfo.center[0] - marker.marker.getLatLng().lat) * (mapInfo.center[0] - marker.marker.getLatLng().lat) + (mapInfo.center[1] - marker.marker.getLatLng().long) * (mapInfo.center[1] - marker.marker.getLatLng().long)
+            if(distSquared < minDistSquared) {
+                minDistSquared = distSquared
+                chosenMapName = mapInfo.name
+            }
+        }
+    }
+    if(chosenMapName) {
+        setMap(chosenMapName)
+        qtLeaflet.log(`Chose map ${chosenMapName}`)
+    }
+}
+
 function centerMap(lat, lng) {
     if (map.getCenter().lat != lat && map.getCenter().lng != lng) {
         map.setView([lat, lng], map.zoom)
@@ -130,7 +153,7 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     window.qtLeaflet = channel.objects.qtLeaflet
 
     // Connect to the payload point signal
-    qtLeaflet.updatePayloadPoint.connect((name, latitude, longitude) => {
+    qtLeaflet.addPoint.connect((name, latitude, longitude) => {
         addPoint(name, latitude, longitude)
     })
     qtLeaflet.setMap.connect((name) => {
@@ -139,4 +162,7 @@ if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, (channel) 
     qtLeaflet.reset.connect(() => {
         reset()
     });
+    qtLeaflet.autoChooseMap.connect(() => {
+        autoChooseMap()
+    })
 })

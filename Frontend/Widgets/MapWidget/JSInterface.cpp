@@ -5,8 +5,24 @@
 #include "JSInterface.h"
 #include <QDebug>
 
+void JsInterface::chooseMap()
+{
+    if(mapHasBeenChosen)
+    {
+        return;
+    }
+    emit autoChooseMap();
+    mapHasBeenChosen = true;
+}
+
 void JsInterface::newPayloadPosition(double lat, double lng) {
-    emit updatePayloadPoint("payload", lat, lng);
+    emit addPoint("payload", lat, lng);
+    chooseMap();
+}
+
+void JsInterface::newRocketPosition(double lat, double lng) {
+    emit addPoint("rocket", lat, lng);
+    chooseMap();
 }
 
 void JsInterface::log(const QString& str) {
@@ -15,6 +31,7 @@ void JsInterface::log(const QString& str) {
 
 void JsInterface::setMapName(const QString &name)
 {
+    mapHasBeenChosen = true;
     emit setMap(name);
 }
 
