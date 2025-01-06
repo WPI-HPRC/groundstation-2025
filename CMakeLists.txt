@@ -30,7 +30,10 @@ foreach(PROTO_FILE ${PROTO_FILES})
 endforeach()
 
 # Create lists for the generated sources and headers
-set(PROTO_SRCS)
+set(PROTO_SRCS
+        Frontend/Widgets/MapWidget/gpswidget.cpp
+        Frontend/Widgets/MapWidget/gpswidget.h
+        Frontend/Widgets/MapWidget/gpswidget.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -87,6 +90,8 @@ find_package(Qt6 COMPONENTS
         3DExtras
         3DInput
         3DRender
+        WebEngineWidgets
+        WebChannel
         REQUIRED)
 
 # Add the executable
@@ -203,6 +208,11 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/TimelineWidget/statesummarywidget.cpp
         Frontend/Widgets/TimelineWidget/statesummarywidget.h
         Frontend/Widgets/TimelineWidget/statesummarywidget.ui
+        Frontend/Widgets/MapWidget/mapwidget.cpp
+        Frontend/Widgets/MapWidget/mapwidget.h
+        Frontend/Widgets/MapWidget/mapwidget.ui
+        Frontend/Widgets/MapWidget/JSInterface.cpp
+        Frontend/Widgets/MapWidget/JSInterface.h
 )
 
 # Link Protobuf and Qt6 libraries
@@ -216,6 +226,8 @@ target_link_libraries(gs_backend_2024_2025
         Qt6::3DExtras
         Qt6::3DInput
         Qt6::3DRender
+        Qt6::WebEngineWidgets
+        Qt6::WebChannel
         ${Protobuf_LIBRARIES}
 )
 
