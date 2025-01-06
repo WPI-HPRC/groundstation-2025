@@ -20,7 +20,7 @@ TimelineWidget::TimelineWidget(QWidget *parent) :
         stateWidget->setEnabled(i == NUM_STATES-1);
         stateWidget->setTitle(Backend::getInstance().RocketStateNames.at(NUM_STATES - i - 1));
         stateWidget->hideValues();
-        ui->gridLayout->addWidget(stateWidget, i+1, 0);
+        ui->gridLayout_2->addWidget(stateWidget, i+1, 0);
         stateWidgets.append(stateWidget);
 
         if(i == NUM_STATES - 1)
