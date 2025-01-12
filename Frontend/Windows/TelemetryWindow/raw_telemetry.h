@@ -11,7 +11,7 @@
 #include <QSerialPort>
 
 #include "Backend/Backend.h"
-#include <QWidget.h>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Raw_Telemetry; }

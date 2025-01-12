@@ -4,7 +4,7 @@
 
 // You may need to build the project (run Qt uic code generator) to get "ui_ThroughputDisplayWidget.h" resolved
 
-#include "throughputdisplaywidget.h"
+#include "ThroughputDisplayWidget.h"
 #include "ui_ThroughputDisplayWidget.h"
 
 

@@ -11,7 +11,7 @@ GpsWidget::GpsWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::GpsWidget)
 {
     ui->setupUi(this);
-
+/*
     connect(ui->albans, &QRadioButton::released, this, [this]()
     {
         this->ui->TheMapWidget->jsInterface->setMapName("albans");
@@ -58,7 +58,7 @@ GpsWidget::GpsWidget(QWidget *parent) :
     {
         this->ui->TheMapWidget->jsInterface->reset();
     });
-
+*/
 }
 
 GpsWidget::~GpsWidget()

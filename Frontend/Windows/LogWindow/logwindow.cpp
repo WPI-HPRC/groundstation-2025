@@ -38,7 +38,7 @@ LogWindow::LogWindow(QWidget *parent) :
         {
             dir = Backend::getInstance().groundStationModem->dataLogger->logDir.path();
         }
-        QString filepath = QFileDialog::getOpenFileName(this, "Open CSV", dir, "CSV files (*.CSV)");
+        QString filepath = QFileDialog::getOpenFileName(this, "Open CSV", dir, "CSV files (*.CSV *.csv)");
         if(!filepath.isEmpty())
         {
             this->currentCSV = filepath;

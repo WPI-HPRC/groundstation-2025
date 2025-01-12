@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(gs_backend_2024_2025)
+project(groundstation-2025)
 
 set(CMAKE_CXX_STANDARD 17)
 set(ABSL_PROPAGATE_CXX_STD, ON)
@@ -33,7 +33,7 @@ endforeach()
 set(PROTO_SRCS
         Frontend/Widgets/MapWidget/gpswidget.cpp
         Frontend/Widgets/MapWidget/gpswidget.h
-        Frontend/Widgets/MapWidget/gpswidget.ui
+        Frontend/Widgets/MapWidget/GpsWidget.ui
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
@@ -94,8 +94,9 @@ find_package(Qt6 COMPONENTS
         3DExtras
         3DInput
         3DRender
-        WebEngineWidgets
+        WebView
         WebChannel
+
         REQUIRED)
 
 # Add the executable
@@ -127,10 +128,10 @@ add_executable(gs_backend_2024_2025
         Utility/SerialPortManager.h
         Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
         Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/raw_telemetry.ui
+        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
@@ -146,11 +147,11 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Utility/DataSimulator/DataSimulator.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
@@ -175,7 +176,7 @@ add_executable(gs_backend_2024_2025
         Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.ui
         Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
         Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/raw_telemetry.ui
+        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/Viewer3D/Viewer3D.cpp
         Frontend/Widgets/Viewer3D/Viewer3D.h
         Frontend/Windows/MainWindow/mainwindow.cpp
@@ -185,7 +186,7 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/IndicatorWidget/IndicatorWidget/QLedLabel.h
         Frontend/Widgets/IndicatorWidget/IndicatorWidget/ledwidget.cpp
         Frontend/Widgets/IndicatorWidget/IndicatorWidget/ledwidget.h
-        Frontend/Widgets/IndicatorWidget/IndicatorWidget/ledwidget.ui
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/LedWidget.ui
         Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.cpp
         Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.h
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.cpp
@@ -198,23 +199,23 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/DataSimulationButton/DataSimulationButton.cpp
         Frontend/Widgets/DataSimulationButton/DataSimulationButton.h
         Utility/UnitConversions.h
-        Frontend/Widgets/RadioPerformanceWidgets/throughputdisplaywidget.cpp
-        Frontend/Widgets/RadioPerformanceWidgets/throughputdisplaywidget.h
+        Frontend/Widgets/RadioPerformanceWidgets/ThroughputDisplayWidget.cpp
+        Frontend/Widgets/RadioPerformanceWidgets/ThroughputDisplayWidget.h
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
-        Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
+        Frontend/Widgets/MaxValueWidget/MaxValueWidget.ui
         Frontend/Widgets/StateDisplayWidget/statedisplaywidget.cpp
         Frontend/Widgets/StateDisplayWidget/statedisplaywidget.h
-        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.ui
+        Frontend/Widgets/StateDisplayWidget/StateDisplayWidget.ui
         Frontend/Widgets/TimelineWidget/timelinewidget.cpp
         Frontend/Widgets/TimelineWidget/timelinewidget.h
-        Frontend/Widgets/TimelineWidget/timelinewidget.ui
+        Frontend/Widgets/TimelineWidget/TimelineWidget.ui
         Frontend/Widgets/TimelineWidget/statesummarywidget.cpp
         Frontend/Widgets/TimelineWidget/statesummarywidget.h
-        Frontend/Widgets/TimelineWidget/statesummarywidget.ui
+        Frontend/Widgets/TimelineWidget/StateSummaryWidget.ui
         Frontend/Widgets/MapWidget/mapwidget.cpp
         Frontend/Widgets/MapWidget/mapwidget.h
-        Frontend/Widgets/MapWidget/mapwidget.ui
+        Frontend/Widgets/MapWidget/MapWidget.ui
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
 )
@@ -230,7 +231,8 @@ target_link_libraries(gs_backend_2024_2025
         Qt6::3DExtras
         Qt6::3DInput
         Qt6::3DRender
-        Qt6::WebEngineWidgets
+
+        Qt6::WebView
         Qt6::WebChannel
         ${Protobuf_LIBRARIES}
 )
