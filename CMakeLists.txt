@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 project(groundstation-2025)
 
 set(CMAKE_CXX_STANDARD 17)
-set(ABSL_PROPAGATE_CXX_STD, ON)
+set(ABSL_PROPAGATE_CXX_STD ON)
 
 # Add Protobuf as a subdirectory
 set(BUILD_SHARED_LIBS OFF)  # Use static libraries for Protobuf
@@ -96,11 +96,11 @@ find_package(Qt6 COMPONENTS
         3DRender
         WebView
         WebChannel
-
+        WebEngineWidgets
         REQUIRED)
 
 # Add the executable
-add_executable(gs_backend_2024_2025
+add_executable(groundstation-2025
         ${PROTO_SRCS}
         main.cpp
         Resources/Resources.qrc
@@ -221,7 +221,7 @@ add_executable(gs_backend_2024_2025
 )
 
 # Link Protobuf and Qt6 libraries
-target_link_libraries(gs_backend_2024_2025
+target_link_libraries(groundstation-2025
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
@@ -231,11 +231,11 @@ target_link_libraries(gs_backend_2024_2025
         Qt6::3DExtras
         Qt6::3DInput
         Qt6::3DRender
-
+        Qt6::WebEngineWidgets
         Qt6::WebView
         Qt6::WebChannel
         ${Protobuf_LIBRARIES}
 )
 
 # Include all generated files in the target
-target_sources(gs_backend_2024_2025 PRIVATE ${PROTO_SRCS})
+target_sources(groundstation-2025 PRIVATE ${PROTO_SRCS})

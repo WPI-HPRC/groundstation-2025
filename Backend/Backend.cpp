@@ -743,7 +743,7 @@ void Backend::start()
 
     webServer = new WebServer(8001);
   
-    QString simulationFile = "../Utility/DataSimulator/SimulationData/SamplePayloadData.csv";
+    QString simulationFile = ":/SimulationData/SamplePayloadData.csv";
 
     payloadDataSimulator = new DataSimulator(
             simulationFile,
@@ -752,7 +752,7 @@ void Backend::start()
             GroundStation::PacketType::Payload
             );
 
-    simulationFile = "../Utility/DataSimulator/SimulationData/SampleRocketData.csv";
+    simulationFile = ":/SimulationData/SampleRocketData.csv";
     rocketDataSimulator = new DataSimulator(
             simulationFile,
             webServer,
