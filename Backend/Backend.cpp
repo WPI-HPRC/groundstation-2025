@@ -92,7 +92,7 @@ void Backend::doConversions(google::protobuf::Message *message, const QMap<std::
         }
         else
         {
-            qDebug() << "Couldn't find field " << fieldName;
+            qDebug() << "Couldn't find field " << fieldName.c_str();
         }
     }
 }

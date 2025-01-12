@@ -7,7 +7,7 @@
 
 #include <QWidget>
 #include <QWebChannel>
-#include <QWebEngineView>
+#include <QtWebEngineWidgets/QWebEngineView>
 #include "Frontend/Widgets/MapWidget/JSInterface.h"
 #include "Backend/Backend.h"
 

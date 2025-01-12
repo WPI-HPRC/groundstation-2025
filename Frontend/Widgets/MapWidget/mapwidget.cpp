@@ -13,9 +13,11 @@
 MapWidget::MapWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::MapWidget)
 {
-    ui->setupUi(this);
 
+    ui->setupUi(this);
+/*
     // Create a web engine view, and display an offline leaflet map webpage inside it
+
     mapView = new QWebEngineView(this);
     mapView->load(QUrl("qrc:/Maps/src/index.html"));
     mapWebChannel = new QWebChannel(mapView->page());
@@ -37,6 +39,7 @@ MapWidget::MapWidget(QWidget *parent) :
     timer->start(2000);
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &MapWidget::telemetryAvailable);
+*/
 }
 
 void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
