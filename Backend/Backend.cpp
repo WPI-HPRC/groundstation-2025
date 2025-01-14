@@ -466,7 +466,7 @@ void Backend::forceMaxValuesUpdate()
 void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
 {
     if (!groundFlightTime.isValid() // if we haven't started the launch-elapsed timer
-        && (rocketData.state() > 0)) // and we're in a non-prelaunch state
+        && (rocketData.flightstate() > 0)) // and we're in a non-prelaunch state
     {
         std::cout << "Launched!" << std::endl;
         groundFlightTime.start(); // start a timer within the application
@@ -493,25 +493,25 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
         updateMaxRocketValues(maxRocketValues, *packet);
         updateTimes(*packet);
 
-        if(lastRocketPacket.state() == 0 && packet->state() == 1)
+        if(lastRocketPacket.flightstate() == 0 && packet->flightstate() == 1)
         {
             groundLevelAltitude = lastRocketPacket.altitude();
         }
-        if(lastRocketPacket.state() != packet->state())
+        if(lastRocketPacket.flightstate() != packet->flightstate())
         {
             // Reset things when we reach prelaunch state
 
-            if(packet->state() == 0)
+            if(packet->flightstate() == 0)
             {
                 stateMaxValues.clear();
             }
 
             currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-            emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
+            emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.flightstate(), packet->flightstate());
 
-            if(lastRocketPacket.state() != 6)
+            if(lastRocketPacket.flightstate() != 6)
             {
-                stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+                stateMaxValues.insert(lastRocketPacket.flightstate(), currentStateMaxValues);
                 currentStateMaxValues = {};
             }
         }

@@ -58,6 +58,17 @@ void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
             jsInterface->newPayloadPosition(latitude, longitude);
         }
     }
+    if(telemetry.packetType == GroundStation::Rocket)
+    {
+        HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
+        if(packet->gpslock())
+        {
+            double latitude = packet->gpslat()/10e6;
+            double longitude = packet->gpslong()/10e6;
+
+            jsInterface->newRocketPosition(latitude, longitude);
+        }
+    }
 }
 
 MapWidget::~MapWidget()

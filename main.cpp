@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+
     QFont font("Courier New");
     font.setStyleHint(QFont::Monospace);
     QApplication::setFont(font);
@@ -17,7 +18,7 @@ int main(int argc, char *argv[])
 
     Backend &backend = Backend::getInstance();
     backend.start();
-
+    
     int code = QApplication::exec();
 
     backend.flushFiles();

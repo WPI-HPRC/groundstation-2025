@@ -49,7 +49,7 @@ QSerialPortInfo getTargetPort()
 
 void populateRocketProtobuf(const GroundStation::RocketTelemPacket& myStruct, HPRC::RocketTelemetryPacket& protobufPacket) {
     // State
-    protobufPacket.set_state(myStruct.state);
+    protobufPacket.set_flightstate(myStruct.state);
 
     // Raw Sensor Readings
     protobufPacket.set_accelx(myStruct.accelX);
@@ -197,6 +197,9 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
 
     absl::Status status;
 
+    google::protobuf::util::JsonPrintOptions  options;
+    options.always_print_fields_with_no_presence = true;
+
     switch (frame[0])
     {
         case GroundStation::Rocket:
@@ -205,7 +208,7 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
             populateRocketProtobuf(*(GroundStation::RocketTelemPacket *)&frame[1], rocketPacket);
 
             // Convert current packet to JSON
-            status = google::protobuf::util::MessageToJsonString(rocketPacket, &str);
+            status = google::protobuf::util::MessageToJsonString(rocketPacket, &str, options);
             if (status != absl::OkStatus())
             {
                 std::cerr << "Error converting packet to JSON string: " << status << std::endl;
@@ -220,7 +223,7 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
             populatePayloadProtobuf(*(GroundStation::PayloadTelemPacket *) &frame[1], payloadPacket);
 
             // Convert current packet to JSON
-            status = google::protobuf::util::MessageToJsonString(payloadPacket, &str);
+            status = google::protobuf::util::MessageToJsonString(payloadPacket, &str), options;
             if (status != absl::OkStatus())
             {
                 std::cerr << "Error converting packet to JSON string: " << status << std::endl;

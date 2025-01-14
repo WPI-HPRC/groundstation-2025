@@ -126,14 +126,25 @@ function autoChooseMap()
             continue
         }
 
-        let minDistSquared = 10000000
+
+
+        let minDistSquared = Infinity
         chosenMapName = Object.entries(maps)[0][0]
         for (const [mapName, mapInfo] of Object.entries(maps)) {
-            let distSquared = (mapInfo.center[0] - marker.marker.getLatLng().lat) * (mapInfo.center[0] - marker.marker.getLatLng().lat) + (mapInfo.center[1] - marker.marker.getLatLng().long) * (mapInfo.center[1] - marker.marker.getLatLng().long)
+            /*
+            qtLeaflet.log(`"Map Center[0]: ${mapInfo.center[0]}`);
+            qtLeaflet.log(`"Map Center[1]: ${mapInfo.center[1]}`);
+            qtLeaflet.log(`Rocket lat: ${marker.marker.getLatLng().lat}`)
+            qtLeaflet.log(`Rocket long: ${marker.marker.getLatLng().lng}`)
+*/
+            const latDist = Math.pow(mapInfo.center[0] - marker.marker.getLatLng().lat, 2);
+            const longDist = Math.pow(mapInfo.center[1] - marker.marker.getLatLng().lng, 2);
+            let distSquared = latDist + longDist;
             if(distSquared < minDistSquared) {
                 minDistSquared = distSquared
                 chosenMapName = mapInfo.name
             }
+            qtLeaflet.log(distSquared)
         }
     }
     if(chosenMapName) {
