@@ -70,7 +70,7 @@ void Raw_Telemetry::processRocketTelemetryData(const HPRC::RocketTelemetryPacket
     //Rocket Column2 update
     updateTable2(0,1,QString::number(data.epochtime()));
     updateTable2(1,1,QString::number(data.timestamp()));
-    updateTable2(2,1,QString::number(data.flightstate()));
+    updateTable2(2,1,QString::number(data.state()));
     //Rocket GPS Lock update
     if (data.gpslock()){
         updateTable2(3,1,"yes");

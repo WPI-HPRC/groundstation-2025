@@ -49,7 +49,7 @@ QSerialPortInfo getTargetPort()
 
 void populateRocketProtobuf(const GroundStation::RocketTelemPacket& myStruct, HPRC::RocketTelemetryPacket& protobufPacket) {
     // State
-    protobufPacket.set_flightstate(myStruct.state);
+    protobufPacket.set_state(myStruct.state);
 
     // Raw Sensor Readings
     protobufPacket.set_accelx(myStruct.accelX);

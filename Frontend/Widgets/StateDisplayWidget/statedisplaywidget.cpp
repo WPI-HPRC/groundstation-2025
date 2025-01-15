@@ -37,7 +37,7 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
     const char *velocityLabel = Backend::getInstance().convertToEnglish ? "ft/s" : "m/s";
     const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
     HPRC::RocketTelemetryPacket data = *telemetry.data.rocketData;
-    if(data.flightstate() == 0)
+    if(data.state() == 0)
     {
         ui->TimeWidget->setVisible(false);
     }
@@ -45,7 +45,7 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
     {
         ui->TimeWidget->setVisible(true);
     }
-    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(data.flightstate()));
+    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(data.state()));
 
     ui->AccelerationLabel->setText(QString::asprintf("%0.2f %s",
                                                      sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz()),
@@ -57,7 +57,7 @@ void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
     ));
 
     ui->AglLabel->setText(QString::asprintf("%0.2f %s",
-                                                 data.flightstate() == 0 ? 0 : data.altitude() - Backend::getInstance().groundLevelAltitude,
+                                                 data.state() == 0 ? 0 : data.altitude() - Backend::getInstance().groundLevelAltitude,
                                                  altitudeLabel
     ));
 
