@@ -6,7 +6,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QSettings>
 #include "Backend/Backend.h"
 
 
@@ -40,6 +40,19 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         Backend::getInstance().forceMaxValuesUpdate();
     });
+
+    connect(ui->SaveLayoutButton, &QPushButton::released, this, [this]()
+    {
+        QSettings settings;
+        settings.setValue("DOCK_LOCATIONS",this->saveState(1));
+    });
+
+    QSettings settings;
+
+    if(!settings.value("DOCK_LOCATIONS").isNull())
+    {
+        this->restoreState(settings.value("DOCK_LOCATIONS").toByteArray(),1);
+    }
 }
 
 MainWindow::~MainWindow()
