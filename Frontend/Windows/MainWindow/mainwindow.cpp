@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
         Backend::getInstance().forceMaxValuesUpdate();
     });
 
+    // From https://stackoverflow.com/questions/14288635/any-easy-way-to-store-dock-windows-layout-and-sizes-in-settings-with-qt
     connect(ui->SaveLayoutButton, &QPushButton::released, this, [this]()
     {
         QSettings settings;
