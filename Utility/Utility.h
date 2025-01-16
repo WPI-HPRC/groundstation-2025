@@ -76,6 +76,8 @@ namespace GroundStation
         uint8_t satellites = 0;
         bool gpsLock = false;
 
+        int sdFileNo = -1;
+
         uint32_t loopCount = 0;
         uint32_t timestamp = 0;
 

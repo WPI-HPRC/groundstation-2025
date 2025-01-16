@@ -43,7 +43,7 @@ public:
 
         if (!hasWrittenHeaders)
         {
-            _write(headers.join(",").append("\n"));
+            _write(headers.join(",").append(",internalTimestamp").append("\n"));
             hasWrittenHeaders = true;
         }
 
@@ -53,6 +53,7 @@ public:
         {
             valueLine.append(toJsonString(jsonData.value(value)).append(","));
         }
+        valueLine.append(QString::asprintf("%lld", QDateTime::currentMSecsSinceEpoch()));
         valueLine.append("\n");
 
         _write(valueLine);

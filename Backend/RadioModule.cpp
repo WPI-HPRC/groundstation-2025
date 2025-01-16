@@ -98,6 +98,8 @@ void populateRocketProtobuf(const GroundStation::RocketTelemPacket& myStruct, HP
     protobufPacket.set_satellites(myStruct.satellites);
     protobufPacket.set_gpslock(myStruct.gpsLock);
 
+    protobufPacket.set_sdfileno(myStruct.sdFileNo);
+
     // Miscellaneous
     protobufPacket.set_loopcount(myStruct.loopCount);
     protobufPacket.set_timestamp(myStruct.timestamp);
@@ -124,9 +126,9 @@ void populatePayloadProtobuf(const GroundStation::PayloadTelemPacket& myStruct, 
     protobufPacket.set_gyrox(myStruct.gyroX);
     protobufPacket.set_gyroy(myStruct.gyroY);
     protobufPacket.set_gyroz(myStruct.gyroZ);
-    protobufPacket.set_rawmagx(myStruct.magX);
-    protobufPacket.set_rawmagy(myStruct.magY);
-    protobufPacket.set_rawmagz(myStruct.magZ);
+    protobufPacket.set_magx(myStruct.magX);
+    protobufPacket.set_magy(myStruct.magY);
+    protobufPacket.set_magz(myStruct.magZ);
     protobufPacket.set_pressure(myStruct.pressure);
     protobufPacket.set_temperature(myStruct.temperature);
 
@@ -223,7 +225,7 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
             populatePayloadProtobuf(*(GroundStation::PayloadTelemPacket *) &frame[1], payloadPacket);
 
             // Convert current packet to JSON
-            status = google::protobuf::util::MessageToJsonString(payloadPacket, &str), options;
+            status = google::protobuf::util::MessageToJsonString(payloadPacket, &str, options);
             if (status != absl::OkStatus())
             {
                 std::cerr << "Error converting packet to JSON string: " << status << std::endl;

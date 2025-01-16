@@ -125,9 +125,7 @@ function autoChooseMap()
         if(marker.marker.getLatLng().lat === 0) {
             continue
         }
-
-
-
+        
         let minDistSquared = Infinity
         chosenMapName = Object.entries(maps)[0][0]
         for (const [mapName, mapInfo] of Object.entries(maps)) {
@@ -144,7 +142,6 @@ function autoChooseMap()
                 minDistSquared = distSquared
                 chosenMapName = mapInfo.name
             }
-            qtLeaflet.log(distSquared)
         }
     }
     if(chosenMapName) {
