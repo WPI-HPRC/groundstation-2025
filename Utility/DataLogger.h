@@ -83,7 +83,7 @@ private:
 
     static QString toJsonString(const QJsonValue &value)
     {
-        if (value.isDouble() || value.isBool())
+        if (value.isDouble())
         {
             double number = value.toDouble();
             if (number == static_cast<int>(number))
@@ -102,6 +102,10 @@ private:
         else if (value.isNull() || value.isUndefined())
         {
             return {}; // Return empty string for null or undefined values
+        }
+        else if (value.isBool())
+        {
+            return QString::number(value.toBool() ? 1 : 0);
         }
         else
         {
