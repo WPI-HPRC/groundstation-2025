@@ -119,16 +119,16 @@ add_executable(groundstation-2025
         Utility/json_struct.h
         Utility/json_struct.h
         xbee/XBeeDevice.cpp
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.cpp
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.ui
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.cpp
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.h
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.ui
         Frontend/Widgets/SerialPortList/SerialPortList.cpp
         Frontend/Widgets/SerialPortList/SerialPortList.h
         Utility/SerialPortManager.cpp
         Utility/SerialPortManager.h
-        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
-        Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
         Frontend/Widgets/TimeDateWidgets/DateWidget.ui
@@ -171,12 +171,12 @@ add_executable(groundstation-2025
         Frontend/Widgets/RadioPerformanceWidgets/droppedpacketswidget.h
         Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.cpp
         Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.h
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.cpp
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.ui
-        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
-        Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.cpp
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.h
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.ui
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/Viewer3D/Viewer3D.cpp
         Frontend/Widgets/Viewer3D/Viewer3D.h
         Frontend/Windows/MainWindow/mainwindow.cpp
@@ -191,9 +191,9 @@ add_executable(groundstation-2025
         Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.h
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.cpp
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.h
-        Frontend/Windows/LogWindow/logwindow.cpp
-        Frontend/Windows/LogWindow/logwindow.h
-        Frontend/Windows/LogWindow/logwindow.ui
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.cpp
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.h
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.ui
         Utility/TelemetryHandler.cpp
         Utility/TelemetryHandler.h
         Frontend/Widgets/DataSimulationButton/DataSimulationButton.cpp
@@ -218,6 +218,9 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/MapWidget.ui
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
+        Frontend/Windows/LivestreamWindow/livestreamwindow.cpp
+        Frontend/Windows/LivestreamWindow/livestreamwindow.h
+        Frontend/Windows/LivestreamWindow/livestreamwindow.ui
 )
 
 # Link Protobuf and Qt6 libraries

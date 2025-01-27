@@ -373,19 +373,19 @@
   <customwidget>
    <class>Raw_Telemetry</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/TelemetryWindow/raw_telemetry.h</header>
+   <header>Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RadioControlsWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RadioPerformanceWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -414,7 +414,7 @@
   <customwidget>
    <class>LogWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/LogWindow/logwindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/LogWindow/logwindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
