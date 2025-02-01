@@ -37,7 +37,10 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
-        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h)
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
+        Frontend/Images/ImageWidget/ImageWidget.cpp
+        Frontend/Images/ImageWidget/ImageWidget.h
+        Frontend/Images/LogoImage.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -97,6 +100,9 @@ find_package(Qt6 COMPONENTS
         WebView
         WebChannel
         WebEngineWidgets
+        SvgWidgets
+        Multimedia
+        MultimediaWidgets
         REQUIRED)
 
 # Add the executable
@@ -221,6 +227,9 @@ add_executable(groundstation-2025
         Frontend/Windows/LivestreamWindow/livestreamwindow.cpp
         Frontend/Windows/LivestreamWindow/livestreamwindow.h
         Frontend/Windows/LivestreamWindow/livestreamwindow.ui
+        Frontend/Images/LogoSvg.h
+        Frontend/Images/Placeholder4x3Image.h
+
 )
 
 # Link Protobuf and Qt6 libraries
@@ -237,6 +246,9 @@ target_link_libraries(groundstation-2025
         Qt6::WebEngineWidgets
         Qt6::WebView
         Qt6::WebChannel
+        Qt6::SvgWidgets
+        Qt6::MultimediaWidgets
+        Qt6::Multimedia
         ${Protobuf_LIBRARIES}
 )
 
