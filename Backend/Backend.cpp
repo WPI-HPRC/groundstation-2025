@@ -741,7 +741,7 @@ void Backend::start()
 {
     getPorts();
 
-    webServer = new WebServer(8001);
+//    webServer = new WebServer(8001);
   
     QString simulationFile = ":/SimulationData/SamplePayloadData.csv";
 
