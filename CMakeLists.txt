@@ -39,7 +39,8 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
         Backend/HPRCWebSocket.cpp
-        Backend/HPRCWebSocket.h)
+        Backend/HPRCWebSocket.h
+        Backend/APRS/KissClient.cpp)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -220,7 +221,7 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/MapWidget.ui
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
-        Backend/KissClient.h
+        Backend/APRS/KissClient.h
 )
 
 # Link Protobuf and Qt6 libraries

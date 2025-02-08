@@ -3,7 +3,7 @@
 #include <QProcess>
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
-#include "Backend/KissClient.h"
+#include "Backend/APRS/KissClient.h"
 #include <QTimer>
 
 int main(int argc, char *argv[])

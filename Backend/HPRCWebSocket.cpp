@@ -12,7 +12,6 @@ HPRCWebSocket::HPRCWebSocket()
     m_socket = new QWebSocket();
     retryConnection = true;
 
-
     connect(m_socket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 
