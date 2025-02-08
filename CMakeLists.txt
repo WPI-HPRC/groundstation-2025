@@ -40,7 +40,11 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
         Backend/HPRCWebSocket.cpp
         Backend/HPRCWebSocket.h
-        Backend/APRS/KissClient.cpp)
+        Backend/APRS/KissClient.cpp
+        Backend/APRS/DirewolfProcess.cpp
+        Backend/APRS/DirewolfProcess.h
+        Backend/APRS/APRSHandler.cpp
+        Backend/APRS/APRSHandler.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

@@ -9,7 +9,10 @@ KissClient::KissClient(QObject *parent) : QObject(parent) {
     connect(socket, &QTcpSocket::connected, this, &KissClient::onConnected);
     connect(socket, &QTcpSocket::readyRead, this, &KissClient::onDataReceived);
     connect(socket, &QTcpSocket::errorOccurred, this, &KissClient::onError);
+}
 
+void KissClient::start()
+{
     qDebug() << "Connecting to Dire Wolf KISS TCP server...";
     socket->connectToHost("localhost", 8001);
 }

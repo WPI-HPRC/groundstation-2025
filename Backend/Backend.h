@@ -18,6 +18,7 @@
 #include "Utility/json_struct.h"
 #include "Utility/DataSimulator/DataSimulator.h"
 #include "Utility/UnitConversions.h"
+#include "Backend/APRS/APRSHandler.h"
 
 #include "generated/telemetry/RocketTelemetryPacket.pb.h"
 #include "generated/telemetry/PayloadTelemetryPacket.pb.h"
@@ -229,6 +230,8 @@ signals:
 
 private:
     explicit Backend(QObject *parent = nullptr);
+
+    APRSHandler aprsHandler;
 
     using ConversionFunction = float (*)(float);
     static void doConversions(google::protobuf::Message *message, const QMap<std::string, ConversionFunction> &conversionMap);
