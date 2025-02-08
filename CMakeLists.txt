@@ -44,7 +44,10 @@ set(PROTO_SRCS
         Backend/APRS/DirewolfProcess.cpp
         Backend/APRS/DirewolfProcess.h
         Backend/APRS/APRSHandler.cpp
-        Backend/APRS/APRSHandler.h)
+        Backend/APRS/APRSHandler.h
+        Frontend/Widgets/AprsWidget/aprswidget.cpp
+        Frontend/Widgets/AprsWidget/aprswidget.h
+        Frontend/Widgets/AprsWidget/aprswidget.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

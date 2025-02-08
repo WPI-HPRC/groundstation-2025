@@ -14,7 +14,11 @@ class DirewolfProcess: public QObject
 public:
     explicit DirewolfProcess(QObject *parent = nullptr);
     void start();
+    void stop();
     QString frequency = "434.55M";
+
+signals:
+    void direwolfOutput(QString);
 
 private:
     QProcess process;

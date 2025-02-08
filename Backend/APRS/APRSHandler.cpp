@@ -8,3 +8,8 @@ APRSHandler::APRSHandler(QObject *parent): QObject(parent)
 {
     direwolfProcess.start();
 }
+
+void APRSHandler::stop()
+{
+    direwolfProcess.stop();
+}

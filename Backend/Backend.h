@@ -164,6 +164,8 @@ public:
     int telemetryDecimalPlaces = 5;
     void forceMaxValuesUpdate();
 
+
+    APRSHandler aprsHandler;
     RadioModule *groundStationModem;
 
     DataLogger *dummyLogger;
@@ -230,8 +232,6 @@ signals:
 
 private:
     explicit Backend(QObject *parent = nullptr);
-
-    APRSHandler aprsHandler;
 
     using ConversionFunction = float (*)(float);
     static void doConversions(google::protobuf::Message *message, const QMap<std::string, ConversionFunction> &conversionMap);

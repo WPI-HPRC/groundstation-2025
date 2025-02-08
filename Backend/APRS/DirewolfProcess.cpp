@@ -19,11 +19,11 @@ DirewolfProcess::DirewolfProcess(QObject *parent): QObject(parent)
     direwolfConfig = direWolfFile.readAll();
 
     QObject::connect(&process, &QProcess::readyReadStandardOutput, [&]() {
-        qDebug() << process.readAllStandardOutput().toStdString();
+        emit direwolfOutput(process.readAllStandardOutput());
     });
 
     QObject::connect(&process, &QProcess::readyReadStandardError, [&]() {
-        qDebug() << "Error:" << process.readAllStandardError();
+        emit direwolfOutput(process.readAllStandardOutput());
     });
 }
 
@@ -37,4 +37,9 @@ void DirewolfProcess::start()
     process.start();
     process.write(direwolfConfig.toUtf8());
     process.closeWriteChannel();
+}
+
+void DirewolfProcess::stop()
+{
+    process.close();
 }

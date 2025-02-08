@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 
     int code = QApplication::exec();
 
+    backend.aprsHandler.stop();
     backend.flushFiles();
     return code;
 }

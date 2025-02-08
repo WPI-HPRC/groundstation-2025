@@ -15,7 +15,8 @@ class APRSHandler: public QObject
 public:
     explicit APRSHandler(QObject *parent = nullptr);
 
-private:
+    void stop();
+
     DirewolfProcess direwolfProcess;
     KissClient kissClient;
 };
