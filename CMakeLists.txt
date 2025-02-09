@@ -232,7 +232,6 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/JSInterface.h
         Backend/APRS/KissClient.h
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
-        Utility/DataSimulator.cpp
         Frontend/Windows/GraphWindow/GraphWindow.h
         Frontend/Windows/GraphWindow/GraphWindow.cpp
         Frontend/Windows/GraphWindow/GraphWindow.ui
