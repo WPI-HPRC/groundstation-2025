@@ -31,21 +31,21 @@ void GraphWindow::scroll()
 void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
 {
 
-    acceleration->addToSeries(0,seconds, telemetry.data.rocketData->accelX);
-    acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accelY);
-    acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelZ);
+    acceleration->addToSeries(0,seconds, telemetry.data.rocketData->accelx());
+    acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
+    acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelz());
 
-    position->addToSeries(0,seconds, telemetry.data.rocketData->posX);
-    position->addToSeries(1, seconds, telemetry.data.rocketData->posY);
-    position->addToSeries(2, seconds, telemetry.data.rocketData->posZ);
+    position->addToSeries(0,seconds, telemetry.data.rocketData->posx());
+    position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
+    position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
 
-    gyro->addToSeries(0,seconds, telemetry.data.rocketData->gyroX);
-    gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroY);
-    gyro->addToSeries(2, seconds, telemetry.data.rocketData->gyroZ);
+    gyro->addToSeries(0,seconds, telemetry.data.rocketData->gyrox());
+    gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroy());
+    gyro->addToSeries(2, seconds, telemetry.data.rocketData->gyroz());
 
-    velocity->addToSeries(0,seconds, telemetry.data.rocketData->velX);
-    velocity->addToSeries(1, seconds, telemetry.data.rocketData->velY);
-    velocity->addToSeries(2, seconds, telemetry.data.rocketData->velZ);
+    velocity->addToSeries(0,seconds, telemetry.data.rocketData->velx());
+    velocity->addToSeries(1, seconds, telemetry.data.rocketData->vely());
+    velocity->addToSeries(2, seconds, telemetry.data.rocketData->velz());
 
     telemflag = true;
 }

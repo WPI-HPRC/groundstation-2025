@@ -86,10 +86,11 @@ find_package(Qt6 COMPONENTS
         3DExtras
         3DInput
         3DRender
+        Charts
         REQUIRED)
 
 # Add the executable
-add_executable(gs_backend_2024_2025
+ add_executable(gs_backend_2024_2025
         ${PROTO_SRCS}
         main.cpp
         Resources/Resources.qrc
@@ -193,7 +194,6 @@ add_executable(gs_backend_2024_2025
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
         Frontend/Widgets/MaxValueWidget/maxvaluewidget.ui
-        Utility/DataSimulator.cpp
         Frontend/Windows/GraphWindow/GraphWindow.h
         Frontend/Windows/GraphWindow/GraphWindow.cpp
         Frontend/Windows/GraphWindow/GraphWindow.ui

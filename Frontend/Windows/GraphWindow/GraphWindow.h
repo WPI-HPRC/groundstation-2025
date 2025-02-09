@@ -35,7 +35,7 @@ public:
         for( auto elem : list) {
             graph->addSeriesCustom(elem);
         }
-        allGraphs.push_back();
+        //allGraphs.push_back();
         return graph;
     }
     ~GraphWindow();
