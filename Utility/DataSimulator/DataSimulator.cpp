@@ -140,7 +140,7 @@ void DataSimulator::sendNextLine()
     absl::Status status = google::protobuf::util::MessageToJsonString(*currentPacket, &jsonString);
     if (status == absl::OkStatus())
     {
-        _webServer->broadcast(QString::fromStdString(jsonString));
+//        _webServer->broadcast(QString::fromStdString(jsonString));
     }
     else
     {

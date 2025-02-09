@@ -7,12 +7,19 @@
 #include "aprswidget.h"
 #include "ui_AprsWidget.h"
 #include "Backend/Backend.h"
+#include <QTableWidget>
 #include <QCheckBox>
 
 AprsWidget::AprsWidget(QWidget *parent) :
         QWidget(parent), ui(new Ui::AprsWidget)
 {
     ui->setupUi(this);
+    ui->DataTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->DataTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->DataTable->setStyleSheet("QTableWidget {background-color: transparent;}"
+                                               "QHeaderView::section {background-color: transparent;}"
+                                               "QHeaderView {background-color: transparent;}"
+                                               "QTableCornerButton::section {background-color: transparent;}");
 
     connect(&Backend::getInstance().aprsHandler.direwolfProcess.process, &QProcess::started, this, [this]()
     {
@@ -68,8 +75,8 @@ void AprsWidget::kissOutput(const KissClient::AprsOutput& output)
                                              "\nGPS Lock: %s"
                                              "\nSatellites: %d"
                                              "\nAltitude: %d ft"
-                                             "\nLatitude: %0.4fºE"
-                                             "\nLongitude: %0.4fºN"
+                                             "\nLatitude: %0.5fºE"
+                                             "\nLongitude: %0.5fºN"
                                              "\n",
                                              output.callsign.toStdString().c_str(),
                                              output.ID,
@@ -79,9 +86,33 @@ void AprsWidget::kissOutput(const KissClient::AprsOutput& output)
                                              output.data.latitude,
                                              output.data.longitude
                                              ));
+    if(output.ID == 13)
+    {
+        updateTable(0, 1, output.data.gpsLock ? "YES" : "NO");
+        updateTable(1, 1, QString::number(output.data.satellites));
+        updateTable(2, 1, QString::number(output.data.altitude));
+        updateTable(3, 1, QString::number(output.data.latitude, 'f', 5));
+        updateTable(4, 1, QString::number(output.data.longitude, 'f', 5));
+
+    }
 }
 
 AprsWidget::~AprsWidget()
 {
     delete ui;
+}
+
+void AprsWidget::updateTable(int row, int column, const QString &value)
+{
+    QTableWidget *widget = ui->DataTable;
+    auto *cell = (QLabel *)widget->cellWidget(row, column);
+    if(!cell)
+    {
+        widget->setCellWidget(row, column, new QLabel(value));
+    }
+    else
+    {
+        cell->setContentsMargins(12, 0, 0, 0);
+        cell->setText(value);
+    }
 }

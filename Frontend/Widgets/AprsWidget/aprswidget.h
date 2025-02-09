@@ -25,6 +25,8 @@ public:
 
     ~AprsWidget() override;
 
+    void updateTable(int row, int column, const QString &value);
+
 public slots:
     void direwolfOutputAvailable(const QString& output);
     void kissOutput(const KissClient::AprsOutput& output);
