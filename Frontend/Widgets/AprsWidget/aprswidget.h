@@ -6,6 +6,7 @@
 #define GROUNDSTATION_2025_APRSWIDGET_H
 
 #include <QWidget>
+#include "Backend/APRS/KissClient.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -25,7 +26,8 @@ public:
     ~AprsWidget() override;
 
 public slots:
-    void direwolfOutputAvailable(QString output);
+    void direwolfOutputAvailable(const QString& output);
+    void kissOutput(const KissClient::AprsOutput& output);
 
 private:
     Ui::AprsWidget *ui;

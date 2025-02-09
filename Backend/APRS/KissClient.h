@@ -10,26 +10,52 @@
 class KissClient : public QObject {
 Q_OBJECT
 public:
+
+    struct AprsData
+    {
+        bool gpsLock;
+        int satellites;
+        int altitude;
+        float longitude;
+        float latitude;
+    };
+
+    struct AprsOutput
+    {
+        AprsData data;
+        QString callsign;
+        int ID;
+    };
+
     explicit KissClient(QObject *parent = nullptr);
     void start();
 
+    bool isConnected;
+    bool isConnecting;
+
 private slots:
     void onConnected();
+    void onDisconnected();
 
     void onDataReceived();
 
     void onError(QTcpSocket::SocketError error);
 
+signals:
+    void output(AprsOutput);
+
 private:
     QTcpSocket *socket;
 
+    AprsOutput currentOutput;
+
     void decodeAx25(const QByteArray &data);
 
-    static QString decodeCallsign(QByteArray callsignData);
+    QString decodeCallsign(QByteArray callsignData);
 
     void parseAprsPayload(const QByteArray &aprsData);
 
-    double convertDMS(int degrees, double minutes, bool isNegative);
+    float convertDMS(int degrees, double minutes, bool isNegative);
 };
 
 #endif //GROUNDSTATION_2025_KISSCLIENT_H

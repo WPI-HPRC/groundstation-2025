@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include <QSettings>
 #include "Backend/Backend.h"
+#include "Backend/APRS/KissClient.h"
 #include "Backend/APRS/DirewolfProcess.h"
 
 
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     connect(&Backend::getInstance().aprsHandler.direwolfProcess, &DirewolfProcess::direwolfOutput, ui->AprsDisplay, &AprsWidget::direwolfOutputAvailable);
+    connect(&Backend::getInstance().aprsHandler.kissClient, &KissClient::output, ui->AprsDisplay, &AprsWidget::kissOutput);
+
 
     // From https://stackoverflow.com/questions/14288635/any-easy-way-to-store-dock-windows-layout-and-sizes-in-settings-with-qt
     connect(ui->SaveLayoutButton, &QPushButton::released, this, [this]()

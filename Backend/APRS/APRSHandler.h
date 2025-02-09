@@ -16,9 +16,13 @@ public:
     explicit APRSHandler(QObject *parent = nullptr);
 
     void stop();
+    void start();
 
     DirewolfProcess direwolfProcess;
     KissClient kissClient;
+
+public slots:
+    void direwolfOutput(QString output);
 };
 
 

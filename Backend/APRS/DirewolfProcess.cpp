@@ -25,6 +25,11 @@ DirewolfProcess::DirewolfProcess(QObject *parent): QObject(parent)
     QObject::connect(&process, &QProcess::readyReadStandardError, [&]() {
         emit direwolfOutput(process.readAllStandardOutput());
     });
+
+    QObject::connect(&process, &QProcess::finished, this, [&](int exitCode, QProcess::ExitStatus exitStatus = QProcess::NormalExit)
+    {
+        qDebug() << "Direwolf process ended with code " << exitCode;
+    });
 }
 
 void DirewolfProcess::start()
