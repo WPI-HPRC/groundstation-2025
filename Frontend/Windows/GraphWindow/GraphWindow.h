@@ -36,11 +36,11 @@ public:
         //allGraphs.push_back();
         return graph;
     }
+    qreal seconds;
     ~GraphWindow();
 
 private:
     Ui::GraphWindow *ui;
-    qreal seconds;
     int resolution;
     bool telemflag;
     bool etmflag;
@@ -51,6 +51,8 @@ private:
     GraphWidget* position;
     GraphWidget* gyro;
     GraphWidget* velocity;
+    GraphWidget *mag;
+    GraphWidget *altitude;
     std::vector<GraphWidget*> allGraphs;
 
 public slots:

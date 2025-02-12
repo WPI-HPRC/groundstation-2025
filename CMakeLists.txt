@@ -47,7 +47,8 @@ set(PROTO_SRCS
         Backend/APRS/APRSHandler.h
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
-        Frontend/Widgets/AprsWidget/aprswidget.ui)
+        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/GraphWidget/OneAxisGraph.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -235,6 +236,7 @@ add_executable(groundstation-2025
         Frontend/Windows/GraphWindow/GraphWindow.ui
         Frontend/Widgets/GraphWidget/GraphWidget.cpp
         Frontend/Widgets/GraphWidget/GraphWidget.h
+        Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
 
 )
 

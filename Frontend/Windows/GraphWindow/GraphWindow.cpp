@@ -3,6 +3,8 @@
 #include "GraphWindow.h"
 #include "ui_GraphWindow.h"
 
+#include "Frontend/Widgets/GraphWidget/ThreeAxisGraph.h"
+#include "Frontend/Widgets/GraphWidget/OneAxisGraph.h"
 
 void GraphWindow::scroll()
 {
@@ -36,7 +38,7 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
     acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelz());
 
-    position->addToSeries(0,seconds, telemetry.data.rocketData->posx());
+    position->addToSeries(0, seconds, telemetry.data.rocketData->posx());
     position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
     position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
 
@@ -47,6 +49,12 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     velocity->addToSeries(0,seconds, telemetry.data.rocketData->velx());
     velocity->addToSeries(1, seconds, telemetry.data.rocketData->vely());
     velocity->addToSeries(2, seconds, telemetry.data.rocketData->velz());
+
+    mag->addToSeries(0,seconds, telemetry.data.rocketData->magx());
+    mag->addToSeries(1, seconds, telemetry.data.rocketData->magy());
+    mag->addToSeries(2, seconds, telemetry.data.rocketData->magz());
+
+    altitude->addToSeries(0, seconds, telemetry.data.rocketData->altitude());
 
     telemflag = true;
 }
@@ -62,34 +70,30 @@ GraphWindow::GraphWindow(QWidget *parent) :
     timer = new QTimer(this);
     timer->start(1000 / samplerate);
 
-    acceleration = new GraphWidget("Acceleration", resolution, nullptr);
-    acceleration->addSeriesCustom("x");
-    acceleration->addSeriesCustom("y");
-    acceleration->addSeriesCustom("z");
+    acceleration = new ThreeAxisGraph("Acceleration", resolution);
     ui->GraphA->setChart(acceleration);
     allGraphs.push_back(acceleration);
 
-    position = new GraphWidget("Position", resolution, nullptr);
-    position->addSeriesCustom("x");
-    position->addSeriesCustom("y");
-    position->addSeriesCustom("z");
+    position = new ThreeAxisGraph("Airbrakes", resolution);
     ui->GraphA_2->setChart(position);
     allGraphs.push_back(position);
 
     //TODO testing of auto "random" color, decide actual gyro colors later, so far looks good tho
-    gyro = new GraphWidget("Gyro", resolution, nullptr);
-    gyro->addSeriesCustom( "x");
-    gyro->addSeriesCustom( "y");
-    gyro->addSeriesCustom( "z");
+    gyro = new ThreeAxisGraph("Gyro", resolution);
     ui->GraphA_3->setChart(gyro);
     allGraphs.push_back(gyro);
 
-    velocity = new GraphWidget("Velocity", 8, nullptr);
-    velocity->addSeriesCustom("x");
-    velocity->addSeriesCustom("y");
-    velocity->addSeriesCustom("z");
+    velocity = new ThreeAxisGraph("Velocity", resolution);
     ui->GraphA_4->setChart(velocity);
     allGraphs.push_back(velocity);
+
+    mag = new ThreeAxisGraph("Mag", resolution);
+    ui->GraphA_5->setChart(mag);
+    allGraphs.push_back(mag);
+
+    altitude = new OneAxisGraph("Altitude", resolution);
+    ui->GraphA_6->setChart(altitude);
+    allGraphs.push_back(altitude);
 
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);

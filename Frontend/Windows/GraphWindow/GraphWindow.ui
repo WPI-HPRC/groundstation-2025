@@ -14,46 +14,26 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QChartView" name="GraphA" native="true">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>20</y>
-      <width>481</width>
-      <height>321</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QChartView" name="GraphA_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>20</y>
-      <width>481</width>
-      <height>321</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QChartView" name="GraphA_3" native="true">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>350</y>
-      <width>481</width>
-      <height>321</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QChartView" name="GraphA_4" native="true">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>350</y>
-      <width>481</width>
-      <height>321</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QChartView" name="GraphA_4" native="true"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QChartView" name="GraphA_3" native="true"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QChartView" name="GraphA" native="true"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QChartView" name="GraphA_2" native="true"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QChartView" name="GraphA_5" native="true"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QChartView" name="GraphA_6" native="true"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>
