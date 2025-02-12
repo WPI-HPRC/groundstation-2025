@@ -40,7 +40,7 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
     position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
 
-    gyro->addToSeries(0,seconds, telemetry.data.rocketData->gyrox());
+    gyro->addToSeries(0, seconds, telemetry.data.rocketData->gyrox());
     gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroy());
     gyro->addToSeries(2, seconds, telemetry.data.rocketData->gyroz());
 
@@ -57,7 +57,7 @@ GraphWindow::GraphWindow(QWidget *parent) :
     telemflag = true;
     seconds = 0;
     samplerate = 20;
-    resolution = 10;
+    resolution = 20;
     ui->setupUi(this);
     timer = new QTimer(this);
     timer->start(1000 / samplerate);
@@ -82,6 +82,7 @@ GraphWindow::GraphWindow(QWidget *parent) :
     gyro->addSeriesCustom( "y");
     gyro->addSeriesCustom( "z");
     ui->GraphA_3->setChart(gyro);
+    allGraphs.push_back(gyro);
 
     velocity = new GraphWidget("Velocity", 8, nullptr);
     velocity->addSeriesCustom("x");

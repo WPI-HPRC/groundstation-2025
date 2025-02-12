@@ -19,8 +19,11 @@ GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
 
     this->addAxis(axisX, Qt::AlignLeft);
     this->addAxis(axisY, Qt::AlignBottom);
-//    this->setAxisX(axisX);
-//    this->setAxisY(axisY);
+}
+
+void GraphWidget::hideLegend()
+{
+    this->legend()->hide();
 }
 
 void GraphWidget::addSeriesCustom(const QString &name)

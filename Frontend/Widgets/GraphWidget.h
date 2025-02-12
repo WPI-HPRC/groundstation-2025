@@ -28,6 +28,8 @@ public:
     //TODO DESTROY
     //~CustomChart();
 
+    void hideLegend();
+
 private:
     std::vector<QLineSeries*> dataSeries;
     int windowRange;
