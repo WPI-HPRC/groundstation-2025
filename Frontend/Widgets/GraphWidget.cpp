@@ -17,8 +17,10 @@ GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
     auto *axisY = new QValueAxis();
     axisY->setRange(0, 1);
 
-    this->setAxisX(axisX);
-    this->setAxisY(axisY);
+    this->addAxis(axisX, Qt::AlignLeft);
+    this->addAxis(axisY, Qt::AlignBottom);
+//    this->setAxisX(axisX);
+//    this->setAxisY(axisY);
 }
 
 void GraphWidget::addSeriesCustom(const QString &name)
@@ -71,6 +73,11 @@ void GraphWidget::removeTail(qreal now) {
 }
 //TODO do directly on addSeriesCustom or is every rescale okay
 void GraphWidget::rescale() {
+    if(dataSeries.empty())
+        return;
+    if(dataSeries.at(0)->count() == 0)
+        return;
+
     qreal minX = dataSeries.at(0)->at(0).x();
     qreal maxX = dataSeries.at(0)->points().last().x();
     qreal minY = dataSeries.at(0)->at(0).y();
@@ -83,9 +90,8 @@ void GraphWidget::rescale() {
         }
     }
 
-    this->axisX()->setRange(minX, maxX);
-    this->axisY()->setRange(minY, maxY);
-
+    this->axes().at(0)->setRange(minX, maxX);
+    this->axes().at(1)->setRange(minY*1.1, maxY*1.1);
 
     createDefaultAxes();
 }
