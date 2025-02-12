@@ -18,6 +18,7 @@
 #include "Utility/json_struct.h"
 #include "Utility/DataSimulator/DataSimulator.h"
 #include "Utility/UnitConversions.h"
+#include "Backend/APRS/APRSHandler.h"
 
 #include "generated/telemetry/RocketTelemetryPacket.pb.h"
 #include "generated/telemetry/PayloadTelemetryPacket.pb.h"
@@ -163,6 +164,8 @@ public:
     int telemetryDecimalPlaces = 5;
     void forceMaxValuesUpdate();
 
+
+    APRSHandler aprsHandler;
     RadioModule *groundStationModem;
 
     DataLogger *dummyLogger;

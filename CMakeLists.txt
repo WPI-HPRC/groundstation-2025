@@ -37,7 +37,17 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
-        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h)
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
+        Backend/HPRCWebSocket.cpp
+        Backend/HPRCWebSocket.h
+        Backend/APRS/KissClient.cpp
+        Backend/APRS/DirewolfProcess.cpp
+        Backend/APRS/DirewolfProcess.h
+        Backend/APRS/APRSHandler.cpp
+        Backend/APRS/APRSHandler.h
+        Frontend/Widgets/AprsWidget/aprswidget.cpp
+        Frontend/Widgets/AprsWidget/aprswidget.h
+        Frontend/Widgets/AprsWidget/aprswidget.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -218,6 +228,7 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/MapWidget.ui
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
+        Backend/APRS/KissClient.h
 )
 
 # Link Protobuf and Qt6 libraries
