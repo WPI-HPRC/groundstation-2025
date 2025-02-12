@@ -233,8 +233,8 @@ add_executable(groundstation-2025
         Frontend/Windows/GraphWindow/GraphWindow.h
         Frontend/Windows/GraphWindow/GraphWindow.cpp
         Frontend/Windows/GraphWindow/GraphWindow.ui
-        Frontend/Widgets/GraphWidget.cpp
-        Frontend/Widgets/GraphWidget.h
+        Frontend/Widgets/GraphWidget/GraphWidget.cpp
+        Frontend/Widgets/GraphWidget/GraphWidget.h
 
 )
 

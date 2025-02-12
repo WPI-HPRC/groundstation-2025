@@ -9,7 +9,7 @@
 #include <QValueAxis>
 #include <QTimer>
 
-#include "Frontend/Widgets/GraphWidget.h"
+#include "Frontend/Widgets/GraphWidget/GraphWidget.h"
 #include "Backend/Backend.h"
 namespace Ui {
     class GraphWindow;
