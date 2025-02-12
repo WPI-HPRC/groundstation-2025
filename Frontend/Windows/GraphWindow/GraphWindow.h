@@ -15,8 +15,6 @@ namespace Ui {
     class GraphWindow;
 }
 
-
-
 class GraphWindow : public QMainWindow
 {
     Q_OBJECT
@@ -31,7 +29,7 @@ public:
     //TODO enable_if?
     template <class T>
     GraphWidget* makeGraphSimple(std::initializer_list<T> list) {
-        GraphWidget* graph = new GraphWidget("Velocity", QBrush(QColor(30, 30, 19)), 8);
+        GraphWidget* graph = new GraphWidget("Velocity", 8, nullptr);
         for( auto elem : list) {
             graph->addSeriesCustom(elem);
         }

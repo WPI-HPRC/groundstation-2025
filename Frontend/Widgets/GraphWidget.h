@@ -17,9 +17,8 @@ class GraphWidget : public QChart {
 Q_OBJECT
 
 public:
-    explicit GraphWidget(const QString &title, const QBrush &brush, int range, QGraphicsItem *parent = nullptr);
-    void addSeriesCustom(const QString& name, QColor color);
-    void addSeriesCustom(const QString& name);
+    explicit GraphWidget(const QString &title, int range, QGraphicsItem *parent);
+    void addSeriesCustom(const QString &name);
     void rescale();
     QLineSeries* getSeries(int x);
     void addToSeries(int x, qreal valx, qreal valy);

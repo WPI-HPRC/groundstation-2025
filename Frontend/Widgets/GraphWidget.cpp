@@ -5,7 +5,7 @@
 #include "GraphWidget.h"
 #include <QtCharts/QChart>
 
-GraphWidget::GraphWidget(const QString &title, const QBrush &brush, int range, QGraphicsItem *parent)
+GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
     : QChart(parent)  {
     setTitle(title);
     windowRange = range;
@@ -17,20 +17,12 @@ GraphWidget::GraphWidget(const QString &title, const QBrush &brush, int range, Q
     auto *axisY = new QValueAxis();
     axisY->setRange(0, 1);
 
-
-    this->setPlotAreaBackgroundBrush(QBrush(QColor(232, 218, 197)));
     this->setAxisX(axisX);
     this->setAxisY(axisY);
 }
 
-void GraphWidget::addSeriesCustom(const QString &name, QColor color) {
-    auto* series = new QLineSeries();
-    series->setName(name);
-    dataSeries.push_back(series);
-    series->append(0,0);
-    addSeries(series);
-}
-void GraphWidget::addSeriesCustom(const QString &name) {
+void GraphWidget::addSeriesCustom(const QString &name)
+{
     auto* series = new QLineSeries();
     series->setName(name);
     dataSeries.push_back(series);

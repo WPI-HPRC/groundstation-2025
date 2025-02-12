@@ -6,7 +6,6 @@
 
 void GraphWindow::scroll()
 {
-
     if(!telemflag){
         for(GraphWidget* widget : allGraphs) {
             widget->yScream(seconds);
@@ -25,11 +24,13 @@ void GraphWindow::scroll()
         widget->rescale();
     }
     seconds += (1.0 / samplerate);
-    telemflag = false;
+//    telemflag = false;
 }
 
 void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
 {
+    if(telemetry.packetType != GroundStation::Rocket)
+        return;
 
     acceleration->addToSeries(0,seconds, telemetry.data.rocketData->accelx());
     acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
@@ -53,7 +54,7 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
 GraphWindow::GraphWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::GraphWindow)
 {
-    telemflag = false;
+    telemflag = true;
     seconds = 0;
     samplerate = 20;
     resolution = 10;
@@ -61,31 +62,31 @@ GraphWindow::GraphWindow(QWidget *parent) :
     timer = new QTimer(this);
     timer->start(1000 / samplerate);
 
-    acceleration = new GraphWidget("Acceleration", QBrush(QColor(30, 30, 19)), resolution);
-    acceleration->addSeriesCustom("x", QColor(245, 60, 25));
-    acceleration->addSeriesCustom("y", QColor(24, 245, 47));
-    acceleration->addSeriesCustom("z",QColor(25, 60, 255));
+    acceleration = new GraphWidget("Acceleration", resolution, nullptr);
+    acceleration->addSeriesCustom("x");
+    acceleration->addSeriesCustom("y");
+    acceleration->addSeriesCustom("z");
     ui->GraphA->setChart(acceleration);
     allGraphs.push_back(acceleration);
 
-    position = new GraphWidget("Position", QBrush(QColor(30, 30, 19)), resolution);
-    position->addSeriesCustom("x", QColor(245, 60, 25));
-    position->addSeriesCustom("y", QColor(24, 245, 47));
-    position->addSeriesCustom("z",QColor(25, 60, 255));
+    position = new GraphWidget("Position", resolution, nullptr);
+    position->addSeriesCustom("x");
+    position->addSeriesCustom("y");
+    position->addSeriesCustom("z");
     ui->GraphA_2->setChart(position);
     allGraphs.push_back(position);
 
     //TODO testing of auto "random" color, decide actual gyro colors later, so far looks good tho
-    gyro = new GraphWidget("Gyro", QBrush(QColor(30, 30, 19)), resolution);
+    gyro = new GraphWidget("Gyro", resolution, nullptr);
     gyro->addSeriesCustom( "x");
     gyro->addSeriesCustom( "y");
     gyro->addSeriesCustom( "z");
     ui->GraphA_3->setChart(gyro);
 
-    velocity = new GraphWidget("Velocity", QBrush(QColor(30, 30, 19)), 8);
-    velocity->addSeriesCustom( "x", QColor(245, 160, 125));
-    velocity->addSeriesCustom("y", QColor(124, 245, 147));
-    velocity->addSeriesCustom("z", QColor(125, 160, 255));
+    velocity = new GraphWidget("Velocity", 8, nullptr);
+    velocity->addSeriesCustom("x");
+    velocity->addSeriesCustom("y");
+    velocity->addSeriesCustom("z");
     ui->GraphA_4->setChart(velocity);
     allGraphs.push_back(velocity);
 
