@@ -89,7 +89,6 @@ GraphWindow::GraphWindow(QWidget *parent) :
     ui->GraphA_4->setChart(velocity);
     allGraphs.push_back(velocity);
 
-
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);
     scroll();

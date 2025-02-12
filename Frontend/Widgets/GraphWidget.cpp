@@ -7,24 +7,15 @@
 
 GraphWidget::GraphWidget(const QString &title, const QBrush &brush, int range, QGraphicsItem *parent)
     : QChart(parent)  {
-
-    setBackgroundBrush(brush);
-    setTitleBrush(QBrush(QColor(232, 218, 197)));
     setTitle(title);
     windowRange = range;
 
-    QValueAxis *axisX = new QValueAxis();
+    auto *axisX = new QValueAxis();
     axisX->setRange(0, range);
     axisX->setTickCount(10);
-    axisX->setLabelsBrush(QBrush(QColor(232, 218, 197)));
-    axisX->setLabelsColor(QColor(232, 218, 197));
-    axisX->colorChanged(QColor(232, 218, 197));
 
-    QValueAxis *axisY = new QValueAxis();
+    auto *axisY = new QValueAxis();
     axisY->setRange(0, 1);
-    axisY->setLabelsBrush(QBrush(QColor(232, 218, 197)));
-    axisY->setLabelsColor(QColor(232, 218, 197));
-    axisY->colorChanged(QColor(232, 218, 197));
 
 
     this->setPlotAreaBackgroundBrush(QBrush(QColor(232, 218, 197)));
@@ -33,22 +24,18 @@ GraphWidget::GraphWidget(const QString &title, const QBrush &brush, int range, Q
 }
 
 void GraphWidget::addSeriesCustom(const QString &name, QColor color) {
-    QLineSeries* series = new QLineSeries();
-    series->setColor(color);
+    auto* series = new QLineSeries();
     series->setName(name);
     dataSeries.push_back(series);
     series->append(0,0);
     addSeries(series);
-    legend()->markers(series).first()->setLabelBrush(QBrush(QColor(232, 218, 197)));
 }
 void GraphWidget::addSeriesCustom(const QString &name) {
-    QLineSeries* series = new QLineSeries();
-    series->setColor(QColor(name.toInt(nullptr, 8), name.toInt(nullptr, 10), name.toInt(nullptr, 16)));
+    auto* series = new QLineSeries();
     series->setName(name);
     dataSeries.push_back(series);
     series->append(0,0);
     addSeries(series);
-    legend()->markers(series).first()->setLabelBrush(QBrush(QColor(232, 218, 197)));
 }
 
 QLineSeries *GraphWidget::getSeries(int x) {
