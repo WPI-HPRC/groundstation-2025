@@ -254,8 +254,6 @@ target_link_libraries(groundstation-2025
         Qt6::WebChannel
         Qt6::Charts
         ${Protobuf_LIBRARIES}
-
-        Qt6::Charts
 )
 
 # Include all generated files in the target
