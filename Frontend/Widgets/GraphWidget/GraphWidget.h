@@ -7,6 +7,7 @@
 
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QBarSeries>
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QLegendMarker>
 #include <QString>

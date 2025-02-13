@@ -27,9 +27,10 @@ public:
             this->legend()->setGeometry(QRectF(
                     this->plotArea().x(),
                     this->plotArea().top() - 12,
-                    this->plotArea().width(),
-                    12
+                    200,
+                    0
             ));
+//            this->legend()->setBackgroundVisible(true);
             this->legend()->setZValue(1000);
             this->legend()->update();
         });

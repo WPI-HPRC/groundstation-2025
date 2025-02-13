@@ -13,13 +13,14 @@ GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
 
     auto *axisX = new QValueAxis();
     axisX->setRange(0, range);
-    axisX->setTickCount(10);
+    axisX->setTickCount(2);
 
     auto *axisY = new QValueAxis();
     axisY->setRange(0, 1);
 
     this->addAxis(axisX, Qt::AlignLeft);
     this->addAxis(axisY, Qt::AlignBottom);
+//    this->setContentsMargins(0, 0, 0, 0);
 //    this->setTheme(QChart::ChartThemeDark);
 }
 
