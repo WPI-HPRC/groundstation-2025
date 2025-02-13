@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     GraphWindow graphWindow;
     graphWindow.showNormal();
     graphWindow.update();
-    graphWindow.setWindowTitle("Graph View");
+    graphWindow.setWindowTitle("Graphs");
 
     Backend &backend = Backend::getInstance();
     backend.start();

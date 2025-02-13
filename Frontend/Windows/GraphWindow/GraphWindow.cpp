@@ -115,6 +115,8 @@ GraphWindow::GraphWindow(QWidget *parent) :
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);
     scroll();
+//    ui->Airbrakes->setTitleBarWidget(new QWidget(ui->Airbrakes));
+    ui->centralwidget->hide();
 }
 
 

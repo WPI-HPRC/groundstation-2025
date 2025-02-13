@@ -4,6 +4,7 @@
 
 #include "GraphWidget.h"
 #include <QtCharts/QChart>
+#include <QGraphicsLinearLayout>
 
 GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
     : QChart(parent)  {

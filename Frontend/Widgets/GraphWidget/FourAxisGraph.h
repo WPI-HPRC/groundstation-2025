@@ -17,6 +17,22 @@ public:
         addSeriesCustom("j");
         addSeriesCustom("k");
         addSeriesCustom("w");
+
+        this->legend()->setInteractive(false);
+        this->legend()->detachFromChart();
+        // Need to let things update their size own before we can do anything
+        QTimer::singleShot(0, [this]()
+        {
+            this->legend()->update();
+            this->legend()->setGeometry(QRectF(
+                    this->plotArea().x(),
+                    this->plotArea().top() - 12,
+                    this->plotArea().width(),
+                    12
+            ));
+            this->legend()->setZValue(1000);
+            this->legend()->update();
+        });
     }
 };
 
