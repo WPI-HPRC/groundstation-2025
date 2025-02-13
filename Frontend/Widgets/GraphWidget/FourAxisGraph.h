@@ -23,15 +23,16 @@ public:
         // Need to let things update their size own before we can do anything
         QTimer::singleShot(0, [this]()
         {
-            this->legend()->update();
             this->legend()->setGeometry(QRectF(
                     this->plotArea().x(),
-                    this->plotArea().top() - 12,
-                    200,
+                    this->plotArea().top(),
+                    145,
                     0
             ));
-//            this->legend()->setBackgroundVisible(true);
+            this->legend()->setColor(QColor(100, 100, 100, 50));
+            this->legend()->setBackgroundVisible(true);
             this->legend()->setZValue(1000);
+            this->legend()->setContentsMargins(0, 0, 0, 0);
             this->legend()->update();
         });
     }
