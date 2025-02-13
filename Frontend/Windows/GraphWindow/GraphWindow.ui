@@ -15,25 +15,124 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QChartView" name="GraphA_4" native="true"/>
-    </item>
     <item row="1" column="0">
-     <widget class="QChartView" name="GraphA_3" native="true"/>
+     <widget class="QChartView" name="VelocityGraph" native="true"/>
     </item>
     <item row="0" column="0">
-     <widget class="QChartView" name="GraphA" native="true"/>
+     <widget class="QChartView" name="AirbrakesGraph" native="true"/>
     </item>
-    <item row="0" column="1">
-     <widget class="QChartView" name="GraphA_2" native="true"/>
+    <item row="3" column="0">
+     <widget class="QChartView" name="QuatGraph" native="true"/>
     </item>
     <item row="2" column="0">
-     <widget class="QChartView" name="GraphA_5" native="true"/>
-    </item>
-    <item row="2" column="1">
-     <widget class="QChartView" name="GraphA_6" native="true"/>
+     <widget class="QChartView" name="PositionGraph" native="true"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QDockWidget" name="Altitude">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFeatureMask</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QChartView" name="AltitudeGraph" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="Acceleration">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFeatureMask</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QChartView" name="AccelerationGraph" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="Gyro">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFeatureMask</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QChartView" name="GyroGraph" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="Mag">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFeatureMask</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout_5">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QChartView" name="MagGraph" native="true"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <customwidgets>

@@ -48,11 +48,13 @@ private:
     qreal samplerate;
     QTimer* timer;
     GraphWidget* acceleration;
-    GraphWidget* airbrakes;
+    GraphWidget* quat;
     GraphWidget* gyro;
     GraphWidget* velocity;
     GraphWidget *mag;
     GraphWidget *altitude;
+    GraphWidget *position;
+    GraphWidget *airbrakes;
     std::vector<GraphWidget*> allGraphs;
 
 public slots:

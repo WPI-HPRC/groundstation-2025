@@ -5,6 +5,7 @@
 
 #include "Frontend/Widgets/GraphWidget/ThreeAxisGraph.h"
 #include "Frontend/Widgets/GraphWidget/OneAxisGraph.h"
+#include "Frontend/Widgets/GraphWidget/FourAxisGraph.h"
 
 void GraphWindow::scroll()
 {
@@ -38,8 +39,6 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
     acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelz());
 
-    airbrakes->addToSeries(0, seconds, telemetry.data.rocketData->servoposition());
-
     gyro->addToSeries(0, seconds, telemetry.data.rocketData->gyrox());
     gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroy());
     gyro->addToSeries(2, seconds, telemetry.data.rocketData->gyroz());
@@ -52,7 +51,17 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     mag->addToSeries(1, seconds, telemetry.data.rocketData->magy());
     mag->addToSeries(2, seconds, telemetry.data.rocketData->magz());
 
+    position->addToSeries(0,seconds, telemetry.data.rocketData->posx());
+    position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
+    position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
+
     altitude->addToSeries(0, seconds, telemetry.data.rocketData->altitude());
+    airbrakes->addToSeries(0, seconds, telemetry.data.rocketData->servoposition());
+
+    quat->addToSeries(0, seconds, telemetry.data.rocketData->i());
+    quat->addToSeries(1, seconds, telemetry.data.rocketData->j());
+    quat->addToSeries(2, seconds, telemetry.data.rocketData->k());
+    quat->addToSeries(3, seconds, telemetry.data.rocketData->w());
 
     telemflag = true;
 }
@@ -68,33 +77,40 @@ GraphWindow::GraphWindow(QWidget *parent) :
     timer = new QTimer(this);
     timer->start(1000 / samplerate);
 
-    acceleration = new ThreeAxisGraph("Acceleration", resolution);
-    ui->GraphA->setChart(acceleration);
-    allGraphs.push_back(acceleration);
-
-    airbrakes = new OneAxisGraph("Airbrakes", resolution);
-    ui->GraphA_2->setChart(airbrakes);
-    allGraphs.push_back(airbrakes);
-    airbrakes->setMinValue(0);
-
-    //TODO testing of auto "random" color, decide actual gyro colors later, so far looks good tho
-    gyro = new ThreeAxisGraph("Gyro", resolution);
-    ui->GraphA_3->setChart(gyro);
-    allGraphs.push_back(gyro);
-
-    velocity = new ThreeAxisGraph("Velocity", resolution);
-    ui->GraphA_4->setChart(velocity);
-    allGraphs.push_back(velocity);
-
-    mag = new ThreeAxisGraph("Mag", resolution);
-    ui->GraphA_5->setChart(mag);
-    allGraphs.push_back(mag);
-
     altitude = new OneAxisGraph("Altitude", resolution);
-    ui->GraphA_6->setChart(altitude);
+    ui->AltitudeGraph->setChart(altitude);
     allGraphs.push_back(altitude);
     altitude->setMinValue(0);
     altitude->dontScroll();
+
+    acceleration = new ThreeAxisGraph("Acceleration", resolution);
+    ui->AccelerationGraph->setChart(acceleration);
+    allGraphs.push_back(acceleration);
+
+    gyro = new ThreeAxisGraph("Gyro", resolution);
+    ui->GyroGraph->setChart(gyro);
+    allGraphs.push_back(gyro);
+
+    mag = new ThreeAxisGraph("Mag", resolution);
+    ui->MagGraph->setChart(mag);
+    allGraphs.push_back(mag);
+
+    quat = new FourAxisGraph("Quaternion", resolution);
+    ui->QuatGraph->setChart(quat);
+    allGraphs.push_back(quat);
+
+    velocity = new ThreeAxisGraph("Velocity", resolution);
+    ui->VelocityGraph->setChart(velocity);
+    allGraphs.push_back(velocity);
+
+    position = new ThreeAxisGraph("Position", resolution);
+    ui->PositionGraph->setChart(position);
+    allGraphs.push_back(position);
+
+    airbrakes = new OneAxisGraph("Airbrakes", resolution);
+    ui->AirbrakesGraph->setChart(airbrakes);
+    allGraphs.push_back(airbrakes);
+    airbrakes->setMinValue(0);
 
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);

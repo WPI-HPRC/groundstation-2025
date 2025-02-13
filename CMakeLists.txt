@@ -48,7 +48,8 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
         Frontend/Widgets/AprsWidget/aprswidget.ui
-        Frontend/Widgets/GraphWidget/OneAxisGraph.h)
+        Frontend/Widgets/GraphWidget/OneAxisGraph.h
+        Frontend/Widgets/GraphWidget/FourAxisGraph.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
