@@ -167,6 +167,6 @@ void DataSimulator::sendNextLine()
         start();
         return;
     }
-
+    dt = 0;
     timer->start(static_cast<int>(dt));
 }

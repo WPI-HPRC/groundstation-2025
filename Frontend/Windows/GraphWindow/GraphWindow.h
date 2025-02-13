@@ -48,7 +48,7 @@ private:
     qreal samplerate;
     QTimer* timer;
     GraphWidget* acceleration;
-    GraphWidget* position;
+    GraphWidget* airbrakes;
     GraphWidget* gyro;
     GraphWidget* velocity;
     GraphWidget *mag;

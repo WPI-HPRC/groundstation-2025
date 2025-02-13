@@ -19,6 +19,7 @@ GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
 
     this->addAxis(axisX, Qt::AlignLeft);
     this->addAxis(axisY, Qt::AlignBottom);
+//    this->setTheme(QChart::ChartThemeDark);
 }
 
 void GraphWidget::hideLegend()
@@ -61,6 +62,8 @@ void GraphWidget::yZeroFill(qreal valx) {
 
 //TODO would be MUCH better if QLineSeries was using a list instead of a vector
 void GraphWidget::removeTail(qreal now) {
+    if(noScroll)
+        return;
     if(now > windowRange) {
         qreal lowestXValueDisplayed = now-windowRange;
         for (QLineSeries *l: dataSeries) {
@@ -93,8 +96,35 @@ void GraphWidget::rescale() {
         }
     }
 
+    if(useMinValue)
+    {
+        if(maxY == 0 && minY < 0)
+        {
+            maxY = minValue;
+        }
+        else
+        {
+            minY = minValue;
+        }
+    }
+
+    if(noScroll)
+    {
+        minX = 0;
+    }
     this->axes().at(0)->setRange(minX, maxX);
     this->axes().at(1)->setRange(minY*1.1, maxY*1.1);
 
     createDefaultAxes();
+}
+
+void GraphWidget::setMinValue(float newMinValue)
+{
+    useMinValue = true;
+    minValue = newMinValue;
+}
+
+void GraphWidget::dontScroll()
+{
+    noScroll = true;
 }

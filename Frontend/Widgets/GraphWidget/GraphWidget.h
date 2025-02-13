@@ -20,6 +20,7 @@ public:
     explicit GraphWidget(const QString &title, int range, QGraphicsItem *parent);
     void addSeriesCustom(const QString &name);
     void rescale();
+    void setMinValue(float minValue);
     QLineSeries* getSeries(int x);
     void addToSeries(int x, qreal valx, qreal valy);
     void yScream(qreal valx);
@@ -29,10 +30,14 @@ public:
     //~CustomChart();
 
     void hideLegend();
+    void dontScroll();
 
 private:
     std::vector<QLineSeries*> dataSeries;
     int windowRange;
+    float minValue;
+    bool useMinValue = false;
+    bool noScroll = false;
     qreal lastXUpdate;
     qreal lastYUpdate;
 };

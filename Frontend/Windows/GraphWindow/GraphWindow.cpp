@@ -38,9 +38,7 @@ void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
     acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
     acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelz());
 
-    position->addToSeries(0, seconds, telemetry.data.rocketData->posx());
-    position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
-    position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
+    airbrakes->addToSeries(0, seconds, telemetry.data.rocketData->servoposition());
 
     gyro->addToSeries(0, seconds, telemetry.data.rocketData->gyrox());
     gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroy());
@@ -74,9 +72,10 @@ GraphWindow::GraphWindow(QWidget *parent) :
     ui->GraphA->setChart(acceleration);
     allGraphs.push_back(acceleration);
 
-    position = new ThreeAxisGraph("Airbrakes", resolution);
-    ui->GraphA_2->setChart(position);
-    allGraphs.push_back(position);
+    airbrakes = new OneAxisGraph("Airbrakes", resolution);
+    ui->GraphA_2->setChart(airbrakes);
+    allGraphs.push_back(airbrakes);
+    airbrakes->setMinValue(0);
 
     //TODO testing of auto "random" color, decide actual gyro colors later, so far looks good tho
     gyro = new ThreeAxisGraph("Gyro", resolution);
@@ -94,6 +93,8 @@ GraphWindow::GraphWindow(QWidget *parent) :
     altitude = new OneAxisGraph("Altitude", resolution);
     ui->GraphA_6->setChart(altitude);
     allGraphs.push_back(altitude);
+    altitude->setMinValue(0);
+    altitude->dontScroll();
 
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);

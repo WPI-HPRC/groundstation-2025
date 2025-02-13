@@ -513,7 +513,10 @@ void Backend::receiveTelemetry(Backend::Telemetry telemetry)
 
             if(lastRocketPacket.state() != 6)
             {
-                stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+                if(packet->state() != 0)
+                {
+                    stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+                }
                 currentStateMaxValues = {};
             }
         }
