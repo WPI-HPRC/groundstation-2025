@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
+#include "Frontend/Windows/CameraWindow/camerawindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +15,9 @@ int main(int argc, char *argv[])
     MainWindow mainWindow;
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
+
+    CameraWindow cameraWindow;
+    cameraWindow.showMaximized();
 
     Backend &backend = Backend::getInstance();
     backend.start();

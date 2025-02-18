@@ -47,7 +47,10 @@ set(PROTO_SRCS
         Backend/APRS/APRSHandler.h
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
-        Frontend/Widgets/AprsWidget/aprswidget.ui)
+        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Windows/CameraWindow/camerawindow.cpp
+        Frontend/Windows/CameraWindow/camerawindow.h
+        Frontend/Windows/CameraWindow/camerawindow.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -107,6 +110,8 @@ find_package(Qt6 COMPONENTS
         WebView
         WebChannel
         WebEngineWidgets
+        Multimedia
+        MultimediaWidgets
         REQUIRED)
 
 # Add the executable
@@ -245,6 +250,8 @@ target_link_libraries(groundstation-2025
         Qt6::WebEngineWidgets
         Qt6::WebView
         Qt6::WebChannel
+        Qt6::Multimedia
+        Qt6::MultimediaWidgets
         ${Protobuf_LIBRARIES}
 )
 
