@@ -20,8 +20,6 @@ GraphWidget::GraphWidget(const QString &title, int range, QGraphicsItem *parent)
 
     this->addAxis(axisX, Qt::AlignLeft);
     this->addAxis(axisY, Qt::AlignBottom);
-//    this->setContentsMargins(0, 0, 0, 0);
-//    this->setTheme(QChart::ChartThemeDark);
 }
 
 void GraphWidget::hideLegend()
