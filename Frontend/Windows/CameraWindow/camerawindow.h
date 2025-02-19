@@ -6,6 +6,11 @@
 #define GROUNDSTATION_2025_CAMERAWINDOW_H
 
 #include <QMainWindow>
+#include <QtMultimedia/QMediaDevices>
+#include <QtMultimedia/QCameraDevice>
+#include <QtMultimedia/QCamera>
+#include <QtMultimedia/QMediaCaptureSession>
+#include <QtMultimediaWidgets/QVideoWidget>
 
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +26,12 @@ Q_OBJECT
 
 public:
     explicit CameraWindow(QWidget *parent = nullptr);
+    void init();
+    void startCamera();
+
+    QMediaCaptureSession captureSession;  // Move this to class scope
+    QCamera *camera;  // Store camera pointer here
+    QVideoWidget *viewfinder;
 
     ~CameraWindow() override;
 

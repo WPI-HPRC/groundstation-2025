@@ -7,11 +7,7 @@
 #include "camerawindow.h"
 #include "ui_CameraWindow.h"
 
-#include <QtMultimedia/QMediaDevices>
-#include <QtMultimedia/QCameraDevice>
-#include <QtMultimedia/QCamera>
-#include <QtMultimedia/QMediaCaptureSession>
-#include <QtMultimediaWidgets/QVideoWidget>
+#include <QPermission>
 
 bool checkCameraAvailability()
 {
@@ -21,6 +17,41 @@ bool checkCameraAvailability()
         return false;
 }
 
+void CameraWindow::init()
+{
+    QCameraPermission cameraPermission;
+    switch (qApp->checkPermission(cameraPermission)) {
+        case Qt::PermissionStatus::Undetermined:
+            qDebug() << "Requesting permission";
+            qApp->requestPermission(cameraPermission, this, &CameraWindow::init);
+            return;
+        case Qt::PermissionStatus::Denied:
+            qWarning("Camera permission is not granted!");
+            return;
+        case Qt::PermissionStatus::Granted:
+            qDebug() << "Permission Granted!";
+            break;
+    }
+    startCamera();
+}
+
+void CameraWindow::startCamera()
+{
+    const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+    for (const QCameraDevice &cameraDevice : cameras) {
+        if (cameraDevice.isDefault()) {
+            camera = new QCamera(cameraDevice, this);  // Store camera in class member
+            camera->start();  // Start the camera
+
+            captureSession.setCamera(camera);
+            viewfinder = new QVideoWidget(this);
+            captureSession.setVideoOutput(viewfinder);
+
+            setCentralWidget(viewfinder);
+        }
+    }
+}
+
 CameraWindow::CameraWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::CameraWindow)
 {
@@ -28,21 +59,7 @@ CameraWindow::CameraWindow(QWidget *parent) :
 
     if(checkCameraAvailability())
     {
-        const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
-        for (const QCameraDevice &cameraDevice : cameras) {
-            if(cameraDevice.isDefault())
-            {
-                QMediaCaptureSession captureSession;
-                auto *camera = new QCamera(cameraDevice);
-                captureSession.setCamera(camera);
-                auto *viewfinder = new QVideoWidget();
-                captureSession.setVideoOutput(viewfinder);
-                viewfinder->show();
-
-                camera->start(); // to start the camera
-            }
-            qDebug() << cameraDevice.isDefault();
-        }
+        this->init();
     }
 }
 

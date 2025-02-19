@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 project(groundstation-2025)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(ABSL_PROPAGATE_CXX_STD ON)
 
 # Add Protobuf as a subdirectory
@@ -28,6 +28,15 @@ message(STATUS "Proto Files Found:")
 foreach(PROTO_FILE ${PROTO_FILES})
     message(STATUS "  - ${PROTO_FILE}")
 endforeach()
+
+set(MACOSX_BUNDLE_ICON_FILE logo.icns)
+
+# And the following tells CMake where to find and install the file itself.
+set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons/logo.icns")
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons/logo.rc")
+set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
+set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.wpi.hprc)
 
 # Create lists for the generated sources and headers
 set(PROTO_SRCS
@@ -117,6 +126,9 @@ find_package(Qt6 COMPONENTS
 # Add the executable
 add_executable(groundstation-2025
         ${PROTO_SRCS}
+#        MACOSX_BUNDLE
+        ${app_icon_macos}
+        ${app_icon_resource_windows}
         main.cpp
         Resources/Resources.qrc
         Backend/Backend.cpp
@@ -236,8 +248,18 @@ add_executable(groundstation-2025
         Backend/APRS/KissClient.h
 )
 
+set_target_properties(groundstation-2025 PROPERTIES
+        com.wpi.hprc
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/macos/Info.plist.in"
+        MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
+)
+
 # Link Protobuf and Qt6 libraries
 target_link_libraries(groundstation-2025
+        PRIVATE
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
@@ -254,6 +276,8 @@ target_link_libraries(groundstation-2025
         Qt6::MultimediaWidgets
         ${Protobuf_LIBRARIES}
 )
+
+qt_finalize_target(groundstation-2025)
 
 # Include all generated files in the target
 target_sources(groundstation-2025 PRIVATE ${PROTO_SRCS})
