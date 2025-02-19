@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
+#include "Frontend/Windows/CameraWindow/camerawindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,9 +12,17 @@ int main(int argc, char *argv[])
     font.setStyleHint(QFont::Monospace);
     QApplication::setFont(font);
 
+    QIcon icon(":/Icons/logo.ico");
+
     MainWindow mainWindow;
+    mainWindow.setWindowIcon(icon);
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
+    mainWindow.update();
+
+    CameraWindow cameraWindow;
+    cameraWindow.setWindowIcon(icon);
+    cameraWindow.showMaximized();
 
     Backend &backend = Backend::getInstance();
     backend.start();
