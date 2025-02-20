@@ -14,14 +14,14 @@
    <string>LivestreamWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="1">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0">
     <item row="0" column="0">
      <widget class="LogoImage" name="label">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -31,6 +31,9 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="AccelerationGauge" name="widget" native="true"/>
+    </item>
    </layout>
   </widget>
  </widget>
@@ -39,6 +42,12 @@
    <class>LogoImage</class>
    <extends>QLabel</extends>
    <header>Frontend/Images/LogoImage.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AccelerationGauge</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/GaugeWidget/AccelerationGauge.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

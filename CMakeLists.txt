@@ -40,7 +40,11 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
         Frontend/Images/ImageWidget/ImageWidget.cpp
         Frontend/Images/ImageWidget/ImageWidget.h
-        Frontend/Images/LogoImage.h)
+        Frontend/Images/LogoImage.h
+        Frontend/Widgets/GaugeWidget/GaugeWidget.cpp
+        Frontend/Widgets/GaugeWidget/GaugeWidget.h
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -229,6 +233,7 @@ add_executable(groundstation-2025
         Frontend/Windows/LivestreamWindow/livestreamwindow.ui
         Frontend/Images/LogoSvg.h
         Frontend/Images/Placeholder4x3Image.h
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
 
 )
 
