@@ -27,7 +27,7 @@ void GaugeDisplay::setGaugeWidget(QWidget *widget)
 void GaugeDisplay::updateNumber(const QString &numberString)
 {
     ui->ValueLabel->setText(numberString);
-    ui->ValueLabel->setStyleSheet("margin-top: 70px");
+    ui->ValueLabel->setStyleSheet("margin-top: 70px; color: white");
 }
 
 void GaugeDisplay::updateLabel(const QString &label)

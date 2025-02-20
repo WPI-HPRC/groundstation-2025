@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-//    QFont font("Courier New");
-    QFont font("Minecraft");
+    QFont font("Courier New");
+//    QFont font("Minecraft");
     font.setStyleHint(QFont::Monospace);
     QApplication::setFont(font);
 
