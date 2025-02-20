@@ -73,34 +73,16 @@
     <item row="1" column="3">
      <widget class="Viewer3D" name="widget_5" native="true"/>
     </item>
-    <item row="0" column="3">
-     <widget class="LogoImage" name="label">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Logo Image</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1" colspan="2">
      <widget class="CameraWidget" name="widget_4" native="true"/>
+    </item>
+    <item row="0" column="3">
+     <widget class="LivestreamTimeWidget" name="widget_6" native="true"/>
     </item>
    </layout>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>LogoImage</class>
-   <extends>QLabel</extends>
-   <header>Frontend/Images/LogoImage.h</header>
-  </customwidget>
   <customwidget>
    <class>AccelerationGauge</class>
    <extends>QWidget</extends>
@@ -129,6 +111,12 @@
    <class>Viewer3D</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/Viewer3D/Viewer3D.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LivestreamTimeWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -80,7 +80,13 @@ set(PROTO_SRCS
         Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineWidget.h
         Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.cpp
         Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.h
-        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.ui)
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.ui
+        Frontend/Widgets/LivestreamTimeWidget/LivestreamTimeWidget.cpp
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.cpp
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.ui
+        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.cpp
+        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
