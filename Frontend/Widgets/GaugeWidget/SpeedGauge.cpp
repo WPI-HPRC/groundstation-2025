@@ -16,7 +16,8 @@ SpeedGauge::SpeedGauge(QWidget *parent): GaugeDisplay(parent)
     gauge->lower();
 
     this->setGaugeWidget(gauge);
-    this->updateLabel("Speed (mph)");
+    this->updateLabel("SPEED");
+    this->setUnits("MPH");
 
     gauge->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
 

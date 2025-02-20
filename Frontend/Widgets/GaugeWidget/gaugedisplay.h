@@ -24,7 +24,7 @@ public:
     void setGaugeWidget(QWidget *widget);
     void updateNumber(const QString &numberString);
     void updateLabel(const QString &label);
-
+    void setUnits(const QString &unitLabel);
     ~GaugeDisplay() override;
 
 private:

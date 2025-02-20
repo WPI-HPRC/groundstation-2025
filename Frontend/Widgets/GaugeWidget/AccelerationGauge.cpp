@@ -12,7 +12,8 @@ AccelerationGauge::AccelerationGauge(QWidget *parent): GaugeDisplay(parent)
     gauge->lower();
 
     this->setGaugeWidget(gauge);
-    this->updateLabel("Acceleration (G)");
+    this->updateLabel("G-FORCE");
+    this->setUnits("");
 
     gauge->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
 

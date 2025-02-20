@@ -64,11 +64,36 @@
   <property name="windowTitle">
    <string>GaugeDisplay</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" rowstretch="4,1">
+  <layout class="QGridLayout" name="gridLayout" rowstretch="4,1,0">
    <property name="verticalSpacing">
     <number>0</number>
    </property>
-   <item row="1" column="0">
+   <item row="0" column="0">
+    <widget class="QLabel" name="ValueLabel">
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+       <pointsize>50</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: white</string>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::TextFormat::RichText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="indent">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <widget class="QLabel" name="GaugeLabel">
      <property name="font">
       <font>
@@ -96,28 +121,22 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="ValueLabel">
+   <item row="1" column="0">
+    <widget class="QLabel" name="UnitLabel">
      <property name="font">
       <font>
-       <family>Courier New</family>
-       <pointsize>50</pointsize>
+       <family>.AppleSystemUIFont</family>
+       <pointsize>30</pointsize>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: white</string>
+      <string notr="true">color: rgb(200, 200, 200)</string>
      </property>
      <property name="text">
-      <string>1</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::TextFormat::RichText</enum>
+      <string>Units </string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-     <property name="indent">
-      <number>0</number>
+      <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
      </property>
     </widget>
    </item>
