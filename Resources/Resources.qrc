@@ -412,6 +412,15 @@
 		<file>Models/HPRC_rocket.stl</file>
 		<file>Models/Starship.stl</file>
 		<file>Models/LIFT_Rocket.stl</file>
+		<file>APRS/run_aprs.sh</file>
+		<file>APRS/direwolf.conf</file>
+		<file>Models/HPRC_rocket.stl</file>
+		<file>Models/Starship.stl</file>
+		<file>Models/LIFT_Rocket.stl</file>
+		<file>Icons/logo.ico</file>
+		<file>Icons/logo.icns</file>
+		<file>Icons/logo.aps</file>
+		<file>Icons/logo.rc</file>
 		<file>SimulationData/SampleRocketData.csv</file>
 		<file>SimulationData/SamplePayloadData.csv</file>
 	</qresource>

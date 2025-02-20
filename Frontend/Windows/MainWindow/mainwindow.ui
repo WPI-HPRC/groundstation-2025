@@ -356,6 +356,24 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_9">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>APRS</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_9">
+    <layout class="QGridLayout" name="gridLayout_11">
+     <item row="0" column="0">
+      <widget class="AprsWidget" name="AprsDisplay" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -439,6 +457,12 @@
    <class>GpsWidget</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/MapWidget/gpswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AprsWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/AprsWidget/aprswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
