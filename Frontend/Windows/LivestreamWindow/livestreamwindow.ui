@@ -14,7 +14,7 @@
    <string>LivestreamWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="1,1">
     <item row="0" column="0">
      <widget class="LogoImage" name="label">
       <property name="enabled">
@@ -31,8 +31,8 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="AccelerationGauge" name="widget" native="true"/>
+    <item row="1" column="0" colspan="2">
+     <widget class="AccelerationGauge" name="widget_2" native="true"/>
     </item>
    </layout>
   </widget>

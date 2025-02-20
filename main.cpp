@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QFont font("Courier New");
+//    QFont font("Courier New");
+    QFont font("Minecraft");
     font.setStyleHint(QFont::Monospace);
     QApplication::setFont(font);
 
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
     mainWindow.setWindowTitle("Main Window");
 
     LivestreamWindow livestreamWindow;
-    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+//    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     livestreamWindow.showMaximized();
     livestreamWindow.setWindowTitle("Livestream");
 

@@ -16,10 +16,14 @@ public:
     explicit GaugeWidget(float maxValue, QWidget *parent = nullptr);
     void updateValue(float newValue);
 
-    void paintEvent(QPaintEvent *paintEvent);
-
     float value;
     float maxValue;
+
+    int lastHeight;
+
+public slots:
+    void paintEvent(QPaintEvent *paintEvent);
+    void resizeEvent(QResizeEvent *resizeEvent);
 };
 
 

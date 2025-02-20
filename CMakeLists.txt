@@ -44,7 +44,12 @@ set(PROTO_SRCS
         Frontend/Widgets/GaugeWidget/GaugeWidget.cpp
         Frontend/Widgets/GaugeWidget/GaugeWidget.h
         Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
-        Frontend/Widgets/GaugeWidget/AccelerationGauge.h)
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.h
+        Frontend/Widgets/GaugeWidget/GyroGauge.cpp
+        Frontend/Widgets/GaugeWidget/GyroGauge.h
+        Frontend/Widgets/GaugeWidget/gaugedisplay.cpp
+        Frontend/Widgets/GaugeWidget/gaugedisplay.h
+        Frontend/Widgets/GaugeWidget/gaugedisplay.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
