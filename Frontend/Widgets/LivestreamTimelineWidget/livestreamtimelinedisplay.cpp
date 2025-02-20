@@ -8,11 +8,21 @@
 #include "ui_LivestreamTimelineDisplay.h"
 #include "Backend/Backend.h"
 
+#include <QFontDatabase>
 
 LivestreamTimelineDisplay::LivestreamTimelineDisplay(QWidget *parent) :
         QWidget(parent), ui(new Ui::LivestreamTimelineDisplay)
 {
     ui->setupUi(this);
+
+
+    int id = QFontDatabase::addApplicationFont(":/Fonts/centurygothic.ttf");
+    QString font = QFontDatabase::applicationFontFamilies(id).at(0);
+    this->ui->StateLabel->setFont(QFont(font, 30));
+    this->ui->AltitudeLabel->setFont(QFont(font, 50));
+    this->ui->UnofficialLabel->setFont(QFont(font, 15));
+
+
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](Backend::Telemetry telemetry)
     {
         if(telemetry.packetType != GroundStation::Rocket)
@@ -21,6 +31,7 @@ LivestreamTimelineDisplay::LivestreamTimelineDisplay(QWidget *parent) :
 
         this->ui->Timeline->updateValue(data->altitude()*3.28084);
         this->ui->AltitudeLabel->setText(QString::asprintf("%d ft", (int)(data->altitude()*3.28084)));
+        this->ui->StateLabel->setText(Backend::getInstance().RocketStateNames.at(data->state()));
         repaint();
     });
 }

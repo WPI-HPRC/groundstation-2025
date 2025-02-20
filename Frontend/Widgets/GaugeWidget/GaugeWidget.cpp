@@ -40,7 +40,7 @@ void GaugeWidget::paintEvent(QPaintEvent *paintEvent)
 
     int left = paintEvent->rect().left() + 0.5*this->width() - 0.5*size;
 
-    float penSize = qMax(25, size/15);
+    float penSize = 10;
 
     size -= penSize*2;
 
@@ -51,7 +51,7 @@ void GaugeWidget::paintEvent(QPaintEvent *paintEvent)
     int startAngle = 200; // [deg]
     int maxAngle = 220; // [deg]
 
-    QPen bgPen(QColor(160, 160, 160), penSize);
+    QPen bgPen(QColor(100, 100, 100), penSize);
     bgPen.setCapStyle(Qt::SquareCap);
     painter.setPen(bgPen);
     painter.drawArc(rect, startAngle*16, (int)(-maxAngle*16));

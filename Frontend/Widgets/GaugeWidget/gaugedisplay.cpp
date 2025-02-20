@@ -15,13 +15,11 @@ GaugeDisplay::GaugeDisplay(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int id = QFontDatabase::addApplicationFont(":/Fonts/JockeyOne-Regular.ttf");
-    QString jockeyOne = QFontDatabase::applicationFontFamilies(id).at(0);
-    int fontSize = this->ui->GaugeLabel->font().pointSize();
-    this->ui->GaugeLabel->setFont(QFont(jockeyOne, 50));
-    this->ui->UnitLabel->setFont(QFont(jockeyOne, 30));
-    this->ui->ValueLabel->setFont(QFont(jockeyOne, 70));
-
+    int id = QFontDatabase::addApplicationFont(":/Fonts/centurygothic.ttf");
+    QString font = QFontDatabase::applicationFontFamilies(id).at(0);
+    this->ui->GaugeLabel->setFont(QFont(font, 50));
+    this->ui->UnitLabel->setFont(QFont(font, 30));
+    this->ui->ValueLabel->setFont(QFont(font, 70));
 }
 
 void GaugeDisplay::setGaugeWidget(QWidget *widget)

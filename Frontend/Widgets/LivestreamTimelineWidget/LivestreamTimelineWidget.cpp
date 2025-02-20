@@ -18,19 +18,19 @@ void LivestreamTimelineWidget::paintEvent(QPaintEvent *event)
 
     QRectF rect = event->rect();
 
-    float penSize = 30;
+    float penSize = 2;
 
     float margin = rect.height()/20;
     float x = rect.width()*0.5;
     float maxHeight = rect.height() - 2*margin;
 
-    QPen bgPen(QColor(160, 160, 160), penSize);
-    bgPen.setCapStyle(Qt::SquareCap);
+    QPen bgPen(QColor(100, 100, 100), penSize);
+    bgPen.setCapStyle(Qt::RoundCap);
     painter.setPen(bgPen);
     painter.drawLine(x, rect.height()-margin, x, margin);
 
     QPen fillPen(QColor(250, 250, 250), penSize);
-    fillPen.setCapStyle(Qt::SquareCap);
+    fillPen.setCapStyle(Qt::RoundCap);
     painter.setPen(fillPen);
     painter.drawLine(x, rect.height()-margin, x, rect.height()-margin - 1 - maxHeight * qMax(0.f,currentValue)/maxValue);
 
