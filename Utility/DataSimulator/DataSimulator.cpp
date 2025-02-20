@@ -105,6 +105,10 @@ void DataSimulator::sendNextLine()
 
     std::unique_ptr<google::protobuf::Message> currentPacket = std::move(nextPacket);
     nextPacket = parseLine(nextLine());
+    nextPacket = parseLine(nextLine());
+    nextPacket = parseLine(nextLine());
+    nextPacket = parseLine(nextLine());
+    nextPacket = parseLine(nextLine());
 
     if(!currentPacket || !currentPacket->IsInitialized())
     {
