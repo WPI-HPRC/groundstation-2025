@@ -31,7 +31,10 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="1" column="2">
+     <widget class="GyroGauge" name="widget" native="true"/>
+    </item>
+    <item row="1" column="0">
      <widget class="AccelerationGauge" name="widget_2" native="true"/>
     </item>
    </layout>
@@ -47,6 +50,12 @@
    <class>AccelerationGauge</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/GaugeWidget/AccelerationGauge.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GyroGauge</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/GaugeWidget/GyroGauge.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -22,7 +22,7 @@ AccelerationGauge::AccelerationGauge(QWidget *parent): GaugeDisplay(parent)
             return;
         HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;
         float totalAccel = sqrt(data->accelx()*data->accelx() + data->accely()*data->accely() + data->accelz()*data->accelz());
-        this->gauge->updateValue(totalAccel > 0 ? totalAccel : 0);
+        this->gauge->updateValue(totalAccel);
         this->updateNumber(QString::number(round(totalAccel)));
         if((int)currentValue != (int)totalAccel)
         {
