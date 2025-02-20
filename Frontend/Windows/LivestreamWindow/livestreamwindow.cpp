@@ -16,8 +16,13 @@ LivestreamWindow::LivestreamWindow(QWidget *parent) :
 
     auto *image = new Placeholder4x3Image();
 
-//    ui->gridLayout->addWidget(image, 0, 0, -1, -1);
-    image->lower();
+    /*
+    cameraWidget = new CameraWidget();
+    cameraWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+    ui->gridLayout->addWidget(cameraWidget->viewfinder, 0, 0, -1, -1);
+    cameraWidget->viewfinder->lower();
+     */
 }
 
 LivestreamWindow::~LivestreamWindow()

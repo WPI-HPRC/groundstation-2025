@@ -12,7 +12,6 @@
 #include <QtMultimedia/QMediaCaptureSession>
 #include <QtMultimediaWidgets/QVideoWidget>
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui
 {

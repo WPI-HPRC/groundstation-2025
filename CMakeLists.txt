@@ -58,7 +58,7 @@ set(PROTO_SRCS
         Frontend/Widgets/GaugeWidget/GyroGauge.h
         Frontend/Widgets/GaugeWidget/gaugedisplay.cpp
         Frontend/Widgets/GaugeWidget/gaugedisplay.h
-        Frontend/Widgets/GaugeWidget/gaugedisplay.ui)
+        Frontend/Widgets/GaugeWidget/gaugedisplay.ui
         Backend/HPRCWebSocket.cpp
         Backend/HPRCWebSocket.h
         Backend/APRS/KissClient.cpp
@@ -71,7 +71,16 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/aprswidget.ui
         Frontend/Windows/CameraWindow/camerawindow.cpp
         Frontend/Windows/CameraWindow/camerawindow.h
-        Frontend/Windows/CameraWindow/camerawindow.ui)
+        Frontend/Windows/CameraWindow/camerawindow.ui
+        Frontend/Widgets/CameraWidget/CameraWidget.cpp
+        Frontend/Widgets/CameraWidget/CameraWidget.h
+        Frontend/Widgets/GaugeWidget/SpeedGauge.cpp
+        Frontend/Widgets/GaugeWidget/SpeedGauge.h
+        Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineWidget.cpp
+        Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineWidget.h
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.cpp
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.h
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

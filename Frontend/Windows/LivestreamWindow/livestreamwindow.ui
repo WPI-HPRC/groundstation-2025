@@ -6,16 +6,68 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>605</width>
-    <height>467</height>
+    <width>1250</width>
+    <height>791</height>
    </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
   </property>
   <property name="windowTitle">
    <string>LivestreamWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="1,1">
-    <item row="0" column="0">
+    <item row="1" column="3">
+     <widget class="SpeedGauge" name="widget" native="true"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="AccelerationGauge" name="widget_2" native="true"/>
+    </item>
+    <item row="0" column="1">
      <widget class="LogoImage" name="label">
       <property name="enabled">
        <bool>true</bool>
@@ -31,11 +83,8 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="GyroGauge" name="widget" native="true"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="AccelerationGauge" name="widget_2" native="true"/>
+    <item row="0" column="0" rowspan="2">
+     <widget class="LivestreamTimelineDisplay" name="widget_3" native="true"/>
     </item>
    </layout>
   </widget>
@@ -53,9 +102,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>GyroGauge</class>
+   <class>LivestreamTimelineDisplay</class>
    <extends>QWidget</extends>
-   <header>Frontend/Widgets/GaugeWidget/GyroGauge.h</header>
+   <header>Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SpeedGauge</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/GaugeWidget/SpeedGauge.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

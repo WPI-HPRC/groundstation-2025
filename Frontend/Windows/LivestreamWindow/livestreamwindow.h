@@ -6,6 +6,7 @@
 #define GROUNDSTATION_2025_LIVESTREAMWINDOW_H
 
 #include <QMainWindow>
+#include "Frontend/Widgets/CameraWidget/CameraWidget.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +22,8 @@ Q_OBJECT
 
 public:
     explicit LivestreamWindow(QWidget *parent = nullptr);
+
+    CameraWidget *cameraWidget;
 
     ~LivestreamWindow() override;
 

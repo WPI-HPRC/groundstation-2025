@@ -22,10 +22,6 @@ int main(int argc, char *argv[])
     mainWindow.setWindowTitle("Main Window");
     mainWindow.update();
 
-    CameraWindow cameraWindow;
-    cameraWindow.setWindowIcon(icon);
-    cameraWindow.showMaximized();
-
     LivestreamWindow livestreamWindow;
 //    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     livestreamWindow.showMaximized();
