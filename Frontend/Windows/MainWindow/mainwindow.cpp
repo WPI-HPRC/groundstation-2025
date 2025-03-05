@@ -54,6 +54,17 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.setValue("DOCK_LOCATIONS",this->saveState(1));
     });
 
+
+    connect(ui->AirbrakesSlider, &QSlider::valueChanged, this, [](int value)
+    {
+        uint16_t transmitValue = value;
+        std::cout << std::hex << transmitValue << "\n";
+        uint32_t command = 0x000000AB | transmitValue << 8;
+        std::cout << std::hex << command;
+        std::cout << std::endl;
+        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, (uint8_t *)&command, 4);
+    });
+
     QSettings settings;
 
     if(!settings.value("DOCK_LOCATIONS").isNull())

@@ -20,9 +20,11 @@ int main(int argc, char *argv[])
     mainWindow.setWindowTitle("Main Window");
     mainWindow.update();
 
+    /*
     CameraWindow cameraWindow;
     cameraWindow.setWindowIcon(icon);
     cameraWindow.showMaximized();
+     */
 
     Backend &backend = Backend::getInstance();
     backend.start();
