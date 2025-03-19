@@ -763,7 +763,7 @@ void Backend::start()
     QSerialPortInfo modem = getTargetPort(GROUND_STATION_MODULE);
     if(!modem.isNull())
     {
-        connectToModule(GROUND_STATION_MODULE, Default, 921600);
+        connectToModule(GROUND_STATION_MODULE, Default, 230400);
         groundStationModem = getModuleWithName(GROUND_STATION_MODULE);
         // reset the radio's internal error count
         groundStationModem->sendNextFrameImmediately = true;
@@ -814,6 +814,7 @@ Backend::Backend(QObject *parent) : QObject(parent)
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
+    
 //    stateMaxValues = QList<MaxValues>(6);
 
 //    dummyLogger = new DataLogger();
