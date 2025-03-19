@@ -246,6 +246,9 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
         Backend/APRS/KissClient.h
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.ui
 )
 
 set_target_properties(groundstation-2025 PROPERTIES
