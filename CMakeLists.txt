@@ -37,7 +37,9 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
-        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h)
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
+        Backend/TrajectoryEstimation.cpp
+        Backend/TrajectoryEstimation.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -98,6 +100,7 @@ find_package(Qt6 COMPONENTS
         WebChannel
         WebEngineWidgets
         REQUIRED)
+include_directories(/usr/local/include/Eigen)
 
 # Add the executable
 add_executable(groundstation-2025
