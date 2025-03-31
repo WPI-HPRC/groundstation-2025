@@ -82,7 +82,7 @@ KalmanFilter::KalmanFilter() {
 
     // Noise factors (to be tuned based on system performance)
     process_noise_factor = 1.0;
-    measurement_noise_factor = 1.0;
+    measurement_noise_factor = 1.0; // Velocity or Position???????????????
 }
 
 void KalmanFilter::initialize(const Eigen::VectorXd& initial_state, const Eigen::MatrixXd& initial_covariance) {
@@ -118,3 +118,6 @@ void KalmanFilter::update(const Eigen::VectorXd& measurement) {
 Eigen::VectorXd KalmanFilter::getState() const {
     return state;
 }
+
+/* Tuning the Kalman Filter
+ * 

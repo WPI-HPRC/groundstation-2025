@@ -39,7 +39,9 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
         Backend/TrajectoryEstimation.cpp
-        Backend/TrajectoryEstimation.h)
+        Backend/TrajectoryEstimation.h
+        Backend/PoseEstimation.cpp
+        Backend/PoseEstimation.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
