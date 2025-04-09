@@ -6,28 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>300</height>
+    <width>687</width>
+    <height>415</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>RemoteControlWindow</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="3">
-    <widget class="QPushButton" name="ReadSDFileButton">
-     <property name="text">
-      <string>Read SD File</string>
+   <item row="1" column="0">
+    <widget class="QSlider" name="AirbrakesSlider">
+     <property name="minimum">
+      <number>1500</number>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Airbrakes Control</string>
+     <property name="maximum">
+      <number>1775</number>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -44,6 +40,16 @@
      </property>
     </spacer>
    </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Airbrakes Control</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="3">
     <widget class="QPushButton" name="ReadSDDirectoryButton">
      <property name="text">
@@ -51,23 +57,24 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QSlider" name="AirbrakesSlider">
-     <property name="minimum">
-      <number>1500</number>
-     </property>
-     <property name="maximum">
-      <number>1775</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+   <item row="0" column="4">
+    <widget class="QPushButton" name="ReadSDFileButton">
+     <property name="text">
+      <string>Read SD File</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="1" column="4">
     <widget class="QLineEdit" name="SDFileName">
      <property name="placeholderText">
       <string>Enter filename</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="ClearSDButton">
+     <property name="text">
+      <string>Clear SD</string>
      </property>
     </widget>
    </item>

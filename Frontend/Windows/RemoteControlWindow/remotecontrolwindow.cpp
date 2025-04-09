@@ -37,7 +37,7 @@ RemoteControlWindow::RemoteControlWindow(QWidget *parent) :
     {
         if(!Backend::getInstance().groundStationModem)
         {
-//            return;
+            return;
         }
         QString filename = ui->SDFileName->text();
 
@@ -50,6 +50,16 @@ RemoteControlWindow::RemoteControlWindow(QWidget *parent) :
         XBeeDevice::reverseBytes(request, (int)sizeof(request));
 
         Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, request, 1);
+    });
+
+    connect(ui->ClearSDButton, &QPushButton::released, this, [this]()
+    {
+        if(!Backend::getInstance().groundStationModem)
+        {
+            return;
+        }
+        uint8_t command = 0xCC;
+        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, &command, 1);
     });
 }
 
