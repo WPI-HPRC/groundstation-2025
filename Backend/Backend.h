@@ -82,6 +82,8 @@ public:
         ulong length_bytes;
         ulong num_packets_expected;
         ulong num_packets_received;
+        uint8_t lastFrameID;
+        uint8_t *currentBytePointer;
         uint8_t *bytes;
     };
 
@@ -294,6 +296,8 @@ private:
     void handlePayloadTelemetry(Packet telemetry);
 
     void handlePacketizedPacket(GenericPacket packet);
+
+    void handleSDDirectoryContents(Backend::PacketizedData data);
 };
 
 

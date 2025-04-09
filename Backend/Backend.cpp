@@ -552,7 +552,53 @@ void Backend::handlePayloadTelemetry(Backend::Packet telemetry)
 
 void Backend::handlePacketizedPacket(Backend::GenericPacket packet)
 {
-    
+    // This denotes the packetized data is done being sent
+    if(packet.length_bytes == 1)
+    {
+        switch(packet.data[0])
+        {
+            case GroundStation::SDDirectory:
+                handleSDDirectoryContents(sDDirectoryContents);
+                break;
+            case GroundStation::SDFileContents:
+                break;
+            case GroundStation::Image:
+            default:
+                return;
+        }
+        return;
+    }
+
+    // Is there a better way to do this? Yuck
+    Backend::PacketizedData *packetizedData;
+    switch(packet.data[0])
+    {
+        case GroundStation::SDDirectory:
+            packetizedData = &sDDirectoryContents;
+            break;
+        case GroundStation::SDFileContents:
+            packetizedData = &sDFileContents;
+            break;
+        case GroundStation::Image:
+            packetizedData = &image;
+        default:
+            return;
+    }
+
+    packetizedData->length_bytes += packet.length_bytes;
+    packetizedData->num_packets_received++;
+    // Skip the first byte, which is the frame type
+    memcpy(packetizedData->currentBytePointer, &packet.data[1], packet.length_bytes);
+    packetizedData->currentBytePointer += packet.length_bytes;
+}
+
+void Backend::handleSDDirectoryContents(Backend::PacketizedData data)
+{
+    QList<QByteArray> fileNames = QByteArray::fromRawData((const char *)data.bytes, data.length_bytes).split('\0');
+    for(int i = 0; i < fileNames.length(); i++)
+    {
+        qDebug() << fileNames.at(i).toStdString();
+    }
 }
 
 void Backend::receivePacket(Backend::Packet telemetry)
@@ -840,15 +886,18 @@ Backend::Backend(QObject *parent) : QObject(parent)
     // Create 2^16 bytes for each, but we can always realloc if absolutely necessary
     sDFileContents.packetType = GroundStation::SDFileContents;
     sDFileContents.bytes = new uint8_t[65536];
+    sDFileContents.currentBytePointer = sDFileContents.bytes;
 
     sDDirectoryContents.packetType = GroundStation::SDDirectory;
     sDDirectoryContents.bytes = new uint8_t[65536];
+    sDDirectoryContents.currentBytePointer = sDDirectoryContents.bytes;
 
     image.packetType = GroundStation::Image;
     image.bytes = new uint8_t[1048576]; // Give 1mb of space for an image
+    image.currentBytePointer = image.bytes;
 
 
-    
+
 //    stateMaxValues = QList<MaxValues>(6);
 
 //    dummyLogger = new DataLogger();
