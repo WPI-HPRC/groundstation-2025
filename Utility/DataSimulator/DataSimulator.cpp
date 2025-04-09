@@ -147,7 +147,7 @@ void DataSimulator::sendNextLine()
         std::cerr << "Error converting packet to JSON string: " << status << std::endl;
     }
 
-    Backend::Telemetry telemetry{};
+    Backend::Packet telemetry{};
     telemetry.packetType = packetType;  // Assuming a constant packet type
 
     if (packetType == GroundStation::PacketType::Rocket)
@@ -159,7 +159,7 @@ void DataSimulator::sendNextLine()
         telemetry.data.payloadData = (HPRC::PayloadTelemetryPacket *) currentPacket.get();
     }
 
-    Backend::getInstance().receiveTelemetry(telemetry);
+    Backend::getInstance().receivePacket(telemetry);
 
     if (file->atEnd())
     {

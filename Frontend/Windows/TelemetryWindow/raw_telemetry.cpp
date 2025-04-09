@@ -27,7 +27,7 @@ Raw_Telemetry::~Raw_Telemetry() {
     delete ui;
 }
 
-void Raw_Telemetry::telemetryAvailable(Backend::Telemetry telemetry){
+void Raw_Telemetry::telemetryAvailable(Backend::Packet telemetry){
     if(telemetry.packetType== GroundStation::Rocket)
     {
         HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;

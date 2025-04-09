@@ -107,7 +107,7 @@ The ``Backend`` class holds various structs and enums that are necessary for dat
 =======
 Structs
 =======
-There are three structs contained within the Backend: ``ThroughputTestParams``, ``ThroughputTestResults``, and ``Telemetry``. The first two are only important to the Backend,
+There are three structs contained within the Backend: ``ThroughputTestParams``, ``ThroughputTestResults``, and ``Packet``. The first two are only important to the Backend,
 while the third is vital to the rest of the project as well.
 
 ThroughputTestParams
@@ -157,14 +157,14 @@ and display it on the Frontend, along with logging it to a file. It is laid out 
 The struct holds parameters for the test, which are defined above in ``ThroughputTestParams``. Additionally, information about how the test went is included.
 These are the number of packets received, the percent of packets received, and the calculated throughput during the test.
 
-Telemetry
+Packet
 *********
-The ``Telemetry`` struct is one of the most important in the Ground Station, as it holds information about a received packet. This struct is used universally
+The ``Packet`` struct is one of the most important in the Ground Station, as it holds information about a received packet. This struct is used universally
 throughout the project to communicate telemetry. It is laid out as follows:
 
 .. code-block:: cpp
 
-    struct Telemetry
+    struct Packet
     {
         GroundStation::PacketType packetType;
         union data
@@ -185,7 +185,7 @@ Extraction of data may look something like this:
 
 .. code-block:: cpp
 
-    Telemetry telemetry = getTelemetry();
+    Packet telemetry = getTelemetry();
     if (telemetry.packetType == GroundStation::Rocket)
     {
         GroundStation::RocketTelemPacket *rocketData = telemetry.data.rocketData;

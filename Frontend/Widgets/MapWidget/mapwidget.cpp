@@ -45,7 +45,7 @@ MapWidget::MapWidget(QWidget *parent) :
     // End comment here
 }
 
-void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
+void MapWidget::telemetryAvailable(Backend::Packet telemetry)
 {
     if(telemetry.packetType == GroundStation::Payload)
     {

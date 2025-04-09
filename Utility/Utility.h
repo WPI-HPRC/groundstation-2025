@@ -15,7 +15,9 @@ namespace GroundStation
     {
         Unknown = -1,
         Rocket = 0x01,
-        Payload = 0x02
+        Payload = 0x02,
+        SDDirectory = 0xCC, // "Card Contents"
+        SDFileContents = 0xFC, // "File Contents"
     };
 
 #pragma pack(push, 1)

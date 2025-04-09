@@ -485,7 +485,7 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
     }
 }
 
-void Backend::receiveTelemetry(Backend::Telemetry telemetry)
+void Backend::receivePacket(Backend::Packet telemetry)
 {
     if(telemetry.packetType == GroundStation::Rocket)
     {

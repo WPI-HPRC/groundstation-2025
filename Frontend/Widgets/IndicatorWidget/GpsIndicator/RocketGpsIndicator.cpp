@@ -9,7 +9,7 @@ RocketGpsIndicator::RocketGpsIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Rocket GPS");
     this->timeoutDuration_sec = 1;
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Packet telemetry)
     {
         if(telemetry.packetType == GroundStation::Rocket)
         {

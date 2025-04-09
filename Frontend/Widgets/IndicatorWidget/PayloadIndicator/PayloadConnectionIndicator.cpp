@@ -8,7 +8,7 @@
 PayloadConnectionIndicator::PayloadConnectionIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Payload");
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Packet telemetry)
     {
         if(telemetry.packetType == GroundStation::Payload)
         {

@@ -59,13 +59,20 @@ public:
                 );
     };
 
-    struct Telemetry
+    struct GenericPacket
+    {
+        uint8_t length_bytes;
+        const uint8_t *data;
+    };
+
+    struct Packet
     {
         GroundStation::PacketType packetType;
         union data
         {
             HPRC::RocketTelemetryPacket *rocketData;
             HPRC::PayloadTelemetryPacket *payloadData;
+            GenericPacket genericPacket;
         } data;
     };
 
@@ -119,7 +126,7 @@ public:
     void writeParameters(const QString &moduleName);
 
     void linkTestComplete(LinkTestResults results, int iterationsLeft);
-    void receiveTelemetry(Backend::Telemetry telemetry);
+    void receivePacket(Backend::Packet telemetry);
 
     void runLinkTest(uint64_t destinationAddress, uint16_t payloadSize, uint16_t iterations, uint8_t repeat, bool loop=false);
     void cancelLinkTest();
@@ -211,7 +218,7 @@ signals:
     void newRocketFlightTime(uint32_t launchTime);
 
     void throughputTestDataAvailable(float, uint, uint);
-    void telemetryAvailable(Backend::Telemetry);
+    void telemetryAvailable(Backend::Packet);
 
     void receivedAtCommandResponse(uint16_t, const uint8_t *, size_t);
     void newBytesReadAvailable(QString);

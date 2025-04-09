@@ -90,7 +90,7 @@ void Viewer3D::updateColors(QColor panel, QColor highlight) const
     m_view->defaultFrameGraph()->setClearColor(panel);
 }
 
-void Viewer3D::telemetryAvailable(Backend::Telemetry telemetry) const
+void Viewer3D::telemetryAvailable(Backend::Packet telemetry) const
 {
     if (telemetry.packetType == GroundStation::Rocket)
     {

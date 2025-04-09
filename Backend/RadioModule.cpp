@@ -187,12 +187,12 @@ void populatePayloadProtobuf(const GroundStation::PayloadTelemPacket& myStruct, 
 }
 
 
-DataLogger::Packet parsePacket(const uint8_t *frame)
+DataLogger::Packet parsePacket(Backend::GenericPacket frame)
 {
     std::string str;
 
     // This way of assigning the packet type seems redundant, but the packetType byte can take on any value from 0-255; we want to set it to an enum value that we understand
-    Backend::Telemetry telemetry{};
+    Backend::Packet packet{};
 
     HPRC::RocketTelemetryPacket rocketPacket;
     HPRC::PayloadTelemetryPacket payloadPacket;
@@ -202,12 +202,13 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
     google::protobuf::util::JsonPrintOptions  options;
     options.always_print_fields_with_no_presence = true;
 
-    switch (frame[0])
+    switch (frame.data[0])
     {
+        // TODO: Add a check to make sure the length of the packet matches whatever we're casting it into. Do once protobuf is fully integrated
         case GroundStation::Rocket:
         {
-            telemetry.packetType = GroundStation::Rocket;
-            populateRocketProtobuf(*(GroundStation::RocketTelemPacket *)&frame[1], rocketPacket);
+            packet.packetType = GroundStation::Rocket;
+            populateRocketProtobuf(*(GroundStation::RocketTelemPacket *)&frame.data[1], rocketPacket);
 
             // Convert current packet to JSON
             status = google::protobuf::util::MessageToJsonString(rocketPacket, &str, options);
@@ -216,13 +217,13 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
                 std::cerr << "Error converting packet to JSON string: " << status << std::endl;
             }
 
-            telemetry.data.rocketData = &rocketPacket;
+            packet.data.rocketData = &rocketPacket;
             break;
         }
         case GroundStation::Payload:
         {
-            telemetry.packetType = GroundStation::Payload;
-            populatePayloadProtobuf(*(GroundStation::PayloadTelemPacket *) &frame[1], payloadPacket);
+            packet.packetType = GroundStation::Payload;
+            populatePayloadProtobuf(*(GroundStation::PayloadTelemPacket *) &frame.data[1], payloadPacket);
 
             // Convert current packet to JSON
             status = google::protobuf::util::MessageToJsonString(payloadPacket, &str, options);
@@ -230,21 +231,28 @@ DataLogger::Packet parsePacket(const uint8_t *frame)
             {
                 std::cerr << "Error converting packet to JSON string: " << status << std::endl;
             }
-            telemetry.data.payloadData = &payloadPacket;
+            packet.data.payloadData = &payloadPacket;
+            break;
+        }
+        case GroundStation::SDDirectory: case GroundStation::SDFileContents:
+        {
+            packet.packetType = GroundStation::SDDirectory;
+            packet.data.genericPacket = frame;
             break;
         }
         default:
-            str = "";
-            telemetry.packetType = GroundStation::Unknown;
+        {
+            packet.packetType = GroundStation::Unknown;
             break;
+        }
     }
 
-    Backend::getInstance().receiveTelemetry(telemetry);
+    Backend::getInstance().receivePacket(packet);
 
     str = std::regex_replace(str, std::regex("nan"), "0");
     str = std::regex_replace(str, std::regex("inf"), "0");
 
-    return {str, telemetry.packetType};
+    return {str, packet.packetType};
 }
 
 void RadioModule::disconnectPort()
@@ -345,7 +353,7 @@ void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
         throughputTestPacketsReceived ++;
     }
 
-    lastPacket = parsePacket(frame->data);
+    lastPacket = parsePacket({frame->dataLength_bytes, frame->data});
 
     if(recordThroughput) // performance statistics
     {
@@ -359,8 +367,8 @@ void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
             rocketRadioStats.packetsReceivedCount++;
             rocketRadioStats.bytesReceivedCount+= frame->dataLength_bytes + XBee::ReceivePacket::PacketBytes;
             break;
-        case GroundStation::Unknown:
-            break;;
+        default:
+                break;
         }
     }
 
@@ -373,7 +381,7 @@ void RadioModule::handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *fra
     {
         throughputTestPacketsReceived ++;
     }
-    lastPacket = parsePacket(frame->data);
+    lastPacket = parsePacket({frame->dataLength_bytes, frame->data});
 
     if(recordThroughput) // performance statistics
     {
@@ -387,8 +395,8 @@ void RadioModule::handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *fra
             rocketRadioStats.packetsReceivedCount++;
             rocketRadioStats.bytesReceivedCount+= frame->dataLength_bytes + XBee::ReceivePacket64Bit::PacketBytes;
             break;
-        case GroundStation::Unknown:
-            break;;
+        default:
+            break;
         }
     }
 

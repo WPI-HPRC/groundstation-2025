@@ -9,7 +9,7 @@ PayloadGpsIndicator::PayloadGpsIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Payload GPS");
     this->timeoutDuration_sec = 1;
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Packet telemetry)
     {
         if(telemetry.packetType == GroundStation::Payload)
         {

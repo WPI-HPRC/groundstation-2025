@@ -15,7 +15,7 @@ RocketUptimeWidget::RocketUptimeWidget(QWidget *parent) :
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &RocketUptimeWidget::newPacket);
 }
 
-void RocketUptimeWidget::newPacket(Backend::Telemetry telemPacket)
+void RocketUptimeWidget::newPacket(Backend::Packet telemPacket)
 {
     uint_fast32_t currentUpTime = telemPacket.data.rocketData->timestamp();
 

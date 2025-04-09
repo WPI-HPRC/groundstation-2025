@@ -26,7 +26,7 @@ StateDisplayWidget::StateDisplayWidget(QWidget *parent) :
     telemetryConnection = connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &StateDisplayWidget::telemetryAvailable);
 }
 
-void StateDisplayWidget::telemetryAvailable(Backend::Telemetry telemetry)
+void StateDisplayWidget::telemetryAvailable(Backend::Packet telemetry)
 {
     if(telemetry.packetType != GroundStation::Rocket)
     {

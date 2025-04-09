@@ -124,7 +124,7 @@
     <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Raw Telemetry</string>
+    <string>Raw Packet</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
