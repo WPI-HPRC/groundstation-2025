@@ -485,71 +485,93 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
     }
 }
 
+void Backend::handleRocketTelemetry(Backend::Packet telemetry)
+{
+    HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
+    updateMaxRocketValues(maxRocketValues, *packet);
+    updateTimes(*packet);
+
+    if(lastRocketPacket.state() == 0 && packet->state() == 1)
+    {
+        groundLevelAltitude = lastRocketPacket.altitude();
+    }
+    if(lastRocketPacket.state() != packet->state())
+    {
+        // Reset things when we reach prelaunch state
+
+        if(packet->state() == 0)
+        {
+            stateMaxValues.clear();
+        }
+
+        currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
+        emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
+
+        if(lastRocketPacket.state() != 6)
+        {
+            stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+            currentStateMaxValues = {};
+        }
+    }
+
+    updateMaxRocketValues(currentStateMaxValues, *packet);
+
+    lastRocketPacket = *packet;
+    if(convertToEnglish)
+    {
+        doConversions(packet, metricToEnglish);
+        if(convertFromGees)
+        {
+            doConversions(packet, geeConversions_English);
+        }
+    }
+    else if(convertFromGees)
+    {
+        doConversions(packet, geeConversions_Metric);
+    }
+}
+
+void Backend::handlePayloadTelemetry(Backend::Packet telemetry)
+{
+    HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
+    updateMaxPayloadValues(maxPayloadValues, *packet);
+    lastPayloadPacket = *packet;
+    if(convertToEnglish)
+    {
+        doConversions(packet, metricToEnglish);
+        if(convertFromGees)
+        {
+            doConversions(packet, geeConversions_English);
+        }
+    }
+    else if(convertFromGees)
+    {
+        doConversions(packet, geeConversions_Metric);
+    }
+}
+
+void Backend::handlePacketizedPacket(Backend::GenericPacket packet)
+{
+    
+}
+
 void Backend::receivePacket(Backend::Packet telemetry)
 {
-    if(telemetry.packetType == GroundStation::Rocket)
+    switch (telemetry.packetType)
     {
-        HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
-        updateMaxRocketValues(maxRocketValues, *packet);
-        updateTimes(*packet);
-
-        if(lastRocketPacket.state() == 0 && packet->state() == 1)
-        {
-            groundLevelAltitude = lastRocketPacket.altitude();
-        }
-        if(lastRocketPacket.state() != packet->state())
-        {
-            // Reset things when we reach prelaunch state
-
-            if(packet->state() == 0)
-            {
-                stateMaxValues.clear();
-            }
-
-            currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-            emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
-
-            if(lastRocketPacket.state() != 6)
-            {
-                stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
-                currentStateMaxValues = {};
-            }
-        }
-
-        updateMaxRocketValues(currentStateMaxValues, *packet);
-
-        lastRocketPacket = *packet;
-        if(convertToEnglish)
-        {
-            doConversions(packet, metricToEnglish);
-            if(convertFromGees)
-            {
-                doConversions(packet, geeConversions_English);
-            }
-        }
-        else if(convertFromGees)
-        {
-            doConversions(packet, geeConversions_Metric);
-        }
+        case GroundStation::Rocket:
+            handleRocketTelemetry(telemetry);
+            break;
+        case GroundStation::Payload:
+            handlePayloadTelemetry(telemetry);
+            break;
+        case GroundStation::SDDirectory: case GroundStation::SDFileContents: case GroundStation::Image:
+            handlePacketizedPacket(telemetry.data.genericPacket);
+            break;
+        default:
+            break;
     }
-    else if (telemetry.packetType == GroundStation::Payload)
-    {
-        HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
-        updateMaxPayloadValues(maxPayloadValues, *packet);
-        lastPayloadPacket = *packet;
-        if(convertToEnglish)
-        {
-            doConversions(packet, metricToEnglish);
-            if(convertFromGees)
-            {
-                doConversions(packet, geeConversions_English);
-            }
-        }
-        else if(convertFromGees)
-        {
-            doConversions(packet, geeConversions_Metric);
-        }
-    }
+
     emit telemetryAvailable(telemetry);
 }
 
@@ -814,6 +836,18 @@ Backend::Backend(QObject *parent) : QObject(parent)
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
+
+    // Create 2^16 bytes for each, but we can always realloc if absolutely necessary
+    sDFileContents.packetType = GroundStation::SDFileContents;
+    sDFileContents.bytes = new uint8_t[65536];
+
+    sDDirectoryContents.packetType = GroundStation::SDDirectory;
+    sDDirectoryContents.bytes = new uint8_t[65536];
+
+    image.packetType = GroundStation::Image;
+    image.bytes = new uint8_t[1048576]; // Give 1mb of space for an image
+
+
     
 //    stateMaxValues = QList<MaxValues>(6);
 

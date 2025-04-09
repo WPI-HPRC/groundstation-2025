@@ -18,6 +18,7 @@ namespace GroundStation
         Payload = 0x02,
         SDDirectory = 0xCC, // "Card Contents"
         SDFileContents = 0xFC, // "File Contents"
+        Image = 0xEE; // "EEEE"
     };
 
 #pragma pack(push, 1)

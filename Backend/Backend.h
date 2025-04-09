@@ -76,6 +76,15 @@ public:
         } data;
     };
 
+    struct PacketizedData
+    {
+        GroundStation::PacketType packetType;
+        ulong length_bytes;
+        ulong num_packets_expected;
+        ulong num_packets_received;
+        uint8_t *bytes;
+    };
+
     struct MaxValues
     {
         float maxAltitude;
@@ -275,6 +284,16 @@ private:
 
     MaxValues maxRocketValues{};
     MaxValues maxPayloadValues{};
+
+    PacketizedData sDFileContents;
+    PacketizedData sDDirectoryContents;
+    PacketizedData image;
+
+    void handleRocketTelemetry(Packet telemetry);
+
+    void handlePayloadTelemetry(Packet telemetry);
+
+    void handlePacketizedPacket(GenericPacket packet);
 };
 
 
