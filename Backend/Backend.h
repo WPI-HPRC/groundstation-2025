@@ -22,6 +22,7 @@
 
 #include "generated/telemetry/RocketTelemetryPacket.pb.h"
 #include "generated/telemetry/PayloadTelemetryPacket.pb.h"
+#include "generated/telemetry/Packet.pb.h"
 
 class Backend : public QObject
 {
@@ -65,20 +66,8 @@ public:
         const uint8_t *data;
     };
 
-    struct Packet
+    struct ChunkedPacket
     {
-        GroundStation::PacketType packetType;
-        union data
-        {
-            HPRC::RocketTelemetryPacket *rocketData;
-            HPRC::PayloadTelemetryPacket *payloadData;
-            GenericPacket genericPacket;
-        } data;
-    };
-
-    struct PacketizedData
-    {
-        GroundStation::PacketType packetType;
         ulong length_bytes;
         ulong num_packets_expected;
         ulong num_packets_received;
@@ -137,7 +126,7 @@ public:
     void writeParameters(const QString &moduleName);
 
     void linkTestComplete(LinkTestResults results, int iterationsLeft);
-    void receivePacket(Backend::Packet telemetry);
+    void receivePacket(const HPRC::Packet& packet);
 
     void runLinkTest(uint64_t destinationAddress, uint16_t payloadSize, uint16_t iterations, uint8_t repeat, bool loop=false);
     void cancelLinkTest();
@@ -229,7 +218,7 @@ signals:
     void newRocketFlightTime(uint32_t launchTime);
 
     void throughputTestDataAvailable(float, uint, uint);
-    void telemetryAvailable(Backend::Packet);
+    void telemetryAvailable(HPRC::Telemetry);
 
     void receivedAtCommandResponse(uint16_t, const uint8_t *, size_t);
     void newBytesReadAvailable(QString);
@@ -287,17 +276,23 @@ private:
     MaxValues maxRocketValues{};
     MaxValues maxPayloadValues{};
 
-    PacketizedData sDFileContents;
-    PacketizedData sDDirectoryContents;
-    PacketizedData image;
+    ChunkedPacket chunkedPacket;
 
-    void handleRocketTelemetry(Packet telemetry);
+    void handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet);
 
-    void handlePayloadTelemetry(Packet telemetry);
+    void handlePayloadTelemetry(HPRC::PayloadTelemetryPacket *packet);
 
     void handlePacketizedPacket(GenericPacket packet);
 
-    void handleSDDirectoryContents(Backend::PacketizedData data);
+    void handleSDDirectoryContents(Backend::ChunkedPacket data);
+
+    void handleTelemetry(const HPRC::Telemetry& telemetry);
+
+    void handleRadioCommandResponse(const HPRC::CommandResponse &packet);
+
+    void handleBeginPacketChunks(const HPRC::BeginPacketChunks &packet);
+
+    void handleEndPacketChunks(const HPRC::EndPacketChunks &packet);
 };
 
 

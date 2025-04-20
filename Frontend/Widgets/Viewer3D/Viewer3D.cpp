@@ -90,11 +90,11 @@ void Viewer3D::updateColors(QColor panel, QColor highlight) const
     m_view->defaultFrameGraph()->setClearColor(panel);
 }
 
-void Viewer3D::telemetryAvailable(Backend::Packet telemetry) const
+void Viewer3D::telemetryAvailable(const HPRC::Telemetry& telemetry) const
 {
-    if (telemetry.packetType == GroundStation::Rocket)
+    if (telemetry.has_rocketpacket())
     {
         // Switch k and j to get the right orientation. God knows why
-        orientRocket({telemetry.data.rocketData->w(), telemetry.data.rocketData->i(), telemetry.data.rocketData->k(), telemetry.data.rocketData->j()});
+        orientRocket({telemetry.rocketpacket().w(), telemetry.rocketpacket().i(), telemetry.rocketpacket().k(), telemetry.rocketpacket().j()});
     }
 }

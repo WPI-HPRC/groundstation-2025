@@ -5,11 +5,7 @@
 #include "RadioModule.h"
 #include "Backend.h"
 #include "Utility/Utility.h"
-#include "protobuf/src/google/protobuf/util/json_util.h"
-
 #include <QSerialPortInfo>
-#include <regex>
-#include <QJsonDocument>
 
 QSerialPortInfo getTargetPort()
 {
@@ -45,214 +41,6 @@ QSerialPortInfo getTargetPort()
     }
 
     return targetPort;
-}
-
-void populateRocketProtobuf(const GroundStation::RocketTelemPacket& myStruct, HPRC::RocketTelemetryPacket& protobufPacket) {
-    // State
-    protobufPacket.set_state(myStruct.state);
-
-    // Raw Sensor Readings
-    protobufPacket.set_accelx(myStruct.accelX);
-    protobufPacket.set_accely(myStruct.accelY);
-    protobufPacket.set_accelz(myStruct.accelZ);
-    protobufPacket.set_gyrox(myStruct.gyroX);
-    protobufPacket.set_gyroy(myStruct.gyroY);
-    protobufPacket.set_gyroz(myStruct.gyroZ);
-    protobufPacket.set_rawmagx(myStruct.rawMagX);
-    protobufPacket.set_rawmagy(myStruct.rawMagY);
-    protobufPacket.set_rawmagz(myStruct.rawMagZ);
-    protobufPacket.set_pressure(myStruct.pressure);
-    protobufPacket.set_temperature(myStruct.temperature);
-
-    // Servo Position
-    protobufPacket.set_servoposition(myStruct.servoPosition);
-
-    // Calculated Values
-    protobufPacket.set_altitude(myStruct.altitude);
-    protobufPacket.set_launchaltitude(myStruct.launchAltitude);
-    protobufPacket.set_magx(myStruct.magX);
-    protobufPacket.set_magy(myStruct.magY);
-    protobufPacket.set_magz(myStruct.magZ);
-
-    // EKF Results
-    protobufPacket.set_w(myStruct.w);
-    protobufPacket.set_i(myStruct.i);
-    protobufPacket.set_j(myStruct.j);
-    protobufPacket.set_k(myStruct.k);
-    protobufPacket.set_posx(myStruct.posX);
-    protobufPacket.set_posy(myStruct.posY);
-    protobufPacket.set_posz(myStruct.posZ);
-    protobufPacket.set_velx(myStruct.velX);
-    protobufPacket.set_vely(myStruct.velY);
-    protobufPacket.set_velz(myStruct.velZ);
-
-    // GPS Inputs
-    protobufPacket.set_gpslat(myStruct.gpsLat);
-    protobufPacket.set_gpslong(myStruct.gpsLong);
-    protobufPacket.set_gpsaltmsl(myStruct.gpsAltMSL);
-    protobufPacket.set_gpsaltagl(myStruct.gpsAltAGL);
-    protobufPacket.set_gpsvelocityn(myStruct.gpsVelN);
-    protobufPacket.set_gpsvelocitye(myStruct.gpsVelE);
-    protobufPacket.set_gpsvelocityd(myStruct.gpsVelD);
-    protobufPacket.set_epochtime(myStruct.epochTime);
-    protobufPacket.set_satellites(myStruct.satellites);
-    protobufPacket.set_gpslock(myStruct.gpsLock);
-
-    protobufPacket.set_sdfileno(myStruct.sdFileNo);
-
-    // Miscellaneous
-    protobufPacket.set_loopcount(myStruct.loopCount);
-    protobufPacket.set_timestamp(myStruct.timestamp);
-
-    // Covariances
-    protobufPacket.set_covqw(myStruct.covQW);
-    protobufPacket.set_covqx(myStruct.covQX);
-    protobufPacket.set_covqy(myStruct.covQY);
-    protobufPacket.set_covqz(myStruct.covQZ);
-
-    // Deployment Flags
-    protobufPacket.set_droguedeploy(myStruct.drogueDeploy);
-    protobufPacket.set_maindeploy(myStruct.mainDeploy);
-}
-
-void populatePayloadProtobuf(const GroundStation::PayloadTelemPacket& myStruct, HPRC::PayloadTelemetryPacket& protobufPacket) {
-    // State
-    protobufPacket.set_state(myStruct.state);
-
-    // Raw Sensor Readings
-    protobufPacket.set_accelx(myStruct.accelX);
-    protobufPacket.set_accely(myStruct.accelY);
-    protobufPacket.set_accelz(myStruct.accelZ);
-    protobufPacket.set_gyrox(myStruct.gyroX);
-    protobufPacket.set_gyroy(myStruct.gyroY);
-    protobufPacket.set_gyroz(myStruct.gyroZ);
-    protobufPacket.set_magx(myStruct.magX);
-    protobufPacket.set_magy(myStruct.magY);
-    protobufPacket.set_magz(myStruct.magZ);
-    protobufPacket.set_pressure(myStruct.pressure);
-    protobufPacket.set_temperature(myStruct.temperature);
-
-    // Calculated Values
-    protobufPacket.set_altitude(myStruct.altitude);
-    protobufPacket.set_initialaltitude(myStruct.initialAltitude);
-
-    // EKF Results
-    protobufPacket.set_w(myStruct.w);
-    protobufPacket.set_i(myStruct.i);
-    protobufPacket.set_j(myStruct.j);
-    protobufPacket.set_k(myStruct.k);
-    protobufPacket.set_posx(myStruct.posX);
-    protobufPacket.set_posy(myStruct.posY);
-    protobufPacket.set_posz(myStruct.posZ);
-    protobufPacket.set_velx(myStruct.velX);
-    protobufPacket.set_vely(myStruct.velY);
-    protobufPacket.set_velz(myStruct.velZ);
-
-    // GPS Inputs
-    protobufPacket.set_gpslat(myStruct.gpsLat);
-    protobufPacket.set_gpslong(myStruct.gpsLong);
-    protobufPacket.set_gpsaltmsl(myStruct.gpsAltMSL);
-    protobufPacket.set_gpsaltagl(myStruct.gpsAltAGL);
-    protobufPacket.set_epochtime(myStruct.epochTime);
-    protobufPacket.set_satellites(myStruct.satellites);
-    protobufPacket.set_gpslock(myStruct.gpsLock);
-
-    // Miscellaneous
-    protobufPacket.set_loopcount(myStruct.loopCount);
-    protobufPacket.set_timestamp(myStruct.timestamp);
-
-    // CV
-    protobufPacket.set_cx(myStruct.cx);
-    protobufPacket.set_cy(myStruct.cy);
-
-    // Target GPS Estimations
-    protobufPacket.set_targetgpslat(myStruct.targetGpsLat);
-    protobufPacket.set_targetgpslong(myStruct.targetGpsLong);
-
-    // Servo Controls
-    protobufPacket.set_desiredservopos1(myStruct.desiredServoPos1);
-    protobufPacket.set_actualservopos1(myStruct.actualServoPos1);
-    protobufPacket.set_desiredservopos2(myStruct.desiredServoPos2);
-    protobufPacket.set_actualservopos2(myStruct.actualServoPos2);
-    protobufPacket.set_desiredservopos3(myStruct.desiredServoPos3);
-    protobufPacket.set_actualservopos3(myStruct.actualServoPos3);
-    protobufPacket.set_desiredservopos4(myStruct.desiredServoPos4);
-    protobufPacket.set_actualservopos4(myStruct.actualServoPos4);
-
-    // Calculated Trajectory Constants
-    protobufPacket.set_traja(myStruct.trajA);
-    protobufPacket.set_trajb(myStruct.trajB);
-    protobufPacket.set_trajc(myStruct.trajC);
-    protobufPacket.set_trajd(myStruct.trajD);
-}
-
-
-DataLogger::Packet parsePacket(Backend::GenericPacket frame)
-{
-    std::string str;
-
-    // This way of assigning the packet type seems redundant, but the packetType byte can take on any value from 0-255; we want to set it to an enum value that we understand
-    Backend::Packet packet{};
-
-    HPRC::RocketTelemetryPacket rocketPacket;
-    HPRC::PayloadTelemetryPacket payloadPacket;
-
-    absl::Status status;
-
-    google::protobuf::util::JsonPrintOptions  options;
-    options.always_print_fields_with_no_presence = true;
-
-    switch (frame.data[0])
-    {
-        // TODO: Add a check to make sure the length of the packet matches whatever we're casting it into. Do once protobuf is fully integrated
-        case GroundStation::Rocket:
-        {
-            packet.packetType = GroundStation::Rocket;
-            populateRocketProtobuf(*(GroundStation::RocketTelemPacket *)&frame.data[1], rocketPacket);
-
-            // Convert current packet to JSON
-            status = google::protobuf::util::MessageToJsonString(rocketPacket, &str, options);
-            if (status != absl::OkStatus())
-            {
-                std::cerr << "Error converting packet to JSON string: " << status << std::endl;
-            }
-
-            packet.data.rocketData = &rocketPacket;
-            break;
-        }
-        case GroundStation::Payload:
-        {
-            packet.packetType = GroundStation::Payload;
-            populatePayloadProtobuf(*(GroundStation::PayloadTelemPacket *) &frame.data[1], payloadPacket);
-
-            // Convert current packet to JSON
-            status = google::protobuf::util::MessageToJsonString(payloadPacket, &str, options);
-            if (status != absl::OkStatus())
-            {
-                std::cerr << "Error converting packet to JSON string: " << status << std::endl;
-            }
-            packet.data.payloadData = &payloadPacket;
-            break;
-        }
-        case GroundStation::SDDirectory: case GroundStation::SDFileContents:
-        {
-            packet.packetType = GroundStation::SDDirectory;
-            packet.data.genericPacket = frame;
-            break;
-        }
-        default:
-        {
-            packet.packetType = GroundStation::Unknown;
-            break;
-        }
-    }
-
-    Backend::getInstance().receivePacket(packet);
-
-    str = std::regex_replace(str, std::regex("nan"), "0");
-    str = std::regex_replace(str, std::regex("inf"), "0");
-
-    return {str, packet.packetType};
 }
 
 void RadioModule::disconnectPort()
@@ -346,61 +134,56 @@ size_t RadioModule::readBytes_uart(char *buffer, size_t max_bytes)
     return serialPort->read(buffer, max_bytes);
 }
 
-void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
+void RadioModule::_handleReceivePacket(const uint8_t *_packet, uint16_t length_bytes, int rssi)
 {
     if(receivingThroughputTest)
     {
         throughputTestPacketsReceived ++;
     }
 
-    lastPacket = parsePacket({frame->dataLength_bytes, frame->data});
+    // TODO: Handle the case where we are receiving chunks of a packet. They cannot be interpreted until we have received all of them in order
+    // TODO: Handle RSSI
 
-    if(recordThroughput) // performance statistics
+    HPRC::Packet packet;
+    packet.ParseFromArray(_packet, length_bytes);
+
+    if(packet.Message_case() == HPRC::Packet::kTelemetry && recordThroughput)
     {
-        switch (lastPacket.packetType)
+        switch (packet.telemetry().Message_case())
         {
-        case GroundStation::Payload:
-            payloadRadioStats.packetsReceivedCount++;
-            payloadRadioStats.bytesReceivedCount += frame->dataLength_bytes + XBee::ReceivePacket::PacketBytes;
-            break;
-        case GroundStation::Rocket:
-            rocketRadioStats.packetsReceivedCount++;
-            rocketRadioStats.bytesReceivedCount+= frame->dataLength_bytes + XBee::ReceivePacket::PacketBytes;
-            break;
-        default:
+            case HPRC::Telemetry::kRocketPacket:
+                payloadRadioStats.packetsReceivedCount++;
+                payloadRadioStats.bytesReceivedCount += length_bytes;
+                break;
+            case HPRC::Telemetry::kPayloadPacket:
+                rocketRadioStats.packetsReceivedCount++;
+                rocketRadioStats.bytesReceivedCount += length_bytes;
+                break;
+            default:
                 break;
         }
     }
 
-    dataLogger->dataReady(lastPacket.data.c_str(), lastPacket.packetType);
+    if(rssi > 0)
+    {
+        dataLogger->writeTelemetry(packet, rssi);
+    }
+    else
+    {
+        dataLogger->writeTelemetry(packet);
+    }
+
+    Backend::getInstance().receivePacket(packet);
+}
+
+void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
+{
+    _handleReceivePacket(frame->data, frame->dataLength_bytes, 0);
 }
 
 void RadioModule::handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *frame)
 {
-    if(receivingThroughputTest)
-    {
-        throughputTestPacketsReceived ++;
-    }
-    lastPacket = parsePacket({frame->dataLength_bytes, frame->data});
-
-    if(recordThroughput) // performance statistics
-    {
-        switch (lastPacket.packetType)
-        {
-        case GroundStation::Payload:
-            payloadRadioStats.packetsReceivedCount++;
-            payloadRadioStats.bytesReceivedCount += frame->dataLength_bytes + XBee::ReceivePacket64Bit::PacketBytes;
-            break;
-        case GroundStation::Rocket:
-            rocketRadioStats.packetsReceivedCount++;
-            rocketRadioStats.bytesReceivedCount+= frame->dataLength_bytes + XBee::ReceivePacket64Bit::PacketBytes;
-            break;
-        default:
-            break;
-        }
-    }
-
-    dataLogger->dataReady(lastPacket.data.c_str(), lastPacket.packetType, frame->negativeRssi);
+    _handleReceivePacket(frame->data, frame->dataLength_bytes, frame->negativeRssi);
 }
 
 void RadioModule::incorrectChecksum(uint8_t calculated, uint8_t received)
@@ -608,30 +391,4 @@ void ServingRadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
     RadioModule::handleReceivePacket(frame);
 
 //    webServer->broadcast(QString::fromStdString(lastPacket.data));
-}
-
-void RocketTestModule::didCycle()
-{
-    constexpr int interval = 4;
-    if (cycleCount % interval == 0)
-    {
-        packet.timestamp = cycleCount / interval;
-        packet.epochTime = QDateTime::currentMSecsSinceEpoch();
-
-        sendTransmitRequestCommand(GROUND_STATION_ADDR, (uint8_t *)&packet, sizeof(packet));
-    }
-    cycleCount++;
-}
-
-void PayloadTestModule::didCycle()
-{
-    constexpr int interval = 4;
-    if (cycleCount % interval == 0)
-    {
-        packet.timestamp = cycleCount / interval;
-        packet.epochTime = QDateTime::currentMSecsSinceEpoch();
-
-        sendTransmitRequestCommand(GROUND_STATION_ADDR, (uint8_t *)&packet, sizeof(packet));
-    }
-    cycleCount++;
 }

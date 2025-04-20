@@ -26,9 +26,9 @@ StateDisplayWidget::StateDisplayWidget(QWidget *parent) :
     telemetryConnection = connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &StateDisplayWidget::telemetryAvailable);
 }
 
-void StateDisplayWidget::telemetryAvailable(Backend::Packet telemetry)
+void StateDisplayWidget::telemetryAvailable(const HPRC::Telemetry& telemetry)
 {
-    if(telemetry.packetType != GroundStation::Rocket)
+    if(!telemetry.has_rocketpacket())
     {
         return;
     }
@@ -36,8 +36,8 @@ void StateDisplayWidget::telemetryAvailable(Backend::Packet telemetry)
     const char *accelerationLabel = Backend::getInstance().convertFromGees ? (Backend::getInstance().convertToEnglish ? "ft/s/s" : "m/s/s") : "G";
     const char *velocityLabel = Backend::getInstance().convertToEnglish ? "ft/s" : "m/s";
     const char *altitudeLabel = Backend::getInstance().convertToEnglish ? "ft" : "m";
-    HPRC::RocketTelemetryPacket data = *telemetry.data.rocketData;
-    if(data.state() == 0)
+    const HPRC::RocketTelemetryPacket& packet = telemetry.rocketpacket();
+    if(packet.state() == 0)
     {
         ui->TimeWidget->setVisible(false);
     }
@@ -45,24 +45,24 @@ void StateDisplayWidget::telemetryAvailable(Backend::Packet telemetry)
     {
         ui->TimeWidget->setVisible(true);
     }
-    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(data.state()));
+    ui->StateName->setText(Backend::getInstance().RocketStateNames.at(packet.state()));
 
     ui->AccelerationLabel->setText(QString::asprintf("%0.2f %s",
-                                                     sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz()),
+                                                     sqrt(packet.accelx() * packet.accelx() + packet.accely() * packet.accely() + packet.accelz() * packet.accelz()),
                                                      accelerationLabel
                                                      ));
     ui->VelocityLabel->setText(QString::asprintf("%0.2f %s",
-                                                     sqrt(data.velx()*data.velx() + data.vely()*data.vely() + data.velz()*data.velz()),
+                                                     sqrt(packet.velx() * packet.velx() + packet.vely() * packet.vely() + packet.velz() * packet.velz()),
                                                     velocityLabel
     ));
 
     ui->AglLabel->setText(QString::asprintf("%0.2f %s",
-                                                 data.state() == 0 ? 0 : data.altitude() - Backend::getInstance().groundLevelAltitude,
-                                                 altitudeLabel
+                                            packet.state() == 0 ? 0 : packet.altitude() - Backend::getInstance().groundLevelAltitude,
+                                            altitudeLabel
     ));
 
     ui->MslLabel->setText(QString::asprintf("%0.2f %s",
-                                            data.altitude(),
+                                            packet.altitude(),
                                             altitudeLabel
     ));
 }

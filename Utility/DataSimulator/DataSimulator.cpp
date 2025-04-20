@@ -9,8 +9,8 @@
 
 
 DataSimulator::DataSimulator(const QString &filePath, WebServer *webServer, const google::protobuf::Descriptor *descriptor,
-                             GroundStation::PacketType packetType, QObject *parent)
-        : QObject(parent), _webServer(webServer), messageDescriptor(descriptor), packetType(packetType)
+                             DataType dataType, QObject *parent)
+        : QObject(parent), _webServer(webServer), messageDescriptor(descriptor), dataType(dataType)
 {
     if (!messageDescriptor)
     {
@@ -145,21 +145,20 @@ void DataSimulator::sendNextLine()
     else
     {
         std::cerr << "Error converting packet to JSON string: " << status << std::endl;
+        return;
     }
 
-    Backend::Packet telemetry{};
-    telemetry.packetType = packetType;  // Assuming a constant packet type
-
-    if (packetType == GroundStation::PacketType::Rocket)
+    HPRC::Packet packet;
+    if(dataType == RocketTelemetry)
     {
-        telemetry.data.rocketData = (HPRC::RocketTelemetryPacket *) currentPacket.get();
+        packet.mutable_telemetry()->mutable_rocketpacket()->CopyFrom(*dynamic_cast<HPRC::RocketTelemetryPacket*>(currentPacket.get()));
     }
-    else
+    else if(dataType == PayloadTelemetry)
     {
-        telemetry.data.payloadData = (HPRC::PayloadTelemetryPacket *) currentPacket.get();
+        packet.mutable_telemetry()->mutable_payloadpacket()->CopyFrom(*dynamic_cast<HPRC::PayloadTelemetryPacket*>(currentPacket.get()));
     }
 
-    Backend::getInstance().receivePacket(telemetry);
+    Backend::getInstance().receivePacket(packet);
 
     if (file->atEnd())
     {

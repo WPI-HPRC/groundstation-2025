@@ -32,7 +32,7 @@ public:
     JsInterface *jsInterface;
 
 public slots:
-    void telemetryAvailable(Backend::Packet telemetry);
+    void telemetryAvailable(const HPRC::Telemetry &telemetry);
 
 private:
     Ui::MapWidget *ui;

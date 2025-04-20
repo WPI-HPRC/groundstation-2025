@@ -43,7 +43,7 @@ public:
     QQuaternion m_rocketOrientVertically = QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f);
 
 public slots:
-    void telemetryAvailable(Backend::Packet telemetry) const;
+    void telemetryAvailable(const HPRC::Telemetry& telemetry) const;
 };
 
 

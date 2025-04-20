@@ -5,11 +5,13 @@
 #ifndef GS_BACKEND_2024_2025_RADIOMODULE_H
 #define GS_BACKEND_2024_2025_RADIOMODULE_H
 
+#include <cstdint>
 #include "../xbee/XBeeDevice.h"
 #include "../Utility/DataLogger.h"
 #include "../Utility/SerialPort.h"
 #include "../Utility/Utility.h"
 #include "../Utility/WebServer.h"
+#include "generated/telemetry/Packet.pb.h"
 
 struct LinkTestResults
 {
@@ -97,7 +99,6 @@ public:
 
     QString name;
 
-    DataLogger::Packet lastPacket;
     unsigned int cycleCountsFromFrameID[255]{};
     unsigned int cycleCount = 0;
 
@@ -110,6 +111,8 @@ public:
 
 private:
     void handlingFrame(const uint8_t *frame) override;
+
+    void _handleReceivePacket(const uint8_t *_packet, uint16_t length_bytes, int rssi);
 };
 
 class ServingRadioModule
@@ -123,37 +126,6 @@ public:
     void handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *frame) override;
 
     WebServer *webServer;
-};
-
-
-class RocketTestModule : public RadioModule
-{
-public:
-    RocketTestModule(int baudRate, DataLogger *logger, const QSerialPortInfo &portInfo) : RadioModule(baudRate, logger,
-                                                                                                      portInfo)
-    {}
-
-    RocketTestModule(int baudRate, DataLogger *logger) : RadioModule(baudRate, logger)
-    {}
-
-    void didCycle() override;
-
-    GroundStation::RocketTxPacket packet;
-};
-
-class PayloadTestModule : public RadioModule
-{
-public:
-    PayloadTestModule(int baudRate, DataLogger *logger, const QSerialPortInfo &portInfo) : RadioModule(baudRate, logger,
-                                                                                                       portInfo)
-    {}
-
-    PayloadTestModule(int baudRate, DataLogger *logger) : RadioModule(baudRate, logger)
-    {}
-
-    void didCycle() override;
-
-    GroundStation::PayloadTxPacket packet;
 };
 
 

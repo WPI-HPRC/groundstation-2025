@@ -485,9 +485,8 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
     }
 }
 
-void Backend::handleRocketTelemetry(Backend::Packet telemetry)
+void Backend::handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet)
 {
-    HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
     updateMaxRocketValues(maxRocketValues, *packet);
     updateTimes(*packet);
 
@@ -531,9 +530,8 @@ void Backend::handleRocketTelemetry(Backend::Packet telemetry)
     }
 }
 
-void Backend::handlePayloadTelemetry(Backend::Packet telemetry)
+void Backend::handlePayloadTelemetry(HPRC::PayloadTelemetryPacket *packet)
 {
-    HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
     updateMaxPayloadValues(maxPayloadValues, *packet);
     lastPayloadPacket = *packet;
     if(convertToEnglish)
@@ -551,7 +549,7 @@ void Backend::handlePayloadTelemetry(Backend::Packet telemetry)
 }
 
 void Backend::handlePacketizedPacket(Backend::GenericPacket packet)
-{
+{/*
     // This denotes the packetized data is done being sent
     if(packet.length_bytes == 1)
     {
@@ -590,9 +588,10 @@ void Backend::handlePacketizedPacket(Backend::GenericPacket packet)
     // Skip the first byte, which is the frame type
     memcpy(packetizedData->currentBytePointer, &packet.data[1], packet.length_bytes);
     packetizedData->currentBytePointer += packet.length_bytes;
+    */
 }
 
-void Backend::handleSDDirectoryContents(Backend::PacketizedData data)
+void Backend::handleSDDirectoryContents(Backend::ChunkedPacket data)
 {
     QList<QByteArray> fileNames = QByteArray::fromRawData((const char *)data.bytes, data.length_bytes).split('\0');
     for(int i = 0; i < fileNames.length(); i++)
@@ -601,24 +600,59 @@ void Backend::handleSDDirectoryContents(Backend::PacketizedData data)
     }
 }
 
-void Backend::receivePacket(Backend::Packet telemetry)
+void Backend::handleTelemetry(const HPRC::Telemetry& telemetry)
 {
-    switch (telemetry.packetType)
+    switch (telemetry.Message_case())
     {
-        case GroundStation::Rocket:
-            handleRocketTelemetry(telemetry);
+        case HPRC::Telemetry::kRocketPacket:
+            handleRocketTelemetry(const_cast<HPRC::RocketTelemetryPacket *>(&telemetry.rocketpacket()));
             break;
-        case GroundStation::Payload:
-            handlePayloadTelemetry(telemetry);
-            break;
-        case GroundStation::SDDirectory: case GroundStation::SDFileContents: case GroundStation::Image:
-            handlePacketizedPacket(telemetry.data.genericPacket);
+        case HPRC::Telemetry::kPayloadPacket:
+            handlePayloadTelemetry(const_cast<HPRC::PayloadTelemetryPacket *>(&telemetry.payloadpacket()));
             break;
         default:
-            break;
+            qDebug() << "RECEIVED TELEMETRY PACKET WITH MESSAGE NOT SET";
     }
-
     emit telemetryAvailable(telemetry);
+}
+
+void Backend::handleRadioCommandResponse(const HPRC::CommandResponse &packet)
+{
+    // Handle the command response
+}
+
+void Backend::handleBeginPacketChunks(const HPRC::BeginPacketChunks &packet)
+{
+    // Handle the start of receiving packet chunks
+}
+
+void Backend::handleEndPacketChunks(const HPRC::EndPacketChunks &packet)
+{
+    // Handle the end of receiving packet chunks
+}
+
+void Backend::receivePacket(const HPRC::Packet& packet)
+{
+    switch (packet.Message_case())
+    {
+        case HPRC::Packet::kTelemetry:
+            handleTelemetry(packet.telemetry());
+            break;
+        case HPRC::Packet::kCommandResponse:
+            handleRadioCommandResponse(packet.commandresponse());
+            break;
+        case HPRC::Packet::kBeginPacketChunks:
+            handleBeginPacketChunks(packet.beginpacketchunks());
+            break;
+        case HPRC::Packet::kEndPacketChunks:
+            handleEndPacketChunks(packet.endpacketchunks());
+            break;
+        case HPRC::Packet::kCommand:
+            qDebug() << "Received a command from the radio module"; // Should never happen
+            break;
+        default:
+            qDebug() << "RECEIVED PACKET WITH MESSAGE NOT SET";
+    }
 }
 
 void Backend::setBaudRate(const QString &name, int baudRate)
@@ -714,12 +748,6 @@ bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, i
     RadioModule *module;
     switch(moduleType)
     {
-        case Rocket:
-            module = new RocketTestModule(baudRate, new DataLogger(), targetPort);
-            break;
-        case Payload:
-            module = new PayloadTestModule(baudRate, new DataLogger(), targetPort);
-            break;
         default:
             module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
     }
@@ -817,7 +845,7 @@ void Backend::start()
             simulationFile,
             webServer,
             HPRC::PayloadTelemetryPacket::descriptor(),
-            GroundStation::PacketType::Payload
+            DataSimulator::PayloadTelemetry
             );
 
     simulationFile = ":/SimulationData/SampleRocketData.csv";
@@ -825,7 +853,7 @@ void Backend::start()
             simulationFile,
             webServer,
             HPRC::RocketTelemetryPacket::descriptor(),
-            GroundStation::PacketType::Rocket
+            DataSimulator::RocketTelemetry
     );
 
     QSerialPortInfo modem = getTargetPort(GROUND_STATION_MODULE);
@@ -883,20 +911,8 @@ Backend::Backend(QObject *parent) : QObject(parent)
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
 
-    // Create 2^16 bytes for each, but we can always realloc if absolutely necessary
-    sDFileContents.packetType = GroundStation::SDFileContents;
-    sDFileContents.bytes = new uint8_t[65536];
-    sDFileContents.currentBytePointer = sDFileContents.bytes;
-
-    sDDirectoryContents.packetType = GroundStation::SDDirectory;
-    sDDirectoryContents.bytes = new uint8_t[65536];
-    sDDirectoryContents.currentBytePointer = sDDirectoryContents.bytes;
-
-    image.packetType = GroundStation::Image;
-    image.bytes = new uint8_t[1048576]; // Give 1mb of space for an image
-    image.currentBytePointer = image.bytes;
-
-
+    chunkedPacket.bytes = new uint8_t[1048576*50]; // Give 50mb of space in case there is a large piece of data. We should check the data fits this later
+    chunkedPacket.currentBytePointer = chunkedPacket.bytes;
 
 //    stateMaxValues = QList<MaxValues>(6);
 

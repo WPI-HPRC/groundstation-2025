@@ -19,8 +19,15 @@ class DataSimulator : public QObject
 {
 Q_OBJECT
 
+
 public:
-    DataSimulator(const QString &filePath, WebServer *webServer, const google::protobuf::Descriptor *messageDescriptor, GroundStation::PacketType packetType, QObject *parent = nullptr);
+    enum DataType
+    {
+        RocketTelemetry,
+        PayloadTelemetry
+    };
+
+    DataSimulator(const QString &filePath, WebServer *webServer, const google::protobuf::Descriptor *messageDescriptor, DataType dataType, QObject *parent = nullptr);
     void start();
     void stop();
 
@@ -41,7 +48,7 @@ private:
 
     bool shouldStop = false;
 
-    GroundStation::PacketType packetType;
+    DataType dataType;
 
 public slots:
 

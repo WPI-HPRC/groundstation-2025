@@ -9,11 +9,11 @@ RocketGpsIndicator::RocketGpsIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Rocket GPS");
     this->timeoutDuration_sec = 1;
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Packet telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](HPRC::Telemetry telemetry)
     {
-        if(telemetry.packetType == GroundStation::Rocket)
+        if(telemetry.Message_case() == HPRC::Telemetry::kRocketPacket)
         {
-            if(telemetry.data.rocketData->gpslock())
+            if(telemetry.rocketpacket().gpslock())
             {
                 this->resetTimer();
             }

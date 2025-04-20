@@ -8,9 +8,9 @@
 RocketConnectionIndicator::RocketConnectionIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Rocket");
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Packet telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](const HPRC::Telemetry& telemetry)
     {
-        if(telemetry.packetType == GroundStation::Rocket)
+        if(telemetry.has_payloadpacket())
         {
             this->resetTimer();
         }
