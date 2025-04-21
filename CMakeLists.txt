@@ -56,10 +56,10 @@ set(PROTO_SRCS
         Backend/APRS/APRSHandler.h
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
-        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/AprsWidget/AprsWidget.ui
         Frontend/Windows/CameraWindow/camerawindow.cpp
         Frontend/Windows/CameraWindow/camerawindow.h
-        Frontend/Windows/CameraWindow/camerawindow.ui)
+        Frontend/Windows/CameraWindow/CameraWindow.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -248,7 +248,7 @@ add_executable(groundstation-2025
         Backend/APRS/KissClient.h
         Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
         Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
-        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.ui
+        Frontend/Windows/RemoteControlWindow/RemoteControlWindow.ui
 )
 
 set_target_properties(groundstation-2025 PROPERTIES
