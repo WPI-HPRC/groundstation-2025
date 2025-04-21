@@ -151,6 +151,8 @@ public:
 
     void setBaudRate(const QString &name, int baudRate);
 
+    void transmitPacketThroughModem(const HPRC::Packet &packet, uint64_t address);
+
     QList<RadioModule *> radioModules;
     int loopCount;
 
@@ -170,7 +172,6 @@ public:
     int maxValueDecimalPlaces = 3;
     int telemetryDecimalPlaces = 5;
     void forceMaxValuesUpdate();
-
 
     APRSHandler aprsHandler;
     RadioModule *groundStationModem;
@@ -195,6 +196,12 @@ public:
     };
 
     uint32_t rocketFlightTime = 0;
+
+    static uint64_t getAddressBigEndian(const uint8_t *packet, size_t *index_io);
+
+    static uint64_t getAddressBigEndian(const uint8_t *packet);
+
+    static QByteArray hexToBytes(const QString &hexString);
 
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
@@ -277,6 +284,8 @@ private:
     MaxValues maxPayloadValues{};
 
     ChunkedPacket chunkedPacket;
+
+    uint8_t transmitPacketBytes[255]; // Maximum bytes in a packet is 255
 
     void handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet);
 

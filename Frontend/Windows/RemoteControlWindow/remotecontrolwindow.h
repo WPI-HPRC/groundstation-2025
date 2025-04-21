@@ -26,6 +26,8 @@ public:
 
 private:
     Ui::RemoteControlWindow *ui;
+
+    unsigned long long int getDestinationAddress();
 };
 
 

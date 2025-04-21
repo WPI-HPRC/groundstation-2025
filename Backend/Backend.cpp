@@ -745,13 +745,13 @@ bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, i
         return false;
     }
 
-    RadioModule *module;
-    switch(moduleType)
-    {
-        default:
-            module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
-    }
+    RadioModule *module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
     radioModules.append(module);
+    if(!groundStationModem)
+    {
+        groundStationModem = module;
+    }
+
     return true;
 }
 
@@ -903,6 +903,53 @@ void Backend::start()
 
     connect(rssiTimer, &QTimer::timeout, this, &Backend::updateRSSIInfo);
 //    rssiTimer->start();
+}
+
+void Backend::transmitPacketThroughModem(const HPRC::Packet &packet, uint64_t address)
+{
+    if (!groundStationModem)
+    {
+        return;
+    }
+    size_t size = packet.ByteSizeLong();
+    if (size > 255)
+    {
+        qDebug() << "Can't transmit because the packet is over 255 bytes! " << size << " Bytes is too many!";
+    }
+
+    packet.SerializeToArray(transmitPacketBytes, (int) size);
+
+    // For now send to this address, but an input in the frontend will be added
+    groundStationModem->sendTransmitRequestCommand(address, transmitPacketBytes, size);
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet, size_t *index_io)
+{
+    uint64_t address = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        address |= (uint64_t) packet[*index_io] << (8 * (7 - i));
+        (*index_io)++;
+    }
+
+    return address;
+}
+
+QByteArray Backend::hexToBytes(const QString &hexString)
+{
+    QByteArray rawBytes;
+    QString cleanHexString = hexString;
+    cleanHexString.remove(QRegularExpression("\\s")); // Remove all spaces and newlines
+    rawBytes = QByteArray::fromHex(cleanHexString.toLatin1());
+    return rawBytes;
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet)
+{
+    size_t _ = 0;
+
+    return getAddressBigEndian(packet, &_);
 }
 
 Backend::Backend(QObject *parent) : QObject(parent)

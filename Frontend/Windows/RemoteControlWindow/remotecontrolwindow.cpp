@@ -8,58 +8,43 @@
 #include "ui_RemoteControlWindow.h"
 #include "Backend/Backend.h"
 
+uint64_t RemoteControlWindow::getDestinationAddress()
+{
+    QByteArray bytes = Backend::hexToBytes(ui->DestinationAddress->text());
+    return Backend::getAddressBigEndian((uint8_t *)bytes.data());
+}
 
 RemoteControlWindow::RemoteControlWindow(QWidget *parent) :
         QWidget(parent), ui(new Ui::RemoteControlWindow)
 {
     ui->setupUi(this);
+    ui->DestinationAddress->setInputMask("HH HH HH HH HH HH HH HH");
 
-    connect(ui->AirbrakesSlider, &QSlider::valueChanged, this, [](int value)
+    connect(ui->AirbrakesSlider, &QSlider::valueChanged, this, [this](int value)
     {
-        if(!Backend::getInstance().groundStationModem)
-        {
-            return;
-        }
-        uint16_t transmitValue = value;
-        uint32_t command = 0x000000AB | transmitValue << 8;
-        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, (uint8_t *)&command, 4);
+        HPRC::Packet packet;
+        packet.mutable_command()->mutable_actuateairbrakes()->set_servovalue(value);
+
+        Backend::getInstance().transmitPacketThroughModem(packet, getDestinationAddress());
     });
-    connect(ui->ReadSDDirectoryButton, &QPushButton::released, this, []()
+    connect(ui->ReadSDDirectoryButton, &QPushButton::released, this, [this]()
     {
-        if(!Backend::getInstance().groundStationModem)
-        {
-            return;
-        }
-        uint8_t command = 0xCD;
-        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, &command, 1);
+        HPRC::Packet packet;
+        packet.mutable_command()->mutable_readsddirectory();
+        Backend::getInstance().transmitPacketThroughModem(packet, getDestinationAddress());
     });
     connect(ui->ReadSDFileButton, &QPushButton::released, this, [this]()
     {
-        if(!Backend::getInstance().groundStationModem)
-        {
-            return;
-        }
-        QString filename = ui->SDFileName->text();
-
-        uint8_t request[filename.length() + 2];
-        request[0] = 0xFC;
-        request[filename.length() + 1] = '\0';
-        memcpy(&request[1], (uint8_t *)filename.toUtf8().data(), filename.length());
-
-        // We need to reverse the bytes for how the packets are read on the flight computer
-        XBeeDevice::reverseBytes(request, (int)sizeof(request));
-
-        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, request, 1);
+        HPRC::Packet packet;
+        packet.mutable_command()->mutable_readsdfile()->set_filename(ui->SDFileName->text().toStdString().c_str());
+        Backend::getInstance().transmitPacketThroughModem(packet, getDestinationAddress());
     });
 
     connect(ui->ClearSDButton, &QPushButton::released, this, [this]()
     {
-        if(!Backend::getInstance().groundStationModem)
-        {
-            return;
-        }
-        uint8_t command = 0xCC;
-        Backend::getInstance().groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, &command, 1);
+        HPRC::Packet packet;
+        packet.mutable_command()->mutable_clearsd();
+        Backend::getInstance().transmitPacketThroughModem(packet, getDestinationAddress());
     });
 }
 
