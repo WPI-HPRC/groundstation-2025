@@ -905,7 +905,7 @@ void Backend::start()
 //    rssiTimer->start();
 }
 
-void Backend::transmitPacketThroughModem(const HPRC::Packet &packet)
+void Backend::transmitPacketThroughModem(const HPRC::Packet &packet, uint64_t address)
 {
     if (!groundStationModem)
     {
@@ -920,7 +920,36 @@ void Backend::transmitPacketThroughModem(const HPRC::Packet &packet)
     packet.SerializeToArray(transmitPacketBytes, (int) size);
 
     // For now send to this address, but an input in the frontend will be added
-    groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, transmitPacketBytes, size);
+    groundStationModem->sendTransmitRequestCommand(address, transmitPacketBytes, size);
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet, size_t *index_io)
+{
+    uint64_t address = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        address |= (uint64_t) packet[*index_io] << (8 * (7 - i));
+        (*index_io)++;
+    }
+
+    return address;
+}
+
+QByteArray Backend::hexToBytes(const QString &hexString)
+{
+    QByteArray rawBytes;
+    QString cleanHexString = hexString;
+    cleanHexString.remove(QRegularExpression("\\s")); // Remove all spaces and newlines
+    rawBytes = QByteArray::fromHex(cleanHexString.toLatin1());
+    return rawBytes;
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet)
+{
+    size_t _ = 0;
+
+    return getAddressBigEndian(packet, &_);
 }
 
 Backend::Backend(QObject *parent) : QObject(parent)

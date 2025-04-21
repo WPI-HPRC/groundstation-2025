@@ -13,35 +13,6 @@ void ReverseBytes( void *start, int size )
     std::reverse(istart, iend);
 }
 
-uint64_t getAddressBigEndian(const uint8_t *packet, size_t *index_io)
-{
-    uint64_t address = 0;
-
-    for (int i = 0; i < 8; i++)
-    {
-        address |= (uint64_t) packet[*index_io] << (8 * (7 - i));
-        (*index_io)++;
-    }
-
-    return address;
-}
-
-uint64_t getAddressBigEndian(const uint8_t *packet)
-{
-    size_t _ = 0;
-
-    return getAddressBigEndian(packet, &_);
-}
-
-QByteArray hexToBytes(const QString &hexString)
-{
-    QByteArray rawBytes;
-    QString cleanHexString = hexString;
-    cleanHexString.remove(QRegularExpression("\\s")); // Remove all spaces and newlines
-    rawBytes = QByteArray::fromHex(cleanHexString.toLatin1());
-    return rawBytes;
-}
-
 void RadioControlsWindow::linkTestFailed()
 {
     /*
@@ -118,8 +89,8 @@ void RadioControlsWindow::linkTestButtonPressed()
     int payloadSize = ui->LinkTest_PayloadSize->value();
     int iterations = ui->LinkTest_Iterations->value();
     int repeat = ui->LinkTest_Repeat->value();
-    QByteArray bytes = hexToBytes(ui->LinkTest_DestinationAddress->text());
-    uint64_t address = getAddressBigEndian((uint8_t *)bytes.data());
+    QByteArray bytes = Backend::hexToBytes(ui->LinkTest_DestinationAddress->text());
+    uint64_t address = Backend::getAddressBigEndian((uint8_t *)bytes.data());
 
     ui->LinkTest_Button->setText("Running link test...");
     ui->LinkTest_Button->setEnabled(false);
@@ -154,8 +125,8 @@ void RadioControlsWindow::throughputTestButtonPressed()
         return;
     }
 
-    QByteArray bytes = hexToBytes(ui->ThroughputTest_DestinationAddress->text());
-    uint64_t address = getAddressBigEndian((uint8_t *)bytes.data());
+    QByteArray bytes = Backend::hexToBytes(ui->ThroughputTest_DestinationAddress->text());
+    uint64_t address = Backend::getAddressBigEndian((uint8_t *)bytes.data());
     uint duration = ui->ThroughputTest_Duration->value();
     uint8_t transmitOptions = ui->ThroughputTest_TransmitOptions->value();
 
