@@ -905,6 +905,24 @@ void Backend::start()
 //    rssiTimer->start();
 }
 
+void Backend::transmitPacketThroughModem(const HPRC::Packet &packet)
+{
+    if (!groundStationModem)
+    {
+        return;
+    }
+    size_t size = packet.ByteSizeLong();
+    if (size > 255)
+    {
+        qDebug() << "Can't transmit because the packet is over 255 bytes! " << size << " Bytes is too many!";
+    }
+
+    packet.SerializeToArray(transmitPacketBytes, (int) size);
+
+    // For now send to this address, but an input in the frontend will be added
+    groundStationModem->sendTransmitRequestCommand(0x0013A200422CDAC4, transmitPacketBytes, size);
+}
+
 Backend::Backend(QObject *parent) : QObject(parent)
 {
     loopCount = 0;

@@ -151,6 +151,8 @@ public:
 
     void setBaudRate(const QString &name, int baudRate);
 
+    void transmitPacketThroughModem(const HPRC::Packet &packet);
+
     QList<RadioModule *> radioModules;
     int loopCount;
 
@@ -170,7 +172,6 @@ public:
     int maxValueDecimalPlaces = 3;
     int telemetryDecimalPlaces = 5;
     void forceMaxValuesUpdate();
-
 
     APRSHandler aprsHandler;
     RadioModule *groundStationModem;
@@ -277,6 +278,8 @@ private:
     MaxValues maxPayloadValues{};
 
     ChunkedPacket chunkedPacket;
+
+    uint8_t transmitPacketBytes[255]; // Maximum bytes in a packet is 255
 
     void handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet);
 
