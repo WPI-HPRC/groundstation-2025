@@ -745,13 +745,13 @@ bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, i
         return false;
     }
 
-    RadioModule *module;
-    switch(moduleType)
-    {
-        default:
-            module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
-    }
+    RadioModule *module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
     radioModules.append(module);
+    if(!groundStationModem)
+    {
+        groundStationModem = module;
+    }
+
     return true;
 }
 
