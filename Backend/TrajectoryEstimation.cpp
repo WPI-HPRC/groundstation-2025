@@ -120,4 +120,7 @@ Eigen::VectorXd KalmanFilter::getState() const {
 }
 
 /* Tuning the Kalman Filter
- * 
+/* Trajectory estimation--> math--> algorithm--> double check
+ *
+ *
+ *
