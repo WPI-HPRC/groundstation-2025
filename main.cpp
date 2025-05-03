@@ -3,6 +3,7 @@
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
 #include "Frontend/Windows/CameraWindow/camerawindow.h"
+#include "Frontend/Windows/GraphWindow//GraphWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,8 +27,14 @@ int main(int argc, char *argv[])
     cameraWindow.showMaximized();
      */
 
+    GraphWindow graphWindow;
+    graphWindow.showNormal();
+    graphWindow.update();
+    graphWindow.setWindowTitle("Rocket Graphs");
+
     Backend &backend = Backend::getInstance();
     backend.start();
+
 
     int code = QApplication::exec();
 

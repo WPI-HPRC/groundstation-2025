@@ -7,7 +7,6 @@
 #include <QJsonDocument>
 #include <string>
 #include <utility>
-#include <chrono>
 #include "Constants.h"
 
 QMap<std::string, Backend::ConversionFunction> Backend::metricToEnglish = {
@@ -175,6 +174,9 @@ void Backend::cancelLinkTest()
     std::cout << "Cancelling link test" << std::endl;
     getModuleWithName(GROUND_STATION_MODULE)->linkTestsLeft = 0;
 }
+
+
+
 
 void Backend::_runThroughputTest(Backend::ThroughputTestParams params)
 {
@@ -721,6 +723,7 @@ void Backend::writeParameters(const QString &moduleName)
 
 bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, int baudRate)
 {
+
     RadioModule *existingModule = getModuleWithName(name);
     if(existingModule)
     {
