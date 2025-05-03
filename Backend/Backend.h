@@ -195,6 +195,23 @@ public:
             "Abort"
     };
 
+    const QList<QString> PayloadStateNames = {
+            "Pre-Launch",
+            "Boost",
+            "Coast",
+            "Drogue Descent",
+            "Judge Righting",
+            "Vertical Side",
+            "Horizontal Side",
+            "Flail",
+            "Extend Auger",
+            "Drill",
+            "Soil Delivery",
+            "Liquid Delivery",
+            "Recovery",
+            "Abort"
+    };
+
     uint32_t rocketFlightTime = 0;
 
     static uint64_t getAddressBigEndian(const uint8_t *packet, size_t *index_io);
