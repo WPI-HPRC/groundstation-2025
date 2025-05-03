@@ -59,7 +59,7 @@ private:
 
 public slots:
     void scroll();
-    void telemetryAvailable(Backend::Telemetry telemetry);
+    void telemetryAvailable(const HPRC::Telemetry& telemetry);
 
 };
 

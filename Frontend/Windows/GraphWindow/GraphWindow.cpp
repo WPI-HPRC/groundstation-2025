@@ -30,38 +30,40 @@ void GraphWindow::scroll()
 //    telemflag = false;
 }
 
-void GraphWindow::telemetryAvailable(Backend::Telemetry telemetry)
+void GraphWindow::telemetryAvailable(const HPRC::Telemetry& telemetry)
 {
-    if(telemetry.packetType != GroundStation::Rocket)
+    if(!telemetry.has_rocketpacket())
+    {
         return;
+    }
 
-    acceleration->addToSeries(0,seconds, telemetry.data.rocketData->accelx());
-    acceleration->addToSeries(1, seconds, telemetry.data.rocketData->accely());
-    acceleration->addToSeries(2, seconds, telemetry.data.rocketData->accelz());
+    acceleration->addToSeries(0,seconds, telemetry.rocketpacket().accelx());
+    acceleration->addToSeries(1, seconds, telemetry.rocketpacket().accely());
+    acceleration->addToSeries(2, seconds, telemetry.rocketpacket().accelz());
 
-    gyro->addToSeries(0, seconds, telemetry.data.rocketData->gyrox());
-    gyro->addToSeries(1, seconds, telemetry.data.rocketData->gyroy());
-    gyro->addToSeries(2, seconds, telemetry.data.rocketData->gyroz());
+    gyro->addToSeries(0, seconds, telemetry.rocketpacket().gyrox());
+    gyro->addToSeries(1, seconds, telemetry.rocketpacket().gyroy());
+    gyro->addToSeries(2, seconds, telemetry.rocketpacket().gyroz());
 
-    velocity->addToSeries(0,seconds, telemetry.data.rocketData->velx());
-    velocity->addToSeries(1, seconds, telemetry.data.rocketData->vely());
-    velocity->addToSeries(2, seconds, telemetry.data.rocketData->velz());
+    velocity->addToSeries(0,seconds, telemetry.rocketpacket().velx());
+    velocity->addToSeries(1, seconds, telemetry.rocketpacket().vely());
+    velocity->addToSeries(2, seconds, telemetry.rocketpacket().velz());
 
-    mag->addToSeries(0,seconds, telemetry.data.rocketData->magx());
-    mag->addToSeries(1, seconds, telemetry.data.rocketData->magy());
-    mag->addToSeries(2, seconds, telemetry.data.rocketData->magz());
+    mag->addToSeries(0,seconds, telemetry.rocketpacket().magx());
+    mag->addToSeries(1, seconds, telemetry.rocketpacket().magy());
+    mag->addToSeries(2, seconds, telemetry.rocketpacket().magz());
 
-    position->addToSeries(0,seconds, telemetry.data.rocketData->posx());
-    position->addToSeries(1, seconds, telemetry.data.rocketData->posy());
-    position->addToSeries(2, seconds, telemetry.data.rocketData->posz());
+    position->addToSeries(0,seconds, telemetry.rocketpacket().posx());
+    position->addToSeries(1, seconds, telemetry.rocketpacket().posy());
+    position->addToSeries(2, seconds, telemetry.rocketpacket().posz());
 
-    altitude->addToSeries(0, seconds, telemetry.data.rocketData->altitude());
-    airbrakes->addToSeries(0, seconds, telemetry.data.rocketData->servoposition());
+    altitude->addToSeries(0, seconds, telemetry.rocketpacket().altitude());
+    airbrakes->addToSeries(0, seconds, telemetry.rocketpacket().servoposition());
 
-    quat->addToSeries(0, seconds, telemetry.data.rocketData->i());
-    quat->addToSeries(1, seconds, telemetry.data.rocketData->j());
-    quat->addToSeries(2, seconds, telemetry.data.rocketData->k());
-    quat->addToSeries(3, seconds, telemetry.data.rocketData->w());
+    quat->addToSeries(0, seconds, telemetry.rocketpacket().i());
+    quat->addToSeries(1, seconds, telemetry.rocketpacket().j());
+    quat->addToSeries(2, seconds, telemetry.rocketpacket().k());
+    quat->addToSeries(3, seconds, telemetry.rocketpacket().w());
 
     telemflag = true;
 }

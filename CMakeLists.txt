@@ -59,7 +59,7 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/AprsWidget.ui
         Frontend/Windows/CameraWindow/camerawindow.cpp
         Frontend/Windows/CameraWindow/camerawindow.h
-        Frontend/Windows/CameraWindow/CameraWindow.ui)
+        Frontend/Windows/CameraWindow/CameraWindow.ui
         Frontend/Widgets/AprsWidget/aprswidget.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h)
