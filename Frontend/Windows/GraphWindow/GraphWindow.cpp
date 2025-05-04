@@ -2,6 +2,8 @@
 
 #include "GraphWindow.h"
 #include "ui_GraphWindow.h"
+#include <QGraphicsLinearLayout>
+#include <QElapsedTimer>
 
 #include "Frontend/Widgets/GraphWidget/ThreeAxisGraph.h"
 #include "Frontend/Widgets/GraphWidget/OneAxisGraph.h"
@@ -22,14 +24,27 @@ void GraphWindow::scroll()
         */
     }
 
-    if(timerCount % 1 == 0)
+    if(timerCount % 10 == 0)
     {
+//        QElapsedTimer timerr;  // Elapsed time tracker
+//        timerr.start();
         for (GraphWidget *widget: allGraphs)
         {
             widget->removeTail(seconds);
             widget->flushBuffersToSeries();
             widget->rescale();
         }
+        ui->AltitudeGraph->viewport()->update();
+        ui->AccelerationGraph->viewport()->update();
+        ui->GyroGraph->viewport()->update();
+        ui->MagGraph->viewport()->update();
+        ui->QuatGraph->viewport()->update();
+        ui->VelocityGraph->viewport()->update();
+        ui->PositionGraph->viewport()->update();
+        ui->AirbrakesGraph->viewport()->update();
+
+//        qint64 elapsedTime = timerr.elapsed();  // Time in milliseconds
+//        qDebug() << "Rendering took:" << elapsedTime << "ms";
     }
     seconds += (1.0 / samplerate);
 
@@ -48,7 +63,6 @@ void GraphWindow::telemetryAvailable(const HPRC::Telemetry& telemetry)
     acceleration->addToSeries(0,seconds, telemetry.rocketpacket().accelx());
     acceleration->addToSeries(1, seconds, telemetry.rocketpacket().accely());
     acceleration->addToSeries(2, seconds, telemetry.rocketpacket().accelz());
-
 
     gyro->addToSeries(0, seconds, telemetry.rocketpacket().gyrox());
     gyro->addToSeries(1, seconds, telemetry.rocketpacket().gyroy());
@@ -94,64 +108,72 @@ GraphWindow::GraphWindow(QWidget *parent) :
     altitude->setMinValue(0);
     altitude->dontScroll();
     ui->AltitudeGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->AltitudeGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->AltitudeGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->AltitudeGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->AltitudeGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     acceleration = new ThreeAxisGraph("Acceleration", resolution);
     ui->AccelerationGraph->setChart(acceleration);
     allGraphs.push_back(acceleration);
     ui->AccelerationGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->AccelerationGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->AccelerationGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->AccelerationGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->AccelerationGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     gyro = new ThreeAxisGraph("Gyro", resolution);
     ui->GyroGraph->setChart(gyro);
     allGraphs.push_back(gyro);
     ui->GyroGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->GyroGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->GyroGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->GyroGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->GyroGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     mag = new ThreeAxisGraph("Mag", resolution);
     ui->MagGraph->setChart(mag);
     allGraphs.push_back(mag);
     ui->MagGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->MagGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->MagGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->MagGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->MagGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     quat = new FourAxisGraph("Quaternion", resolution);
     ui->QuatGraph->setChart(quat);
     allGraphs.push_back(quat);
     ui->QuatGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->QuatGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->QuatGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->QuatGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->QuatGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     velocity = new ThreeAxisGraph("Velocity", resolution);
     ui->VelocityGraph->setChart(velocity);
     allGraphs.push_back(velocity);
     ui->VelocityGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->VelocityGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->VelocityGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->VelocityGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->VelocityGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     position = new ThreeAxisGraph("Position", resolution);
     ui->PositionGraph->setChart(position);
     allGraphs.push_back(position);
     ui->PositionGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->PositionGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->PositionGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->PositionGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->PositionGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     airbrakes = new OneAxisGraph("Airbrakes", resolution);
     ui->AirbrakesGraph->setChart(airbrakes);
     allGraphs.push_back(airbrakes);
     airbrakes->setMinValue(0);
     ui->AirbrakesGraph->setRenderHint(QPainter::Antialiasing, false);
-    ui->AirbrakesGraph->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+    ui->AirbrakesGraph->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
     ui->AirbrakesGraph->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    ui->AirbrakesGraph->setCacheMode(QGraphicsView::CacheBackground);
 
     connect(timer, &QTimer::timeout, this, &GraphWindow::scroll);
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &GraphWindow::telemetryAvailable);
     scroll();
 //    ui->Airbrakes->setTitleBarWidget(new QWidget(ui->Airbrakes));
-//    ui->centralwidget->hide();
+    ui->centralwidget->hide();
 //    Backend::getInstance().setGraphWindow(this);
 }
 
