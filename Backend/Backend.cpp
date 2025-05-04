@@ -882,6 +882,11 @@ void Backend::start()
 
     connect(rtcTimer, &QTimer::timeout, [this]()
             {
+                if(graphWindow)
+                {
+                    graphWindow->scroll();
+                }
+
                 currentGroundEpoch = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
                 std::tm* currentLocalDateTime = std::localtime(&currentGroundEpoch);
@@ -953,6 +958,15 @@ uint64_t Backend::getAddressBigEndian(const uint8_t *packet)
     size_t _ = 0;
 
     return getAddressBigEndian(packet, &_);
+}
+
+void Backend::setGraphWindow(GraphWindow *window)
+{
+    graphWindow = window;
+//    graphTimer = new QTimer();
+//    graphTimer->setInterval(1000);
+//    connect(rtcTimer, &QTimer::timeout, graphWindow, &GraphWindow::scroll);
+//    graphTimer->start();
 }
 
 Backend::Backend(QObject *parent) : QObject(parent)

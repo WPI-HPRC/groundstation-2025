@@ -19,6 +19,7 @@
 #include "Utility/DataSimulator/DataSimulator.h"
 #include "Utility/UnitConversions.h"
 #include "Backend/APRS/APRSHandler.h"
+#include "Frontend/Windows/GraphWindow/GraphWindow.h"
 
 #include "generated/telemetry/RocketTelemetryPacket.pb.h"
 #include "generated/telemetry/PayloadTelemetryPacket.pb.h"
@@ -220,6 +221,8 @@ public:
 
     static QByteArray hexToBytes(const QString &hexString);
 
+    void setGraphWindow(GraphWindow *window);
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);
@@ -266,6 +269,8 @@ signals:
 private:
     explicit Backend(QObject *parent = nullptr);
 
+    GraphWindow *graphWindow;
+
     using ConversionFunction = float (*)(float);
     static void doConversions(google::protobuf::Message *message, const QMap<std::string, ConversionFunction> &conversionMap);
 
@@ -293,6 +298,8 @@ private:
     uint32_t rocketTimestampStart;
     QTimer *throughputTimer{};
     QTimer *rssiTimer{};
+
+    QTimer *graphTimer{};
 
     RadioCountStats lastRocketCount;
     RadioCountStats lastPayloadCount;

@@ -9,8 +9,9 @@
 #include <QValueAxis>
 #include <QTimer>
 
+#include "generated/telemetry/Packet.pb.h"
 #include "Frontend/Widgets/GraphWidget/GraphWidget.h"
-#include "Backend/Backend.h"
+
 namespace Ui {
     class GraphWindow;
 }
@@ -29,7 +30,7 @@ public:
     //TODO enable_if?
     template <class T>
     GraphWidget* makeGraphSimple(std::initializer_list<T> list) {
-        GraphWidget* graph = new GraphWidget("Velocity", 8, nullptr);
+        auto* graph = new GraphWidget("Velocity", 8, nullptr);
         for( auto elem : list) {
             graph->addSeriesCustom(elem);
         }
@@ -37,7 +38,8 @@ public:
         return graph;
     }
     qreal seconds;
-    ~GraphWindow();
+    int timerCount = 0;
+    ~GraphWindow() override;
 
 private:
     Ui::GraphWindow *ui;
@@ -60,7 +62,6 @@ private:
 public slots:
     void scroll();
     void telemetryAvailable(const HPRC::Telemetry& telemetry);
-
 };
 
 

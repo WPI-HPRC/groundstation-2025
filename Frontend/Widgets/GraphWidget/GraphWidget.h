@@ -33,8 +33,16 @@ public:
     void hideLegend();
     void dontScroll();
 
+    void flushBuffersToSeries();
+
 private:
-    std::vector<QLineSeries*> dataSeries;
+    struct SeriesData {
+        QLineSeries* series{};
+        QVector<QPointF> buffer;
+    };
+
+    std::vector<SeriesData> dataSeries;
+
     int windowRange;
     float minValue;
     bool useMinValue = false;
