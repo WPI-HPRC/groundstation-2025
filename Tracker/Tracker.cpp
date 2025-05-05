@@ -15,7 +15,7 @@ void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate, DataLogge
 
 void Tracker::send(const char *buffer, size_t length_bytes)
 {
-//    Serial.write(buffer, length_bytes);
+    serialPort->write(buffer, length_bytes);
 }
 
 void Tracker::read()
@@ -217,4 +217,40 @@ void Tracker::handleMessage(const char *buffer)
             return;
         }
     }
+}
+
+void Tracker::sendString(QString str)
+{
+    send(str.toStdString().c_str(), str.length());
+}
+
+void Tracker::sendMessage_setPose(float azimuth_degrees, float elevation_degrees)
+{
+    QString str = QString::asprintf("S;P;%d;%d;E", qRound(azimuth_degrees*100), qRound(elevation_degrees*100));
+    sendString(str);
+}
+
+void Tracker::sendMessage_getPose()
+{
+    sendString("G;L;E");
+}
+
+void Tracker::sendMessage_getGps()
+{
+    sendString("G;G;E");
+}
+
+void Tracker::sendMessage_getImu()
+{
+    sendString("G;I;E");
+}
+
+void Tracker::sendEstop_brake()
+{
+    sendString("G;B;E");
+}
+
+void Tracker::sendEstop_coast()
+{
+    sendString("G;C;E");
 }

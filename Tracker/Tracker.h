@@ -18,10 +18,19 @@ public:
     void send(const char *buffer, size_t length_bytes);
     void read();
 
+    void sendMessage_setPose(float azimuth_degrees, float elevation_degrees);
+    void sendMessage_getPose();
+    void sendMessage_getGps();
+    void sendMessage_getImu();
+    void sendEstop_brake();
+    void sendEstop_coast();
+
 private:
     SerialPort *serialPort;
     char readBuffer[READ_BUFFER_LENGTH];
     uint readBufferIndex = 0;
+
+    void sendString(QString str);
 
 private:
     static int utf8DigitsToInt(const char *encodedDigits, size_t length_bytes);
