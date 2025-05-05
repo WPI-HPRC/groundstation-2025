@@ -252,6 +252,7 @@ void Tracker::sendMessage_setPose(Pose pose)
 {
     QString str = QString::asprintf("S;P;%d;%d;E", qRound(pose.azimuth_degrees*100), qRound(pose.elevation_degrees*100));
     sendString(str);
+    desiredPose = pose;
     emit newDesiredPose(pose);
 }
 
