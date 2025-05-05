@@ -20,23 +20,23 @@ void Tracker::send(const char *buffer, size_t length_bytes)
 
 void Tracker::read()
 {
-    // Read bytes until there aren't any more to be read
-    do
-    {
-        size_t bytesRead = serialPort->read(readBuffer, READ_BUFFER_LENGTH);
+    size_t bytesRead = serialPort->read(readBuffer, READ_BUFFER_LENGTH - readBufferIndex);
 
-        if(readBuffer[readBufferIndex+bytesRead == 'E'])
+    for(int i = 0; i < bytesRead; i++)
+    {
+        if (readBuffer[readBufferIndex + i == 'E'])
         {
             // Now we know a packet has been read completely, so handle it here
-            handleMessage(readBuffer);
-            readBufferIndex = 0;
+            handleMessage(&readBuffer[readBufferIndex]);
+            readBufferIndex = i;
             // Optionally, break here if we only want to read/handle one packet maximum per loop
         }
-        else
-        {
-            readBufferIndex += bytesRead;
-        }
-    } while (Serial.peek() != -1);
+    }
+    if(readBufferIndex < READ_BUFFER_LENGTH)
+    {
+        memcpy(&readBuffer, &readBuffer[readBufferIndex], bytesRead - readBufferIndex);
+        readBufferIndex = bytesRead - readBufferIndex;
+    }
 }
 
 

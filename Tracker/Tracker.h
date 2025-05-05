@@ -46,7 +46,7 @@ private:
 
     void handleResponse_pose();
     void handleEstopResponse_brake();
-    void handleEstopResponse_coast()
+    void handleEstopResponse_coast();
 };
 
 
