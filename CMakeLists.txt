@@ -64,7 +64,10 @@ set(PROTO_SRCS
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h
         Tracker/Tracker.cpp
-        Tracker/Tracker.h)
+        Tracker/Tracker.h
+        Frontend/Windows/TrackerWindow/trackerwindow.cpp
+        Frontend/Windows/TrackerWindow/trackerwindow.h
+        Frontend/Windows/TrackerWindow/trackerwindow.ui)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

@@ -15,11 +15,19 @@ void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate, DataLogge
 
 void Tracker::send(const char *buffer, size_t length_bytes)
 {
+    if(!serialPort)
+    {
+        return;
+    }
     serialPort->write(buffer, length_bytes);
 }
 
 void Tracker::read()
 {
+    if(!serialPort)
+    {
+        return;
+    }
     size_t bytesRead = serialPort->read(readBuffer, READ_BUFFER_LENGTH - readBufferIndex);
 
     for(int i = 0; i < bytesRead; i++)
@@ -82,7 +90,10 @@ void Tracker::handleData_pose(const char *buffer)
 
     float elevation_degrees = (float)utf8DigitsToInt(remainingBuffer, buffer_index) / 100;
 
+    actualPose = {azimuth_degrees, elevation_degrees};
+
     // Handle the data
+    emit newPoseData(actualPose);
 }
 
 void Tracker::handleData_gps(const char *buffer)
@@ -96,7 +107,7 @@ void Tracker::handleData_gps(const char *buffer)
 
     float latitude_decimal = (float)utf8DigitsToInt(remainingBuffer, buffer_index) / 100;
 
-    // Handle the data
+    emit newGpsData(longitude_decimal, latitude_decimal);
 }
 
 void Tracker::handleData_imu(const char *buffer)
@@ -120,7 +131,7 @@ void Tracker::handleData_imu(const char *buffer)
 
     float heading_degrees = (float)utf8DigitsToInt(remainingBuffer, buffer_index) / 100;
 
-    // Handle the data
+    emit newImuData(gravityX_gs, gravityY_gs, gravityZ_gs, heading_degrees);
 }
 
 void Tracker::handleData(const char *buffer)
@@ -163,17 +174,17 @@ void Tracker::handleData(const char *buffer)
 
 void Tracker::handleResponse_pose()
 {
-    // Handle the response
+    emit newPoseResponse();
 }
 
 void Tracker::handleEstopResponse_brake()
 {
-    // Handle the response
+    emit newEstopResponse_brake();
 }
 
 void Tracker::handleEstopResponse_coast()
 {
-    // Handle the response
+    emit newEstopResponse_coast();
 }
 
 void Tracker::handleResponse(const char *buffer)
@@ -224,10 +235,11 @@ void Tracker::sendString(QString str)
     send(str.toStdString().c_str(), str.length());
 }
 
-void Tracker::sendMessage_setPose(float azimuth_degrees, float elevation_degrees)
+void Tracker::sendMessage_setPose(Pose pose)
 {
-    QString str = QString::asprintf("S;P;%d;%d;E", qRound(azimuth_degrees*100), qRound(elevation_degrees*100));
+    QString str = QString::asprintf("S;P;%d;%d;E", qRound(pose.azimuth_degrees*100), qRound(pose.elevation_degrees*100));
     sendString(str);
+    emit newDesiredPose(pose);
 }
 
 void Tracker::sendMessage_getPose()
@@ -253,4 +265,9 @@ void Tracker::sendEstop_brake()
 void Tracker::sendEstop_coast()
 {
     sendString("G;C;E");
+}
+
+Tracker::Pose Tracker::poseDifference()
+{
+    return {desiredPose.azimuth_degrees - actualPose.azimuth_degrees, desiredPose.elevation_degrees - actualPose.elevation_degrees};
 }

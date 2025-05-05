@@ -4,6 +4,8 @@
 #include "Frontend/Windows/MainWindow/mainwindow.h"
 #include "Frontend/Windows/CameraWindow/camerawindow.h"
 
+#include "Frontend/Windows/TrackerWindow/trackerwindow.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -20,6 +22,10 @@ int main(int argc, char *argv[])
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
     mainWindow.update();
+
+    TrackerWindow trackerWindow;
+    trackerWindow.show();
+    trackerWindow.setWindowTitle("Tracker");
 
     /*
     CameraWindow cameraWindow;

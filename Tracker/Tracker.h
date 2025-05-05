@@ -13,17 +13,46 @@ class Tracker: public QObject
 {
     Q_OBJECT
 public:
-    Tracker(QObject *parent = nullptr);
+    static Tracker &getInstance()
+    {
+        static Tracker instance;
+        return instance;
+    }
+    Tracker(const Tracker&) = delete;
+    Tracker &operator=(const Tracker&) = delete;
+
+    struct Pose
+    {
+        float azimuth_degrees;
+        float elevation_degrees;
+    };
+
+    Pose desiredPose{};
+    Pose actualPose{};
+    Pose poseDifference();
+
+    bool enabled = true;
+    bool manualControlEnabled = true;
+
     void connectToPort(const QSerialPortInfo& port, int baudRate, DataLogger *dataLogger);
     void send(const char *buffer, size_t length_bytes);
     void read();
 
-    void sendMessage_setPose(float azimuth_degrees, float elevation_degrees);
+    void sendMessage_setPose(Pose newDesiredPose);
     void sendMessage_getPose();
     void sendMessage_getGps();
     void sendMessage_getImu();
     void sendEstop_brake();
     void sendEstop_coast();
+
+signals:
+    void newPoseData(Pose);
+    void newGpsData(float, float);
+    void newImuData(float, float, float, float);
+    void newPoseResponse();
+    void newEstopResponse_brake();
+    void newEstopResponse_coast();
+    void newDesiredPose(Pose);
 
 private:
     SerialPort *serialPort;
@@ -33,6 +62,8 @@ private:
     void sendString(QString str);
 
 private:
+    explicit Tracker(QObject *parent = nullptr);
+
     static int utf8DigitsToInt(const char *encodedDigits, size_t length_bytes);
     static int bytesUntilSemicolon(const char *buffer);
     void handleMessage(const char *buffer);
