@@ -21,27 +21,18 @@ QMainWindow* getMainWindow()
 
 SerialPortList::SerialPortList(QWidget *parent) : QTableWidget(parent)
 {
-    Backend &backend = Backend::getInstance();
 
-    connect(&backend, SIGNAL(foundSerialPorts(QList<QSerialPortInfo>)), this, SLOT(serialPortsFound(QList<QSerialPortInfo>)));
-
-    connect(&backend, SIGNAL(serialPortOpened(QSerialPortInfo, bool)), this, SLOT(serialPortOpened(QSerialPortInfo, bool)));
-    connect(&backend, SIGNAL(serialPortClosed(QSerialPortInfo)), this, SLOT(serialPortClosed(QSerialPortInfo)));
-
-//    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(portChosen(QListWidgetItem*)));
-
-    connect(this, &SerialPortList::openSerialPort, &SerialPortManager::getInstance(), &SerialPortManager::openPort);
-    connect(this, SIGNAL(closeSerialPort(QString)), &SerialPortManager::getInstance(), SLOT(closePort(QString)));
 }
+
 void SerialPortList::serialPortsFound(const QList<QSerialPortInfo>& ports)
 {
     this->serialPorts.clear();
     for(const QSerialPortInfo& port : ports)
     {
-        if(port.portName().contains("Bluetooth") || port.portName().contains("debug-console"))
-        {
-            continue;
-        }
+//        if(port.portName().contains("Bluetooth") || port.portName().contains("debug-console"))
+//        {
+//            continue;
+//        }
         this->serialPorts.append(port);
     }
 
@@ -106,7 +97,7 @@ void SerialPortList::buttonClicked()
 
 void SerialPortList::serialPortOpened(const QSerialPortInfo& info, bool success)
 {
-    qDebug() << "Serial port opened: " << info.portName();
+//    qDebug() << "Serial port opened: " << info.portName();
 
     auto *button = this->findChild<QPushButton *>(info.portName());
 
@@ -119,7 +110,7 @@ void SerialPortList::serialPortOpened(const QSerialPortInfo& info, bool success)
 
 void SerialPortList::serialPortClosed(const QSerialPortInfo& info)
 {
-    qDebug() << "Serial port closed: " << info.portName();
+//    qDebug() << "Serial port closed: " << info.portName();
 
     auto *button = this->findChild<QPushButton *>(info.portName());
 

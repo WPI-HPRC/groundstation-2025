@@ -54,6 +54,11 @@ SerialPort::SerialPort(const QSerialPortInfo& port, int baudRate, DataLogger *da
     std::cout.flush();
 }
 
+QSerialPortInfo SerialPort::getPortInfo()
+{
+    return portInfo;
+}
+
 void SerialPort::setBaudRate(int baudRate)
 {
     serialPort.setBaudRate(baudRate);

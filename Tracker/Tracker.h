@@ -34,9 +34,12 @@ public:
     bool enabled = true;
     bool manualControlEnabled = true;
 
-    void connectToPort(const QSerialPortInfo& port, int baudRate, DataLogger *dataLogger);
+    void connectToPort(const QSerialPortInfo& port, int baudRate);
+    void disconnect();
     void send(const char *buffer, size_t length_bytes);
     void read();
+
+    QSerialPortInfo portInfo{};
 
     void sendMessage_setPose(Pose newDesiredPose);
     void sendMessage_getPose();
@@ -54,12 +57,17 @@ signals:
     void newEstopResponse_coast();
     void newDesiredPose(Pose);
 
+    void portClosed(QSerialPortInfo);
+    void portOpened(QSerialPortInfo);
+
 private:
     SerialPort *serialPort;
     char readBuffer[READ_BUFFER_LENGTH];
     uint readBufferIndex = 0;
 
     void sendString(QString str);
+
+    DataLogger *dataLogger;
 
 private:
     explicit Tracker(QObject *parent = nullptr);

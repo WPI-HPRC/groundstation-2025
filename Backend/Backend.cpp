@@ -38,7 +38,7 @@ QMap<std::string, Backend::ConversionFunction> Backend::geeConversions_Metric = 
         {"accely", &Utility::UnitConversion::gs2meters},
         {"accelz", &Utility::UnitConversion::gs2meters},
 };
-QSerialPortInfo getTargetPort(const QString& portName)
+QSerialPortInfo Backend::getTargetPort(const QString& portName)
 {
     QList serialPorts = QSerialPortInfo::availablePorts();
 

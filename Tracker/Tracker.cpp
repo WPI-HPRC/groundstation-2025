@@ -5,12 +5,25 @@
 #include "Tracker.h"
 Tracker::Tracker(QObject *parent): QObject(parent)
 {
-
+    dataLogger = new DataLogger("tracker_");
 }
 
-void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate, DataLogger *dataLogger)
+void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate)
 {
-    serialPort = new SerialPort(port, baudRate, new DataLogger("tracker_"));
+    portInfo = port;
+    if(serialPort)
+    {
+        serialPort->close();
+    }
+    serialPort = new SerialPort(port, baudRate, dataLogger);
+}
+
+void Tracker::disconnect()
+{
+    QSerialPortInfo portInfo = serialPort->getPortInfo();
+    serialPort->close();
+    serialPort = nullptr;
+    emit portClosed(portInfo);
 }
 
 void Tracker::send(const char *buffer, size_t length_bytes)

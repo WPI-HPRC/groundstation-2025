@@ -223,6 +223,8 @@ public:
 
     void setGraphWindow(GraphWindow *window);
 
+    static QSerialPortInfo getTargetPort(const QString& portName);
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);

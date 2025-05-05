@@ -7,6 +7,7 @@
 #include "trackerwindow.h"
 #include "ui_TrackerWindow.h"
 #include "Tracker/Tracker.h"
+#include "Backend/Backend.h"
 
 TrackerWindow::TrackerWindow(QWidget *parent) :
         QWidget(parent), ui(new Ui::TrackerWindow)
@@ -32,6 +33,11 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
         updateTableValue(0, 0, QString::number(pose.azimuth_degrees, 'f', 2));
         updateTableValue(1, 0, QString::number(pose.elevation_degrees, 'f', 2));
         updateAngleDifferences();
+    });
+
+    connect(&Tracker::getInstance(), &Tracker::newImuData, [this](float gravityX_gs, float gravityY_gs, float gravityZ_gs, float heading_degrees)
+    {
+        ui->HeadingValue->setText(QString::number(heading_degrees));
     });
 
     connect(ui->AzimuthDial, &QDial::valueChanged, this, [this](int value)
@@ -92,6 +98,25 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
             ui->SetPoseContainer->setEnabled(false);
         }
     });
+    connect(ui->TheSerialPortList, &SerialPortList::openSerialPort, this, [](const QString& portName, Backend::RadioModuleType _, int baud)
+    {
+        Tracker::getInstance().connectToPort(Backend::getTargetPort(portName), baud);
+    });
+    connect(ui->TheSerialPortList, &SerialPortList::closeSerialPort, this, [this](QString portName)
+    {
+        if(Tracker::getInstance().portInfo.portName() == portName)
+        {
+            Tracker::getInstance().disconnect();
+        }
+        else
+        {
+            ui->TheSerialPortList->serialPortOpened(Backend::getTargetPort(portName), true);
+        }
+    });
+    connect(&Tracker::getInstance(), &Tracker::portClosed, ui->TheSerialPortList, &SerialPortList::serialPortClosed);
+    connect(&Backend::getInstance(), &Backend::foundSerialPorts, ui->TheSerialPortList, &SerialPortList::serialPortsFound);
+    connect(&Backend::getInstance(), &Backend::serialPortOpened,  ui->TheSerialPortList, &SerialPortList::serialPortOpened);
+    connect(&Backend::getInstance(), &Backend::serialPortClosed,  ui->TheSerialPortList, &SerialPortList::serialPortClosed);
 }
 
 void TrackerWindow::updateAngleDifferences()

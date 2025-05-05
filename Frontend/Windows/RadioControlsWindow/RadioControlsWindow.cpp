@@ -493,6 +493,18 @@ RadioControlsWindow::RadioControlsWindow(QWidget *parent) :
         ui->BytesWrittenBrowser->clear();
     });
 
+    Backend &backend = Backend::getInstance();
+
+    connect(&backend, &Backend::foundSerialPorts, ui->SerialPortListObj, &SerialPortList::serialPortsFound);
+
+    connect(&backend, &Backend::serialPortOpened,  ui->SerialPortListObj, &SerialPortList::serialPortOpened);
+    connect(&backend, &Backend::serialPortClosed,  ui->SerialPortListObj, &SerialPortList::serialPortClosed);
+
+//    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(portChosen(QListWidgetItem*)));
+
+    connect(ui->SerialPortListObj, &SerialPortList::openSerialPort, &SerialPortManager::getInstance(), &SerialPortManager::openPort);
+    connect(ui->SerialPortListObj, SIGNAL(closeSerialPort(QString)), &SerialPortManager::getInstance(), SLOT(closePort(QString)));
+
 //    connect(serialPortListObj, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(serialPortChosen(QListWidgetItem*, QListWidgetItem*)));
 }
 

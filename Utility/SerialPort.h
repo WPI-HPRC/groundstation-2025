@@ -38,6 +38,8 @@ public:
     void open();
     QString name();
 
+    QSerialPortInfo getPortInfo();
+
 public slots:
     void errorOccurred(QSerialPort::SerialPortError error);
 
