@@ -119,7 +119,12 @@ find_package(Qt6 COMPONENTS
 
 find_package(OpenGL)
 
-add_executable(gs_backend_2024_2025 main.cpp
+find_package(Qt6 COMPONENTS
+        Core
+        Gui
+        Widgets
+        SerialPort
+        WebSockets
         3DCore
         3DExtras
         3DInput
@@ -158,10 +163,10 @@ add_executable(groundstation-2025
         Frontend/Windows/RadioControlsWindow/RadioControlsWindow.cpp
         Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h
         Frontend/Windows/RadioControlsWindow/RadioControlsWindow.ui
-        Frontend/Widgets/SerialPortList.cpp
-        Frontend/Widgets/SerialPortList.h
-        Frontend/Widgets/NavBall.cpp
-        Frontend/Widgets/NavBall.h
+        Frontend/Widgets/SerialPortList/SerialPortList.cpp
+        Frontend/Widgets/SerialPortList/SerialPortList.h
+        Frontend/Widgets/NavBall/NavBall.cpp
+        Frontend/Widgets/NavBall/NavBall.h
         Utility/SerialPortManager.cpp
         Utility/SerialPortManager.h
         Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
