@@ -9,11 +9,21 @@
 #include <QElapsedTimer>
 #include <QDateTime>
 #include <QMutex>
+#include <QDateTime>
+#include <QMutex>
+#include <QMap>
 #include "RadioModule.h"
 #include "../Utility/WebServer.h"
 #include "../Utility/DataLogger.h"
 #include "Utility/json_struct.h"
-#include "Utility/DataSimulator.h"
+#include "Utility/DataSimulator/DataSimulator.h"
+#include "Utility/UnitConversions.h"
+#include "Backend/APRS/APRSHandler.h"
+#include "Frontend/Windows/GraphWindow/GraphWindow.h"
+
+#include "generated/telemetry/RocketTelemetryPacket.pb.h"
+#include "generated/telemetry/PayloadTelemetryPacket.pb.h"
+#include "generated/telemetry/Packet.pb.h"
 
 class Backend : public QObject
 {
@@ -50,14 +60,45 @@ public:
                 throughput
                 );
     };
-    struct Telemetry
+
+    struct GenericPacket
     {
-        GroundStation::PacketType packetType;
-        union data
-        {
-            GroundStation::RocketTelemPacket *rocketData;
-            GroundStation::PayloadTelemPacket *payloadData;
-        } data;
+        uint8_t length_bytes;
+        const uint8_t *data;
+    };
+
+    struct ChunkedPacket
+    {
+        ulong length_bytes;
+        ulong num_packets_expected;
+        ulong num_packets_received;
+        uint8_t lastFrameID;
+        uint8_t *currentBytePointer;
+        uint8_t *bytes;
+    };
+
+    struct MaxValues
+    {
+        float maxAltitude;
+        float minAltitude;
+
+        float minPressure;
+        float maxPressure;
+
+        float minTemperature;
+        float maxTemperature;
+
+        float maxAcceleration;
+        float minAcceleration;
+
+        float maxVelocity;
+        float minVelocity;
+
+        float maxAngularVelocity;
+        float minAngularVelocity;
+
+        uint32_t maxRocketServoPosition;
+        uint32_t minRocketServoPosition;
     };
 
     enum RadioModuleType
@@ -74,12 +115,19 @@ public:
     }
     Backend(const Backend&) = delete;
     Backend &operator=(const Backend&) = delete;
-    bool connectToModule(const QString& name, RadioModuleType moduleType);
+    bool connectToModule(const QString& name, RadioModuleType moduleType, int baudRate);
     void disconnectFromModule(const QString& name);
     bool moduleExistsWithName(const QString &name);
 
+    void queryParameter(const QString &moduleName, uint16_t parameter);
+    void queryParameters(const QString &moduleName, const QList<uint16_t>& parameters);
+
+    void setParameter(const QString &moduleName, uint16_t parameter, uint8_t *value, size_t valueSize_bytes);
+    void setParameter(const QString &moduleName, uint16_t parameter, uint8_t value);
+    void writeParameters(const QString &moduleName);
+
     void linkTestComplete(LinkTestResults results, int iterationsLeft);
-    void receiveTelemetry(Backend::Telemetry telemetry);
+    void receivePacket(const HPRC::Packet& packet);
 
     void runLinkTest(uint64_t destinationAddress, uint16_t payloadSize, uint16_t iterations, uint8_t repeat, bool loop=false);
     void cancelLinkTest();
@@ -93,9 +141,18 @@ public:
 
     void runThroughputTestsWithRange(const QString& originatingPort, uint64_t destinationAddress, QList<QList<int>> params, uint duration, uint8_t transmitOptions);
 
+    void receiveAtCommandResponse(uint16_t command, const uint8_t *response, size_t response_length_bytes);
+
+    void newBytesRead(QString text);
+    void newBytesWritten(QString text);
+
     void start();
     void flushFiles();
     void getPorts();
+
+    void setBaudRate(const QString &name, int baudRate);
+
+    void transmitPacketThroughModem(const HPRC::Packet &packet, uint64_t address);
 
     QList<RadioModule *> radioModules;
     int loopCount;
@@ -108,12 +165,74 @@ public:
     QList<QList<int>> throughputTests;
     int throughputTestIndex;
 
+    DataSimulator *rocketDataSimulator;
+    DataSimulator *payloadDataSimulator;
+
+    bool convertToEnglish = false;
+    bool convertFromGees = false;
+    int maxValueDecimalPlaces = 3;
+    int telemetryDecimalPlaces = 5;
+    void forceMaxValuesUpdate();
+
+    APRSHandler aprsHandler;
+    RadioModule *groundStationModem;
+
+    DataLogger *dummyLogger;
+
+    HPRC::RocketTelemetryPacket lastRocketPacket{};
+    HPRC::PayloadTelemetryPacket lastPayloadPacket{};
+
+    float groundLevelAltitude = 0;
+    MaxValues currentStateMaxValues;
+    QList<MaxValues> stateMaxValues;
+
+    const QList<QString> RocketStateNames = {
+            "Pre-Launch",
+            "Launch",
+            "Coast",
+            "Drogue Descent",
+            "Main Descent",
+            "Recovery",
+            "Abort"
+    };
+
+    const QList<QString> PayloadStateNames = {
+            "Pre-Launch",
+            "Boost",
+            "Coast",
+            "Drogue Descent",
+            "Judge Righting",
+            "Vertical Side",
+            "Horizontal Side",
+            "Flail",
+            "Extend Auger",
+            "Drill",
+            "Soil Delivery",
+            "Liquid Delivery",
+            "Recovery",
+            "Abort"
+    };
+
+    uint32_t rocketFlightTime = 0;
+
+    static uint64_t getAddressBigEndian(const uint8_t *packet, size_t *index_io);
+
+    static uint64_t getAddressBigEndian(const uint8_t *packet);
+
+    static QByteArray hexToBytes(const QString &hexString);
+
+    void setGraphWindow(GraphWindow *window);
 
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);
     void throughputTestTimerTicked();
     void runRadioModuleCycles();
+    void updateThroughputSpeeds();
+    void updateRSSIInfo();
+
+    void resetMaxRocketValues();
+    void resetMaxPayloadValues();
 
 signals:
     void foundSerialPorts(QList<QSerialPortInfo>);
@@ -124,22 +243,50 @@ signals:
     void newGroundDateTime(std::tm* currentDate);
     void newGroundFlightTime(uint32_t launchTime);
     void newRocketFlightTime(uint32_t launchTime);
+    void newRocketUptime(uint_fast64_t currentRocketTime);
+    void newPayloadUptime(uint_fast64_t currentPayloadTime);
 
     void throughputTestDataAvailable(float, uint, uint);
-    void telemetryAvailable(Backend::Telemetry);
+    void telemetryAvailable(HPRC::Telemetry);
+
+    void receivedAtCommandResponse(uint16_t, const uint8_t *, size_t);
+    void newBytesReadAvailable(QString);
+    void newBytesWrittenAvailable(QString);
+
+    void rocketThroughputStats(RadioThroughputStats);
+    void payloadThroughputStats(RadioThroughputStats);
+    void combinedThroughputStats(RadioThroughputStats);
+    void rocketCountStats(RadioCountStats);
+    void payloadCountStats(RadioCountStats);
+    void combinedCountStats(RadioCountStats);
+    void droppedPackets(uint32_t);
+
+    void newMaxRocketValues(const MaxValues &);
+    void newMaxPayloadValues(const MaxValues &);
+
+    void rocketStateChanged(const MaxValues &, int lastState, int newState);
 
 private:
     explicit Backend(QObject *parent = nullptr);
 
+    GraphWindow *graphWindow;
+
+    using ConversionFunction = float (*)(float);
+    static void doConversions(google::protobuf::Message *message, const QMap<std::string, ConversionFunction> &conversionMap);
+
+    static QMap<std::string, ConversionFunction> metricToEnglish;
+    static QMap<std::string, ConversionFunction> geeConversions_English;
+    static QMap<std::string, ConversionFunction> geeConversions_Metric;
+
     RadioModule *getModuleWithName(const QString& name);
+    void updateMaxRocketValues(Backend::MaxValues &maxValues, const HPRC::RocketTelemetryPacket& rocketData);
+    void updateMaxPayloadValues(Backend::MaxValues &maxValues, HPRC::PayloadTelemetryPacket payloadData);
+    void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};
-    DataSimulator *dataSimulator;
     DataLogger *dataLogger{};
 
     QTimer *timer{};
-
-    QMutex mutex;
 
     bool throughputTestShouldStop = false;
 
@@ -149,6 +296,38 @@ private:
 
     QElapsedTimer groundFlightTime{};
     uint32_t rocketTimestampStart;
+    QTimer *throughputTimer{};
+    QTimer *rssiTimer{};
+
+    QTimer *graphTimer{};
+
+    RadioCountStats lastRocketCount;
+    RadioCountStats lastPayloadCount;
+
+    QMutex mutex;
+
+    MaxValues maxRocketValues{};
+    MaxValues maxPayloadValues{};
+
+    ChunkedPacket chunkedPacket;
+
+    uint8_t transmitPacketBytes[255]; // Maximum bytes in a packet is 255
+
+    void handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet);
+
+    void handlePayloadTelemetry(HPRC::PayloadTelemetryPacket *packet);
+
+    void handlePacketizedPacket(GenericPacket packet);
+
+    void handleSDDirectoryContents(Backend::ChunkedPacket data);
+
+    void handleTelemetry(const HPRC::Telemetry& telemetry);
+
+    void handleRadioCommandResponse(const HPRC::CommandResponse &packet);
+
+    void handleBeginPacketChunks(const HPRC::BeginPacketChunks &packet);
+
+    void handleEndPacketChunks(const HPRC::EndPacketChunks &packet);
 };
 
 

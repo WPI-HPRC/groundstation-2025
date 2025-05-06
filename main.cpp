@@ -1,34 +1,39 @@
 
 #include <QApplication>
 #include "Backend/Backend.h"
-#include "Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h"
-
-struct TestStruct
-{
-    uint64_t address;
-};
+#include "Frontend/Windows/MainWindow/mainwindow.h"
+#include "Frontend/Windows/CameraWindow/camerawindow.h"
 
 int main(int argc, char *argv[])
 {
-
-
     QApplication a(argc, argv);
 
+    QFont font("Courier New");
+    font.setStyleHint(QFont::Monospace);
+    QApplication::setFont(font);
+
+    QIcon icon(":/Icons/logo.ico");
+
+    MainWindow mainWindow;
+
+    mainWindow.setWindowIcon(icon);
+    mainWindow.showMaximized();
+    mainWindow.setWindowTitle("Main Window");
+    mainWindow.update();
+
+    /*
+    CameraWindow cameraWindow;
+    cameraWindow.setWindowIcon(icon);
+    cameraWindow.showMaximized();
+     */
+
     Backend &backend = Backend::getInstance();
-
-    RadioControlsWindow radioControlsWindow;
-    radioControlsWindow.showNormal();
-    radioControlsWindow.update();
-    radioControlsWindow.setWindowTitle("Radio Controls");
-
-
-    TestStruct test;
-    test.address = 0x0013A200423F474C;
-
     backend.start();
+
 
     int code = QApplication::exec();
 
+    backend.aprsHandler.stop();
     backend.flushFiles();
     return code;
 }

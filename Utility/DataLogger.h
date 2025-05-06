@@ -11,6 +11,7 @@
 #include <iostream>
 #include "../Constants.h"
 #include "Utility.h"
+#include "generated/telemetry/Packet.pb.h"
 
 #define DEBUG_CSV false
 
@@ -43,7 +44,7 @@ public:
 
         if (!hasWrittenHeaders)
         {
-            _write(headers.join(",").append("\n"));
+            _write(headers.join(",").append(",internalTimestamp").append("\n"));
             hasWrittenHeaders = true;
         }
 
@@ -53,6 +54,7 @@ public:
         {
             valueLine.append(toJsonString(jsonData.value(value)).append(","));
         }
+        valueLine.append(QString::asprintf("%lld", QDateTime::currentMSecsSinceEpoch()));
         valueLine.append("\n");
 
         _write(valueLine);
@@ -82,7 +84,7 @@ private:
 
     static QString toJsonString(const QJsonValue &value)
     {
-        if (value.isDouble() || value.isBool())
+        if (value.isDouble())
         {
             double number = value.toDouble();
             if (number == static_cast<int>(number))
@@ -102,6 +104,10 @@ private:
         {
             return {}; // Return empty string for null or undefined values
         }
+        else if (value.isBool())
+        {
+            return QString::number(value.toBool() ? 1 : 0);
+        }
         else
         {
             // Handle other types if needed
@@ -113,19 +119,12 @@ private:
 class DataLogger
 {
 public:
-    struct Packet
-    {
-        std::string data;
-        GroundStation::PacketType packetType;
-    };
 
     explicit DataLogger(QString dirPrefix = "", bool needFiles = true);
 
-    void writeData(const QJsonObject &jsonData, GroundStation::PacketType packetType);
+    void writeTelemetry(const HPRC::Packet& packet);
 
-    void dataReady(const char *data, GroundStation::PacketType packetType);
-
-    void dataReady(const char *data, GroundStation::PacketType packetType, uint8_t rssi);
+    void writeTelemetry(const HPRC::Packet& packet, uint8_t rssi);
 
     void writeToByteFile(const char *text, size_t size);
 
@@ -153,9 +152,14 @@ public:
 
     QString directoryPrefix;
 
+    void openLogsDefault();
+    void showFolder();
+
 private:
     void createDirectory(const QString &dirName);
     void createFiles();
+
+    void _writeTelemetry(const QJsonObject &jsonData, const HPRC::Packet& packet);
 
     bool needToCreateFiles;
 

@@ -5,11 +5,13 @@
 #ifndef GS_BACKEND_2024_2025_RADIOMODULE_H
 #define GS_BACKEND_2024_2025_RADIOMODULE_H
 
+#include <cstdint>
 #include "../xbee/XBeeDevice.h"
 #include "../Utility/DataLogger.h"
 #include "../Utility/SerialPort.h"
 #include "../Utility/Utility.h"
 #include "../Utility/WebServer.h"
+#include "generated/telemetry/Packet.pb.h"
 
 struct LinkTestResults
 {
@@ -39,16 +41,29 @@ struct LinkTestResults
     );
 };
 
+struct RadioCountStats
+{
+    uint32_t packetsReceivedCount;
+    uint64_t bytesReceivedCount;
+};
+
+struct RadioThroughputStats
+{
+    uint32_t packetsPerSecond;
+    uint64_t bytesPerSecond;
+};
+
 class RadioModule : public XBeeDevice
 {
 public:
     RadioModule(int baudRate, DataLogger *logger, const QSerialPortInfo &portInfo);
     RadioModule(int baudRate, DataLogger *logger);
+    void setBaudRate(int baudRate);
 
     void configureRadio();
 
     size_t readBytes_uart(char *buffer, size_t max_bytes) override;
-    void writeBytes(const char *data, size_t length_bytes) override;
+    void writeBytes_uart(const char *data, size_t length_bytes) override;
 
     void sendLinkTestRequest(uint64_t destinationAddress, uint16_t payloadSize, uint16_t iterations) override;
     void handleLinkTest(XBee::ExplicitRxIndicator::LinkTest data) override;
@@ -62,6 +77,8 @@ public:
 
     void _handleTransmitStatus(uint8_t frameID, uint8_t statusCode) override;
 
+    void _handleAtCommandResponse(const uint8_t *frame, uint8_t length_bytes) override;
+
     void incorrectChecksum(uint8_t calculated, uint8_t received) override;
 
     void sentFrame(uint8_t frameID) override;
@@ -72,12 +89,16 @@ public:
 
     void connectPort();
 
+    RadioCountStats rocketRadioStats{};
+    RadioCountStats payloadRadioStats{};
+
+    uint32_t droppedPacketsCount = 0;
+
     DataLogger *dataLogger{};
     SerialPort *serialPort{};
 
     QString name;
 
-    DataLogger::Packet lastPacket;
     unsigned int cycleCountsFromFrameID[255]{};
     unsigned int cycleCount = 0;
 
@@ -87,6 +108,11 @@ public:
 
     bool receivingThroughputTest = false;
     uint throughputTestPacketsReceived = 0;
+
+private:
+    void handlingFrame(const uint8_t *frame) override;
+
+    void _handleReceivePacket(const uint8_t *_packet, uint16_t length_bytes, int rssi);
 };
 
 class ServingRadioModule
@@ -100,37 +126,6 @@ public:
     void handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *frame) override;
 
     WebServer *webServer;
-};
-
-
-class RocketTestModule : public RadioModule
-{
-public:
-    RocketTestModule(int baudRate, DataLogger *logger, const QSerialPortInfo &portInfo) : RadioModule(baudRate, logger,
-                                                                                                      portInfo)
-    {}
-
-    RocketTestModule(int baudRate, DataLogger *logger) : RadioModule(baudRate, logger)
-    {}
-
-    void didCycle() override;
-
-    GroundStation::RocketTxPacket packet;
-};
-
-class PayloadTestModule : public RadioModule
-{
-public:
-    PayloadTestModule(int baudRate, DataLogger *logger, const QSerialPortInfo &portInfo) : RadioModule(baudRate, logger,
-                                                                                                       portInfo)
-    {}
-
-    PayloadTestModule(int baudRate, DataLogger *logger) : RadioModule(baudRate, logger)
-    {}
-
-    void didCycle() override;
-
-    GroundStation::PayloadTxPacket packet;
 };
 
 

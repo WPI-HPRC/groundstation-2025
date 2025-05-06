@@ -4,10 +4,8 @@
 
 #include "RadioModule.h"
 #include "Backend.h"
-
+#include "Utility/Utility.h"
 #include <QSerialPortInfo>
-#include <regex>
-#include <QJsonDocument>
 
 QSerialPortInfo getTargetPort()
 {
@@ -43,39 +41,6 @@ QSerialPortInfo getTargetPort()
     }
 
     return targetPort;
-}
-
-DataLogger::Packet parsePacket(const uint8_t *frame)
-{
-    std::string str;
-
-    // This way of assigning the packet type seems redundant, but the packetType byte can take on any value from 0-255; we want to set it to an enum value that we understand
-    Backend::Telemetry telemetry{};
-
-    switch (frame[0])
-    {
-        case GroundStation::Rocket:
-            telemetry.packetType = GroundStation::Rocket;
-            telemetry.data.rocketData = (GroundStation::RocketTelemPacket *) (&frame[1]);
-            str = JS::serializeStruct(*telemetry.data.rocketData);
-            break;
-        case GroundStation::Payload:
-            telemetry.data.payloadData = (GroundStation::PayloadTelemPacket *) (&frame[1]);
-            str = JS::serializeStruct(*telemetry.data.payloadData);
-            telemetry.packetType = GroundStation::Payload;
-            break;
-        default:
-            str = "";
-            telemetry.packetType = GroundStation::Unknown;
-            break;
-    }
-
-    Backend::getInstance().receiveTelemetry(telemetry);
-
-    str = std::regex_replace(str, std::regex("nan"), "0");
-    str = std::regex_replace(str, std::regex("inf"), "0");
-
-    return {str, telemetry.packetType};
 }
 
 void RadioModule::disconnectPort()
@@ -125,7 +90,7 @@ RadioModule::RadioModule(int baudRate, DataLogger *logger) : XBeeDevice(SerialIn
     *this = RadioModule(baudRate, logger, targetPort);
 }
 
-void RadioModule::writeBytes(const char *data, size_t length_bytes)
+void RadioModule::writeBytes_uart(const char *data, size_t length_bytes)
 {
     if(!serialPort->isOpen())
         return;
@@ -138,19 +103,27 @@ void RadioModule::writeBytes(const char *data, size_t length_bytes)
     int bytes_written = serialPort->write(data, (int) length_bytes);
 
     dataLogger->writeToTextFile("Writing: ");
+    QString logString{};
     for (int i = 0; i < length_bytes; i++)
     {
-        dataLogger->writeToTextFile(QString::asprintf("%02x ", data[i] & 0xFF));
+        logString.append(QString::asprintf("%02X ", (int)(data[i] & 0xFF)));
+//        dataLogger->writeToTextFile(QString::asprintf("%02x ", data[i] & 0xFF));
     }
+    dataLogger->writeToTextFile(logString);
     dataLogger->writeToTextFile("\n");
     dataLogger->flushTextFile();
 
+    Backend::getInstance().newBytesWritten(logString);
 
     if (bytes_written != length_bytes)
     {
         log("FAILED TO WRITE ALL BYTES. EXPECTED %d, RECEIVED %d\n", length_bytes, bytes_written);
     }
+}
 
+void RadioModule::setBaudRate(int baudRate)
+{
+   serialPort->setBaudRate(baudRate);
 }
 
 size_t RadioModule::readBytes_uart(char *buffer, size_t max_bytes)
@@ -161,25 +134,56 @@ size_t RadioModule::readBytes_uart(char *buffer, size_t max_bytes)
     return serialPort->read(buffer, max_bytes);
 }
 
-void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
+void RadioModule::_handleReceivePacket(const uint8_t *_packet, uint16_t length_bytes, int rssi)
 {
     if(receivingThroughputTest)
     {
         throughputTestPacketsReceived ++;
     }
 
-    lastPacket = parsePacket(frame->data);
-    dataLogger->dataReady(lastPacket.data.c_str(), lastPacket.packetType);
+    // TODO: Handle the case where we are receiving chunks of a packet. They cannot be interpreted until we have received all of them in order
+    // TODO: Handle RSSI
+
+    HPRC::Packet packet;
+    packet.ParseFromArray(_packet, length_bytes);
+
+    if(packet.Message_case() == HPRC::Packet::kTelemetry && recordThroughput)
+    {
+        switch (packet.telemetry().Message_case())
+        {
+            case HPRC::Telemetry::kRocketPacket:
+                payloadRadioStats.packetsReceivedCount++;
+                payloadRadioStats.bytesReceivedCount += length_bytes;
+                break;
+            case HPRC::Telemetry::kPayloadPacket:
+                rocketRadioStats.packetsReceivedCount++;
+                rocketRadioStats.bytesReceivedCount += length_bytes;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if(rssi > 0)
+    {
+        dataLogger->writeTelemetry(packet, rssi);
+    }
+    else
+    {
+        dataLogger->writeTelemetry(packet);
+    }
+
+    Backend::getInstance().receivePacket(packet);
+}
+
+void RadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
+{
+    _handleReceivePacket(frame->data, frame->dataLength_bytes, 0);
 }
 
 void RadioModule::handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *frame)
 {
-    if(receivingThroughputTest)
-    {
-        throughputTestPacketsReceived ++;
-    }
-    lastPacket = parsePacket(frame->data);
-    dataLogger->dataReady(lastPacket.data.c_str(), lastPacket.packetType, frame->negativeRssi);
+    _handleReceivePacket(frame->data, frame->dataLength_bytes, frame->negativeRssi);
 }
 
 void RadioModule::incorrectChecksum(uint8_t calculated, uint8_t received)
@@ -190,6 +194,8 @@ void RadioModule::incorrectChecksum(uint8_t calculated, uint8_t received)
     dataLogger->writeToTextFile(str.c_str(), str.length());
 
     dataLogger->flushTextFile();
+
+    droppedPacketsCount++;
 }
 
 void RadioModule::log(const char *format, ...)
@@ -209,6 +215,19 @@ void RadioModule::log(const char *format, ...)
     dataLogger->flushTextFile();
 
     va_end(args);
+}
+
+void RadioModule::handlingFrame(const uint8_t *frame)
+{
+    QString logString{};
+    uint16_t length = frame[1] << 8 | frame[2];
+
+    for(int i = 0; i < length + 4; i++)
+    {
+        logString.append(QString::asprintf("%02X ", ((int)frame[i] & 0xFF)));
+    }
+
+    Backend::getInstance().newBytesRead(logString);
 }
 
 void RadioModule::sendLinkTestRequest(uint64_t destinationAddress, uint16_t payloadSize, uint16_t iterations)
@@ -307,6 +326,23 @@ void RadioModule::sentFrame(uint8_t frameID)
     cycleCountsFromFrameID[frameID] = cycleCount;
 }
 
+void RadioModule::_handleAtCommandResponse(const uint8_t *frame, uint8_t length_bytes)
+{
+    uint16_t command = getAtCommand(frame);
+    size_t response_length_bytes = length_bytes - XBee::AtCommandResponse::PacketBytes;
+    const uint8_t *response = &frame[XBee::AtCommandResponse::BytesBeforeCommandData];
+
+    Backend::getInstance().receiveAtCommandResponse(command, response, response_length_bytes);
+
+    if(command == XBee::AtCommand::ErrorCount)
+    {
+        uint16_t errorCount = frame[XBee::AtCommandResponse::BytesBeforeCommandData] << 8 |
+                           frame[XBee::AtCommandResponse::BytesBeforeCommandData + 1];
+
+        droppedPacketsCount += errorCount;
+    }
+}
+
 void RadioModule::_handleRemoteAtCommandResponse(const uint8_t *frame, uint8_t length_bytes)
 {
     uint16_t command = getRemoteAtCommand(frame);
@@ -347,38 +383,12 @@ void ServingRadioModule::handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Stru
     log("RSSI: -%dbm\n", frame->negativeRssi);
     RadioModule::handleReceivePacket64Bit(frame);
 
-    webServer->broadcast(QString::fromStdString(lastPacket.data));
+//    webServer->broadcast(QString::fromStdString(lastPacket.data));
 }
 
 void ServingRadioModule::handleReceivePacket(XBee::ReceivePacket::Struct *frame)
 {
     RadioModule::handleReceivePacket(frame);
 
-    webServer->broadcast(QString::fromStdString(lastPacket.data));
-}
-
-void RocketTestModule::didCycle()
-{
-    constexpr int interval = 4;
-    if (cycleCount % interval == 0)
-    {
-        packet.timestamp = cycleCount / interval;
-        packet.epochTime = QDateTime::currentMSecsSinceEpoch();
-
-        sendTransmitRequestCommand(GROUND_STATION_ADDR, (uint8_t *)&packet, sizeof(packet));
-    }
-    cycleCount++;
-}
-
-void PayloadTestModule::didCycle()
-{
-    constexpr int interval = 4;
-    if (cycleCount % interval == 0)
-    {
-        packet.timestamp = cycleCount / interval;
-        packet.epochTime = QDateTime::currentMSecsSinceEpoch();
-
-        sendTransmitRequestCommand(GROUND_STATION_ADDR, (uint8_t *)&packet, sizeof(packet));
-    }
-    cycleCount++;
+//    webServer->broadcast(QString::fromStdString(lastPacket.data));
 }

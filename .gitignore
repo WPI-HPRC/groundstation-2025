@@ -109,3 +109,5 @@ Secrets.h
 
 # clangd
 .cache/ 
+build/
+/build/

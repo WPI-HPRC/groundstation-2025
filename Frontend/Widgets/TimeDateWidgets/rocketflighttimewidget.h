@@ -21,6 +21,7 @@ Q_OBJECT
 public:
     explicit RocketFlightTimeWidget(QWidget *parent = nullptr);
     ~RocketFlightTimeWidget() override;
+    void setLabel(QString label);
 
 private:
     Ui::RocketFlightTimeWidget *ui;

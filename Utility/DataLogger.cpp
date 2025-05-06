@@ -7,10 +7,71 @@
 #include <QJsonDocument>
 #include <iostream>
 #include <utility>
+#include <QDesktopServices>
 
+
+#include <regex>
+#include "protobuf/src/google/protobuf/util/json_util.h"
 //#define OFFICIAL_TEST
 
 QString DataLogger::enclosingDirectory = Constants::LogDirPath;
+
+
+QJsonObject qJsonObjectFromPacket(const HPRC::Packet& packet)
+{
+    std::string str;
+
+    absl::Status status;
+
+    google::protobuf::util::JsonPrintOptions  options;
+    options.always_print_fields_with_no_presence = true;
+
+    switch (packet.Message_case())
+    {
+        case HPRC::Packet::kTelemetry:
+        {
+            const HPRC::Telemetry& telemetry = packet.telemetry();
+            switch (telemetry.Message_case())
+            {
+                // TODO: Add a check to make sure the length of the packet matches whatever we're casting it into. Do once protobuf is fully integrated
+                case HPRC::Telemetry::kRocketPacket:
+                {
+                    // Convert current packet to JSON
+                    status = google::protobuf::util::MessageToJsonString(telemetry.rocketpacket(), &str, options);
+                    if (status != absl::OkStatus())
+                    {
+                        std::cerr << "Error converting rocket packet to JSON string: " << status << std::endl;
+                    }
+                    break;
+                }
+                case HPRC::Telemetry::kPayloadPacket:
+                {
+                    // Convert current packet to JSON
+                    status = google::protobuf::util::MessageToJsonString(telemetry.payloadpacket(), &str, options);
+                    if (status != absl::OkStatus())
+                    {
+                        std::cerr << "Error converting payload packet to JSON string: " << status << std::endl;
+                    }
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+
+    str = std::regex_replace(str, std::regex("nan"), "0");
+    str = std::regex_replace(str, std::regex("inf"), "0");
+
+    return QJsonDocument::fromJson(str.c_str()).object();
+}
 
 DataLogger::DataLogger(QString dirPrefix, bool needFiles)
 {
@@ -86,6 +147,18 @@ void DataLogger::createFiles()
 
 }
 
+void DataLogger::openLogsDefault()
+{
+    QDesktopServices::openUrl(QUrl("file://" + rocketLogFile.file.fileName(), QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("file://" + payloadLogFile.file.fileName(), QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("file://" + byteLog.fileName(), QUrl::TolerantMode));
+}
+
+void DataLogger::showFolder()
+{
+    QDesktopServices::openUrl("file://" + logDir.path());
+}
+
 void DataLogger::logLinkTest(const QJsonObject &jsonData)
 {
     linkTestLogFile.write(jsonData);
@@ -141,14 +214,17 @@ void DataLogger::flushDataFiles()
     payloadLogFile.file.flush();
 }
 
-void DataLogger::writeData(const QJsonObject &jsonData, GroundStation::PacketType packetType)
+void DataLogger::_writeTelemetry(const QJsonObject &jsonData, const HPRC::Packet& packet)
 {
-    switch (packetType)
+    if(packet.Message_case() != HPRC::Packet::kTelemetry)
+        return;
+
+    switch (packet.telemetry().Message_case())
     {
-        case GroundStation::Rocket:
+        case HPRC::Telemetry::kRocketPacket:
             rocketLogFile.write(jsonData);
             break;
-        case GroundStation::Payload:
+        case HPRC::Telemetry::kPayloadPacket:
             payloadLogFile.write(jsonData);
             break;
         default:
@@ -157,14 +233,14 @@ void DataLogger::writeData(const QJsonObject &jsonData, GroundStation::PacketTyp
 //    flushDataFiles();
 }
 
-void DataLogger::dataReady(const char *data, GroundStation::PacketType packetType)
+void DataLogger::writeTelemetry(const HPRC::Packet& packet)
 {
-    writeData(QJsonDocument::fromJson(data).object(), packetType);
+    _writeTelemetry(qJsonObjectFromPacket(packet), packet);
 }
 
-void DataLogger::dataReady(const char *data, GroundStation::PacketType packetType, uint8_t rssi)
+void DataLogger::writeTelemetry(const HPRC::Packet& packet, uint8_t rssi)
 {
-    QJsonObject json = QJsonDocument::fromJson(data).object();
+    QJsonObject json = qJsonObjectFromPacket(packet);
     json.insert("rssi", -1 * (int) rssi);
-    writeData(json, packetType);
+    _writeTelemetry(json, packet);
 }

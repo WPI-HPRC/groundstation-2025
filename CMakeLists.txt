@@ -1,9 +1,107 @@
 cmake_minimum_required(VERSION 3.27)
-project(gs_backend_2024_2025)
+project(groundstation-2025)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 20)
+set(ABSL_PROPAGATE_CXX_STD ON)
 
-set(CMAKE_CXX_STANDARD 17)
+# Add Protobuf as a subdirectory
+set(BUILD_SHARED_LIBS OFF)  # Use static libraries for Protobuf
+set(protobuf_BUILD_TESTS OFF CACHE BOOL "Disable Protobuf tests")
+add_subdirectory(protobuf cmake-protobuf-build)
+
+# Set Protobuf variables
+set(Protobuf_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/cmake-protobuf-build/src/protobuf-build/include)
+set(Protobuf_LIBRARIES protobuf::libprotobuf)
+set(Protobuf_PROTOC_EXECUTABLE $<TARGET_FILE:protoc>)
+
+# Output Protobuf variables for debugging
+message(STATUS "Protobuf_INCLUDE_DIRS: ${Protobuf_INCLUDE_DIRS}")
+message(STATUS "Protobuf_LIBRARIES: ${Protobuf_LIBRARIES}")
+message(STATUS "Protobuf_PROTOC_EXECUTABLE: ${Protobuf_PROTOC_EXECUTABLE}")
+
+# Automatically find all .proto files in a directory
+file(GLOB_RECURSE PROTO_FILES "${CMAKE_CURRENT_SOURCE_DIR}/telemetry/*.proto")
+list(REMOVE_DUPLICATES PROTO_FILES)  # Ensure no duplicates
+
+# Print all .proto files line-by-line
+message(STATUS "Proto Files Found:")
+foreach(PROTO_FILE ${PROTO_FILES})
+    message(STATUS "  - ${PROTO_FILE}")
+endforeach()
+
+set(MACOSX_BUNDLE_ICON_FILE logo.icns)
+
+# And the following tells CMake where to find and install the file itself.
+set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons/logo.icns")
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons/logo.rc")
+set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
+set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.wpi.hprc)
+
+# Create lists for the generated sources and headers
+set(PROTO_SRCS
+        Frontend/Widgets/MapWidget/gpswidget.cpp
+        Frontend/Widgets/MapWidget/gpswidget.h
+        Frontend/Widgets/MapWidget/GpsWidget.ui
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
+        Backend/HPRCWebSocket.cpp
+        Backend/HPRCWebSocket.h
+        Backend/APRS/KissClient.cpp
+        Backend/APRS/DirewolfProcess.cpp
+        Backend/APRS/DirewolfProcess.h
+        Backend/APRS/APRSHandler.cpp
+        Backend/APRS/APRSHandler.h
+        Frontend/Widgets/AprsWidget/aprswidget.cpp
+        Frontend/Widgets/AprsWidget/aprswidget.h
+        Frontend/Widgets/AprsWidget/AprsWidget.ui
+        Frontend/Windows/CameraWindow/camerawindow.cpp
+        Frontend/Windows/CameraWindow/camerawindow.h
+        Frontend/Windows/CameraWindow/CameraWindow.ui
+        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/GraphWidget/OneAxisGraph.h
+        Frontend/Widgets/GraphWidget/FourAxisGraph.h)
+set(PROTO_HDRS)
+
+# Loop over all found .proto files
+foreach(PROTO_FILE ${PROTO_FILES})
+    # Get the file name without the directory
+    get_filename_component(PROTO_NAME ${PROTO_FILE} NAME_WE)
+
+    # Get the relative directory of the .proto file from the source folder
+    file(RELATIVE_PATH REL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/telemetry ${PROTO_FILE})
+    get_filename_component(PROTO_DIR ${REL_PATH} DIRECTORY)
+
+    # Define the output directory for generated files
+    # Make sure the output directory structure doesn't get nested unnecessarily
+    set(PROTO_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/telemetry)
+    file(MAKE_DIRECTORY ${PROTO_OUTPUT_DIR})  # Create the directory if it doesn't exist
+
+    # Log to check if the directories are being resolved correctly
+    message(STATUS "Proto File: ${PROTO_FILE}")
+    message(STATUS "Output Directory: ${PROTO_OUTPUT_DIR}")
+
+    # Generate Protobuf files
+    add_custom_command(
+            OUTPUT ${PROTO_OUTPUT_DIR}/${PROTO_NAME}.pb.cc
+            ${PROTO_OUTPUT_DIR}/${PROTO_NAME}.pb.h
+            COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+            --cpp_out=${PROTO_OUTPUT_DIR}
+            --proto_path=${CMAKE_CURRENT_SOURCE_DIR}/telemetry
+            ${PROTO_FILE}
+            DEPENDS ${PROTO_FILE}
+            COMMENT "Generating Protobuf files for ${PROTO_FILE}"
+    )
+
+    # Append the generated source file to the list
+    list(APPEND PROTO_SRCS ${PROTO_OUTPUT_DIR}/${PROTO_NAME}.pb.cc)
+endforeach()
+
+# Include directories for generated headers
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${PROTO_HDRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -22,6 +120,26 @@ find_package(Qt6 COMPONENTS
 find_package(OpenGL)
 
 add_executable(gs_backend_2024_2025 main.cpp
+        3DCore
+        3DExtras
+        3DInput
+        3DRender
+        WebView
+        WebChannel
+        WebEngineWidgets
+        Multimedia
+        MultimediaWidgets
+        Charts
+        REQUIRED)
+
+# Add the executable
+add_executable(groundstation-2025
+        ${PROTO_SRCS}
+#        MACOSX_BUNDLE
+        ${app_icon_macos}
+        ${app_icon_resource_windows}
+        main.cpp
+        Resources/Resources.qrc
         Backend/Backend.cpp
         Backend/Backend.h
         Backend/RadioModule.cpp
@@ -46,9 +164,12 @@ add_executable(gs_backend_2024_2025 main.cpp
         Frontend/Widgets/NavBall.h
         Utility/SerialPortManager.cpp
         Utility/SerialPortManager.h
+        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
@@ -64,11 +185,11 @@ add_executable(gs_backend_2024_2025 main.cpp
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
-        Utility/DataSimulator.cpp
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
+        Utility/DataSimulator/DataSimulator.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.ui
+        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
@@ -84,8 +205,81 @@ add_executable(gs_backend_2024_2025 main.cpp
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/rocketflighttimewidget.h
         Frontend/Widgets/TimeDateWidgets/rocketflighttimewidget.cpp
+        Frontend/Widgets/RadioPerformanceWidgets/droppedpacketswidget.cpp
+        Frontend/Widgets/RadioPerformanceWidgets/droppedpacketswidget.h
+        Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.cpp
+        Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.h
+        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.cpp
+        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h
+        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.ui
+        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
+        Frontend/Widgets/Viewer3D/Viewer3D.cpp
+        Frontend/Widgets/Viewer3D/Viewer3D.h
+        Frontend/Windows/MainWindow/mainwindow.cpp
+        Frontend/Windows/MainWindow/mainwindow.h
+        Frontend/Windows/MainWindow/mainwindow.ui
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/QLedLabel.cpp
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/QLedLabel.h
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/ledwidget.cpp
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/ledwidget.h
+        Frontend/Widgets/IndicatorWidget/IndicatorWidget/LedWidget.ui
+        Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.h
+        Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.h
+        Frontend/Windows/LogWindow/logwindow.cpp
+        Frontend/Windows/LogWindow/logwindow.h
+        Frontend/Windows/LogWindow/logwindow.ui
+        Utility/TelemetryHandler.cpp
+        Utility/TelemetryHandler.h
+        Frontend/Widgets/DataSimulationButton/DataSimulationButton.cpp
+        Frontend/Widgets/DataSimulationButton/DataSimulationButton.h
+        Utility/UnitConversions.h
+        Frontend/Widgets/RadioPerformanceWidgets/ThroughputDisplayWidget.cpp
+        Frontend/Widgets/RadioPerformanceWidgets/ThroughputDisplayWidget.h
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.cpp
+        Frontend/Widgets/MaxValueWidget/maxvaluewidget.h
+        Frontend/Widgets/MaxValueWidget/MaxValueWidget.ui
+        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.cpp
+        Frontend/Widgets/StateDisplayWidget/statedisplaywidget.h
+        Frontend/Widgets/StateDisplayWidget/StateDisplayWidget.ui
+        Frontend/Widgets/TimelineWidget/timelinewidget.cpp
+        Frontend/Widgets/TimelineWidget/timelinewidget.h
+        Frontend/Widgets/TimelineWidget/TimelineWidget.ui
+        Frontend/Widgets/TimelineWidget/statesummarywidget.cpp
+        Frontend/Widgets/TimelineWidget/statesummarywidget.h
+        Frontend/Widgets/TimelineWidget/StateSummaryWidget.ui
+        Frontend/Widgets/MapWidget/mapwidget.cpp
+        Frontend/Widgets/MapWidget/mapwidget.h
+        Frontend/Widgets/MapWidget/MapWidget.ui
+        Frontend/Widgets/MapWidget/JSInterface.cpp
+        Frontend/Widgets/MapWidget/JSInterface.h
+        Backend/APRS/KissClient.h
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
+        Frontend/Windows/RemoteControlWindow/RemoteControlWindow.ui
+        Frontend/Windows/GraphWindow/GraphWindow.h
+        Frontend/Windows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Widgets/GraphWidget/GraphWidget.cpp
+        Frontend/Widgets/GraphWidget/GraphWidget.h
+        Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
 )
-target_link_libraries(gs_backend_2024_2025
+
+set_target_properties(groundstation-2025 PROPERTIES
+        com.wpi.hprc
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/macos/Info.plist.in"
+        MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
+)
+
+# Link Protobuf and Qt6 libraries
+target_link_libraries(groundstation-2025
+        PRIVATE
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
@@ -94,5 +288,20 @@ target_link_libraries(gs_backend_2024_2025
         Qt6::OpenGLWidgets
 
         ${OPENGL_LIBRARIES}        
+        Qt6::3DCore
+        Qt6::3DExtras
+        Qt6::3DInput
+        Qt6::3DRender
+        Qt6::WebEngineWidgets
+        Qt6::WebView
+        Qt6::WebChannel
+        Qt6::Multimedia
+        Qt6::MultimediaWidgets
+        Qt6::Charts
+        ${Protobuf_LIBRARIES}
 )
 
+qt_finalize_target(groundstation-2025)
+
+# Include all generated files in the target
+target_sources(groundstation-2025 PRIVATE ${PROTO_SRCS})

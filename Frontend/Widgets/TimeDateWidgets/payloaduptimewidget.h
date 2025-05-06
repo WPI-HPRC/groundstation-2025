@@ -29,7 +29,7 @@ signals:
     void newUptime(uint32_t);
 
 public slots:
-    void newPacket(Backend::Telemetry telemPacket);
+    void telemetryAvailable(const HPRC::Telemetry& telemetry);
 };
 
 
