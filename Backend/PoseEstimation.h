@@ -6,14 +6,15 @@
 
 #include <cmath>
 #include "Utility/Utility.h"
+#include <iostream>
 
 class PoseEstimator
 {
 public:
     PoseEstimator(GroundStation::RocketTelemPacket);
     void UpdateRocketPosition(GroundStation::RocketTelemPacket);
-    double getYaw();
-    double getPitch();
+    double computeYaw();
+    double computePitch();
 private:
     //Position of the Antenna
     double AntennaLat;
@@ -27,19 +28,22 @@ private:
     double Yaw;
     double Pitch;
 
-    void computeYaw();
-    void computePitch();
     static double toRadians(double deg);
     static double toDegrees(double rad);
 };
 
-class YawEstimator
+class UpdateRocketPosition
 {
     public:
 };
 
-class PitchEstimator
+class computeYaw
 {
     public:
-}
+};
+
+class computePitch
+{
+    public:
+};
 #endif //POSEESTIMATION_H
