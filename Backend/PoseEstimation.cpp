@@ -19,14 +19,17 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
 
 
 
-double computeYaw(double x1, double y1, double x2, double y2) { //y2 is the new coordinate of rocket along y, x2 along x
+double computeYaw(double x1, double y1, double x2, double y2) {
     double Yaw = atan2(y2-y1, x2-x1); //radians
-    return Yaw;
+    return Yaw; //angle of adjustment
 }
-double computePitch(double z1, double z2, double x1, double x2, double y1, double y2 ) {
-    //Equations
-    double Pitch = atan2(z2,sqrt(y2*y2 + x2*x2))-atan2(z1,sqrt(y1*y1+x1*x1)); //z2 is updated altitude
-    return Pitch;
+double computePitch(double x1, double x2, double y1, double y2,double z1, double z2) {
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    double dz = z2 - z1;
+    double horiz_distance = sqrt(dx*dx + dy*dy);
+    double Pitch = atan2(dz,horiz_distance);
+    return Pitch; //angle of adjustment
 }
 
 double convertLon(){
