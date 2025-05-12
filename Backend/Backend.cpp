@@ -798,7 +798,7 @@ void Backend::start()
     throughputTimer->setInterval(500);
 
     connect(throughputTimer, &QTimer::timeout, this, &Backend::updateThroughputSpeeds);
-    throughputTimer->start();
+//    throughputTimer->start();
 
     // use a separate timer for the RSSI data so it gets updated quicker
     // be careful running this too fast, or else it will bog down the radio with too many ATCommandRequests
@@ -806,7 +806,7 @@ void Backend::start()
     rssiTimer->setInterval(50);
 
     connect(rssiTimer, &QTimer::timeout, this, &Backend::updateRSSIInfo);
-    rssiTimer->start();
+//    rssiTimer->start();
 }
 
 Backend::Backend(QObject *parent) : QObject(parent)

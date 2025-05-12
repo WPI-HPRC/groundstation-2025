@@ -8,21 +8,26 @@
 #include "ui_LivestreamWindow.h"
 
 #include "Frontend/Images/Placeholder4x3Image.h"
+#include "Frontend/Widgets/CameraWidget/CameraWidget.h"
 
 LivestreamWindow::LivestreamWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::LivestreamWindow)
 {
     ui->setupUi(this);
 
-    auto *image = new Placeholder4x3Image();
+//    auto *w = new CameraWidget();
 
-    /*
-    cameraWidget = new CameraWidget();
-    cameraWidget->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+//    auto *mapWidget = new Placeholder4x3Image();
 
-    ui->gridLayout->addWidget(cameraWidget->viewfinder, 0, 0, -1, -1);
-    cameraWidget->viewfinder->lower();
-     */
+//    QGridLayout *layout = ui->gridLayout;
+//    cameraWidget->viewfinder->setLayout(layout);
+//    cameraWidget->captureSession.setVideoOutput(this->centralWidget());
+//    ui->gridLayout->addWidget(w, 0, 0, -1, -1);
+//    w->lower();
+//    cameraWidget->viewfinder->lower();
+
+//    cameraWidget->lower();
+//    setCentralWidget(cameraWidget->viewfinder);
 }
 
 LivestreamWindow::~LivestreamWindow()

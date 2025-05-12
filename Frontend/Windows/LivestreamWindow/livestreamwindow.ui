@@ -61,6 +61,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="2,1" columnstretch="1,2,2,2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item row="1" column="1">
      <widget class="AccelerationGauge" name="widget_2" native="true"/>
     </item>
@@ -73,11 +76,11 @@
     <item row="1" column="3">
      <widget class="Viewer3D" name="widget_5" native="true"/>
     </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="CameraWidget" name="widget_4" native="true"/>
-    </item>
     <item row="0" column="3">
      <widget class="LivestreamTimeWidget" name="widget_6" native="true"/>
+    </item>
+    <item row="0" column="1" colspan="2">
+     <widget class="CameraWidget" name="widget_4" native="true"/>
     </item>
    </layout>
   </widget>

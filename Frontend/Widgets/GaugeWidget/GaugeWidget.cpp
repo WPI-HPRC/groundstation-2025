@@ -68,6 +68,7 @@ void GaugeWidget::paintEvent(QPaintEvent *paintEvent)
     painter.drawArc(rect, startAngle*16, qMax(-maxAngle*16, (int)(-maxAngle*16 * (value/maxValue)) - 1));
 
     QWidget::paintEvent(paintEvent);
+    this->raise();
 }
 
 void GaugeWidget::resizeEvent(QResizeEvent *resizeEvent)

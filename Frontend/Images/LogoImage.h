@@ -6,13 +6,17 @@
 #define GROUNDSTATION_2025_LOGOIMAGE_H
 
 #include "Frontend/Images/ImageWidget/ImageWidget.h"
+#include <QTimer>
 
 class LogoImage: public ImageWidget
 {
 public:
     explicit LogoImage(QWidget *parent = nullptr): ImageWidget(parent)
     {
-        this->setImage(":/Images/hprc_logo.png");
+//        QTimer::singleShot(100, [this, image]()
+//        {
+            this->setImage(":/Images/hprc_logo.png");
+//        });
     }
 };
 
