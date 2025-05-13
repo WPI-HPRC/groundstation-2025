@@ -18,28 +18,47 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
 
 
 
-
 double computeYaw(double x1, double y1, double x2, double y2) {
-    double Yaw = atan2(y2-y1, x2-x1); //radians
-    return Yaw; //angle of adjustment
+    double Yaw = atan2(y2-y1, x2-x1); //angle from x-axis in radians
+    return Yaw; // Absolute yaw to the rocket in radians
 }
 double computePitch(double x1, double x2, double y1, double y2,double z1, double z2) {
     double dx = x2 - x1;
     double dy = y2 - y1;
     double dz = z2 - z1;
     double horiz_distance = sqrt(dx*dx + dy*dy);
-    double Pitch = atan2(dz,horiz_distance);
-    return Pitch; //angle of adjustment
+    double Pitch = atan2(dz,horiz_distance); //angle from xy-plane in radians
+    return Pitch; //Absolute pitch to the rocket in radians
+}
+/*
+y1--> position of the antenna
+ y2--> updated position of the rocket
+ y2-y1--> relative vector
+
+x1--> position of the antenna
+ x2--> updated position of the rocket
+ x2-x1--> relative vector
+ */
+
+double x1 = convertLonToX(lon_antenna,lat_antenna_)
+
+convertLonToX(double )
+
+
+double y1= 0.0;
+bool isYReferenceSet = false;
+double convertLonToY(double y2){
+    if (!isYReferenceSet){
+        y1 = y2;
+        isYReferenceSet = true;
+    }
+    return y2-y1; //y2 is the current longitude (y1 is the reference)
 }
 
-double convertLon(){
-    return Yposition;
-}
 
-double convertLat(){
-    return Xposition;
+double convertLatToY(){
+    return x2;
 }
-
 /*
  1. Initialize Antenna position--> using AntennaLon... from antenna GPS
  2. Rocket feeds telementry to UpdateRocketPosition, which is connected to Pose estimator
@@ -48,4 +67,6 @@ double convertLat(){
  5. Done!
 
 
+/*
+ Converter from gps to x and y
  */
