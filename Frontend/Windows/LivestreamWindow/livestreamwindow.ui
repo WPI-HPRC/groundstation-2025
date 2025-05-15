@@ -74,7 +74,7 @@
      <widget class="LivestreamTimelineDisplay" name="widget_3" native="true"/>
     </item>
     <item row="1" column="3">
-     <widget class="Viewer3D" name="widget_5" native="true"/>
+     <widget class="NavBall" name="widget_5" native="true"/>
     </item>
     <item row="0" column="3">
      <widget class="LivestreamTimeWidget" name="widget_6" native="true"/>
@@ -111,15 +111,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Viewer3D</class>
-   <extends>QWidget</extends>
-   <header>Frontend/Widgets/Viewer3D/Viewer3D.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>LivestreamTimeWidget</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NavBall</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/NavBall/NavBall.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

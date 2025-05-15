@@ -10,7 +10,7 @@
 #include "Backend/Backend.h"
 #include "Backend/APRS/KissClient.h"
 #include "Backend/APRS/DirewolfProcess.h"
-#include "Frontend/Windows/GraphWindow/GraphWindow.h"
+#include "Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :

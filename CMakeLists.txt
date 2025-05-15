@@ -69,9 +69,9 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
         Frontend/Widgets/AprsWidget/AprsWidget.ui
-        Frontend/Windows/CameraWindow/camerawindow.cpp
-        Frontend/Windows/CameraWindow/camerawindow.h
-        Frontend/Windows/CameraWindow/camerawindow.ui
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.cpp
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.h
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.ui
         Frontend/Widgets/CameraWidget/CameraWidget.cpp
         Frontend/Widgets/CameraWidget/CameraWidget.h
         Frontend/Widgets/GaugeWidget/SpeedGauge.cpp
@@ -297,12 +297,12 @@ add_executable(groundstation-2025
         Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
 
         Backend/APRS/KissClient.h
-        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
-        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
-        Frontend/Windows/RemoteControlWindow/RemoteControlWindow.ui
-        Frontend/Windows/GraphWindow/GraphWindow.h
-        Frontend/Windows/GraphWindow/GraphWindow.cpp
-        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/remotecontrolwindow.cpp
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/remotecontrolwindow.h
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/RemoteControlWindow.ui
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.h
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.ui
         Frontend/Widgets/GraphWidget/GraphWidget.cpp
         Frontend/Widgets/GraphWidget/GraphWidget.h
         Frontend/Widgets/GraphWidget/ThreeAxisGraph.h

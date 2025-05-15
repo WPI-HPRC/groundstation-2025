@@ -3,7 +3,6 @@
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
 #include "Frontend/Windows/LivestreamWindow/livestreamwindow.h"
-#include "Frontend/Windows/CameraWindow/camerawindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,11 +26,6 @@ int main(int argc, char *argv[])
 //    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     livestreamWindow.showMaximized();
     livestreamWindow.setWindowTitle("Livestream");
-    /*
-    CameraWindow cameraWindow;
-    cameraWindow.setWindowIcon(icon);
-    cameraWindow.showMaximized();
-     */
 
     Backend &backend = Backend::getInstance();
     backend.start();

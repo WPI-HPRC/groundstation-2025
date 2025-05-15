@@ -1932,11 +1932,6 @@
    <extends>QTableWidget</extends>
    <header>Frontend/Widgets/SerialPortList/SerialPortList.h</header>
   </customwidget>
-  <customwidget>
-   <class>NavBall</class>
-   <extends>QOpenGLWidget</extends>
-   <header>Frontend/Widgets/NavBall.h</header>
-  </customwidget>
  </customwidgets>
  <resources/>
  <connections/>
