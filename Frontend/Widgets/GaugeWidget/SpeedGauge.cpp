@@ -21,12 +21,12 @@ SpeedGauge::SpeedGauge(QWidget *parent): GaugeDisplay(parent)
 
     gauge->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(telemetry.packetType != GroundStation::Rocket)
+        if(!telemetry.has_rocketpacket())
             return;
-        HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;
-        float speed = sqrt(data->velx()*data->velx() + data->vely()*data->vely() + data->velz()*data->velz())*2.23694;
+        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
+        float speed = sqrt(data.velx()*data.velx() + data.vely()*data.vely() + data.velz()*data.velz()) * Utility::UnitConversion::MetersPerSecondToMilesPerHour;
 
         this->gauge->updateValue(speed);
         this->updateNumber(QString::number(round(speed)));

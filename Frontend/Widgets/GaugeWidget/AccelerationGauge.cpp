@@ -17,12 +17,12 @@ AccelerationGauge::AccelerationGauge(QWidget *parent): GaugeDisplay(parent)
 
     gauge->setSizePolicy(QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(telemetry.packetType != GroundStation::Rocket)
+        if(!telemetry.has_rocketpacket())
             return;
-        HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;
-        float totalAccel = sqrt(data->accelx()*data->accelx() + data->accely()*data->accely() + data->accelz()*data->accelz());
+        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
+        float totalAccel = sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz());
         this->gauge->updateValue(totalAccel);
         this->updateNumber(QString::number(round(totalAccel)));
         if((int)currentValue != (int)totalAccel)

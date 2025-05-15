@@ -23,15 +23,15 @@ LivestreamTimelineDisplay::LivestreamTimelineDisplay(QWidget *parent) :
     this->ui->UnofficialLabel->setFont(QFont(font, 15));
 
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(telemetry.packetType != GroundStation::Rocket)
+        if(!telemetry.has_rocketpacket())
             return;
-        HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;
+        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
 
-        this->ui->Timeline->updateValue(data->altitude()*3.28084);
-        this->ui->AltitudeLabel->setText(QString::asprintf("%d ft", (int)(data->altitude()*3.28084)));
-        this->ui->StateLabel->setText(Backend::getInstance().RocketStateNames.at(data->state()));
+        this->ui->Timeline->updateValue(Utility::UnitConversion::meters2feet(data.altitude()));
+        this->ui->AltitudeLabel->setText(QString::asprintf("%d ft", (int)(Utility::UnitConversion::meters2feet(data.altitude()))));
+        this->ui->StateLabel->setText(Backend::getInstance().RocketStateNames.at(data.state()));
         repaint();
     });
 }

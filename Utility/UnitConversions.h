@@ -13,6 +13,8 @@ namespace Utility::UnitConversion
     static constexpr float GsToMeters = 9.80665;
     static constexpr float PascalsToPSI = 0.000145038;
     static constexpr float MillibarsToPascals = 100;
+    static constexpr float RadPerSecToRevPerMin = 9.549297;
+    static constexpr float MetersPerSecondToMilesPerHour = 2.23694;
 
     // Methods
     static constexpr float meters2feet(float meters) { return meters*MetersToFeet; }
@@ -32,6 +34,9 @@ namespace Utility::UnitConversion
 
     static constexpr float cel2far(float cel) { return (cel * 1.8) + 32; }
     static constexpr float far2cel(float far) { return (far - 32) / 1.8; }
+
+    static constexpr float rps2rpm(float rps) { return rps * RadPerSecToRevPerMin; }
+    static constexpr float mps2mph(float mps) { return mps * MetersPerSecondToMilesPerHour; }
 };
 
 

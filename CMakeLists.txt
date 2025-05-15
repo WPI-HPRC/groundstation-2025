@@ -86,7 +86,7 @@ set(PROTO_SRCS
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.ui
         Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.cpp
-        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h)
+        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h
         Frontend/Widgets/AprsWidget/aprswidget.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h)
