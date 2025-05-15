@@ -68,7 +68,7 @@ set(PROTO_SRCS
         Backend/APRS/APRSHandler.h
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
-        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/AprsWidget/AprsWidget.ui
         Frontend/Windows/CameraWindow/camerawindow.cpp
         Frontend/Windows/CameraWindow/camerawindow.h
         Frontend/Windows/CameraWindow/camerawindow.ui
@@ -87,6 +87,9 @@ set(PROTO_SRCS
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.ui
         Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.cpp
         Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h)
+        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/GraphWidget/OneAxisGraph.h
+        Frontend/Widgets/GraphWidget/FourAxisGraph.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -126,12 +129,11 @@ endforeach()
 # Include directories for generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${PROTO_HDRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt6 COMPONENTS
         Core
@@ -149,6 +151,7 @@ find_package(Qt6 COMPONENTS
         SvgWidgets
         Multimedia
         MultimediaWidgets
+        Charts
         REQUIRED)
 
 # Add the executable
@@ -281,6 +284,15 @@ add_executable(groundstation-2025
         Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
 
         Backend/APRS/KissClient.h
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
+        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
+        Frontend/Windows/RemoteControlWindow/RemoteControlWindow.ui
+        Frontend/Windows/GraphWindow/GraphWindow.h
+        Frontend/Windows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Widgets/GraphWidget/GraphWidget.cpp
+        Frontend/Widgets/GraphWidget/GraphWidget.h
+        Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
 )
 
 set_target_properties(groundstation-2025 PROPERTIES
@@ -310,6 +322,7 @@ target_link_libraries(groundstation-2025
         Qt6::SvgWidgets
         Qt6::Multimedia
         Qt6::MultimediaWidgets
+        Qt6::Charts
         ${Protobuf_LIBRARIES}
 )
 

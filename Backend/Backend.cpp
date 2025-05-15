@@ -7,7 +7,6 @@
 #include <QJsonDocument>
 #include <string>
 #include <utility>
-#include <chrono>
 #include "Constants.h"
 
 QMap<std::string, Backend::ConversionFunction> Backend::metricToEnglish = {
@@ -175,6 +174,9 @@ void Backend::cancelLinkTest()
     std::cout << "Cancelling link test" << std::endl;
     getModuleWithName(GROUND_STATION_MODULE)->linkTestsLeft = 0;
 }
+
+
+
 
 void Backend::_runThroughputTest(Backend::ThroughputTestParams params)
 {
@@ -485,72 +487,174 @@ void Backend::updateTimes(const HPRC::RocketTelemetryPacket &rocketData)
     }
 }
 
-void Backend::receiveTelemetry(Backend::Telemetry telemetry)
+void Backend::handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet)
 {
-    if(telemetry.packetType == GroundStation::Rocket)
+    updateMaxRocketValues(maxRocketValues, *packet);
+    updateTimes(*packet);
+
+    if(lastRocketPacket.state() == 0 && packet->state() == 1)
     {
-        HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
-        updateMaxRocketValues(maxRocketValues, *packet);
-        updateTimes(*packet);
+        groundLevelAltitude = lastRocketPacket.altitude();
+    }
+    if(lastRocketPacket.state() != packet->state())
+    {
+        // Reset things when we reach prelaunch state
 
-        if(lastRocketPacket.state() == 0 && packet->state() == 1)
+        if(packet->state() == 0)
         {
-            groundLevelAltitude = lastRocketPacket.altitude();
-        }
-        if(lastRocketPacket.state() != packet->state())
-        {
-            // Reset things when we reach prelaunch state
-
-            if(packet->state() == 0)
-            {
-                stateMaxValues.clear();
-            }
-
-            currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-            emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
-
-            if(lastRocketPacket.state() != 6)
-            {
-                stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
-                currentStateMaxValues = {};
-            }
+            stateMaxValues.clear();
         }
 
-        updateMaxRocketValues(currentStateMaxValues, *packet);
+        currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
+        emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
 
-        lastRocketPacket = *packet;
-        if(convertToEnglish)
+        if(lastRocketPacket.state() != 6)
         {
-            doConversions(packet, metricToEnglish);
-            if(convertFromGees)
-            {
-                doConversions(packet, geeConversions_English);
-            }
-        }
-        else if(convertFromGees)
-        {
-            doConversions(packet, geeConversions_Metric);
+            stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
+            currentStateMaxValues = {};
         }
     }
-    else if (telemetry.packetType == GroundStation::Payload)
+
+    updateMaxRocketValues(currentStateMaxValues, *packet);
+
+    lastRocketPacket = *packet;
+    if(convertToEnglish)
     {
-        HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
-        updateMaxPayloadValues(maxPayloadValues, *packet);
-        lastPayloadPacket = *packet;
-        if(convertToEnglish)
+        doConversions(packet, metricToEnglish);
+        if(convertFromGees)
         {
-            doConversions(packet, metricToEnglish);
-            if(convertFromGees)
-            {
-                doConversions(packet, geeConversions_English);
-            }
+            doConversions(packet, geeConversions_English);
         }
-        else if(convertFromGees)
+    }
+    else if(convertFromGees)
+    {
+        doConversions(packet, geeConversions_Metric);
+    }
+}
+
+void Backend::handlePayloadTelemetry(HPRC::PayloadTelemetryPacket *packet)
+{
+    updateMaxPayloadValues(maxPayloadValues, *packet);
+    lastPayloadPacket = *packet;
+    if(convertToEnglish)
+    {
+        doConversions(packet, metricToEnglish);
+        if(convertFromGees)
         {
-            doConversions(packet, geeConversions_Metric);
+            doConversions(packet, geeConversions_English);
         }
+    }
+    else if(convertFromGees)
+    {
+        doConversions(packet, geeConversions_Metric);
+    }
+}
+
+void Backend::handlePacketizedPacket(Backend::GenericPacket packet)
+{/*
+    // This denotes the packetized data is done being sent
+    if(packet.length_bytes == 1)
+    {
+        switch(packet.data[0])
+        {
+            case GroundStation::SDDirectory:
+                handleSDDirectoryContents(sDDirectoryContents);
+                break;
+            case GroundStation::SDFileContents:
+                break;
+            case GroundStation::Image:
+            default:
+                return;
+        }
+        return;
+    }
+
+    // Is there a better way to do this? Yuck
+    Backend::PacketizedData *packetizedData;
+    switch(packet.data[0])
+    {
+        case GroundStation::SDDirectory:
+            packetizedData = &sDDirectoryContents;
+            break;
+        case GroundStation::SDFileContents:
+            packetizedData = &sDFileContents;
+            break;
+        case GroundStation::Image:
+            packetizedData = &image;
+        default:
+            return;
+    }
+
+    packetizedData->length_bytes += packet.length_bytes;
+    packetizedData->num_packets_received++;
+    // Skip the first byte, which is the frame type
+    memcpy(packetizedData->currentBytePointer, &packet.data[1], packet.length_bytes);
+    packetizedData->currentBytePointer += packet.length_bytes;
+    */
+}
+
+void Backend::handleSDDirectoryContents(Backend::ChunkedPacket data)
+{
+    QList<QByteArray> fileNames = QByteArray::fromRawData((const char *)data.bytes, data.length_bytes).split('\0');
+    for(int i = 0; i < fileNames.length(); i++)
+    {
+        qDebug() << fileNames.at(i).toStdString();
+    }
+}
+
+void Backend::handleTelemetry(const HPRC::Telemetry& telemetry)
+{
+    switch (telemetry.Message_case())
+    {
+        case HPRC::Telemetry::kRocketPacket:
+            handleRocketTelemetry(const_cast<HPRC::RocketTelemetryPacket *>(&telemetry.rocketpacket()));
+            break;
+        case HPRC::Telemetry::kPayloadPacket:
+            handlePayloadTelemetry(const_cast<HPRC::PayloadTelemetryPacket *>(&telemetry.payloadpacket()));
+            break;
+        default:
+            qDebug() << "RECEIVED TELEMETRY PACKET WITH MESSAGE NOT SET";
     }
     emit telemetryAvailable(telemetry);
+}
+
+void Backend::handleRadioCommandResponse(const HPRC::CommandResponse &packet)
+{
+    // Handle the command response
+}
+
+void Backend::handleBeginPacketChunks(const HPRC::BeginPacketChunks &packet)
+{
+    // Handle the start of receiving packet chunks
+}
+
+void Backend::handleEndPacketChunks(const HPRC::EndPacketChunks &packet)
+{
+    // Handle the end of receiving packet chunks
+}
+
+void Backend::receivePacket(const HPRC::Packet& packet)
+{
+    switch (packet.Message_case())
+    {
+        case HPRC::Packet::kTelemetry:
+            handleTelemetry(packet.telemetry());
+            break;
+        case HPRC::Packet::kCommandResponse:
+            handleRadioCommandResponse(packet.commandresponse());
+            break;
+        case HPRC::Packet::kBeginPacketChunks:
+            handleBeginPacketChunks(packet.beginpacketchunks());
+            break;
+        case HPRC::Packet::kEndPacketChunks:
+            handleEndPacketChunks(packet.endpacketchunks());
+            break;
+        case HPRC::Packet::kCommand:
+            qDebug() << "Received a command from the radio module"; // Should never happen
+            break;
+        default:
+            qDebug() << "RECEIVED PACKET WITH MESSAGE NOT SET";
+    }
 }
 
 void Backend::setBaudRate(const QString &name, int baudRate)
@@ -619,6 +723,7 @@ void Backend::writeParameters(const QString &moduleName)
 
 bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, int baudRate)
 {
+
     RadioModule *existingModule = getModuleWithName(name);
     if(existingModule)
     {
@@ -643,19 +748,13 @@ bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, i
         return false;
     }
 
-    RadioModule *module;
-    switch(moduleType)
-    {
-        case Rocket:
-            module = new RocketTestModule(baudRate, new DataLogger(), targetPort);
-            break;
-        case Payload:
-            module = new PayloadTestModule(baudRate, new DataLogger(), targetPort);
-            break;
-        default:
-            module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
-    }
+    RadioModule *module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
     radioModules.append(module);
+    if(!groundStationModem)
+    {
+        groundStationModem = module;
+    }
+
     return true;
 }
 
@@ -749,7 +848,7 @@ void Backend::start()
             simulationFile,
             webServer,
             HPRC::PayloadTelemetryPacket::descriptor(),
-            GroundStation::PacketType::Payload
+            DataSimulator::PayloadTelemetry
             );
 
     simulationFile = ":/SimulationData/SampleRocketData.csv";
@@ -757,13 +856,13 @@ void Backend::start()
             simulationFile,
             webServer,
             HPRC::RocketTelemetryPacket::descriptor(),
-            GroundStation::PacketType::Rocket
+            DataSimulator::RocketTelemetry
     );
 
     QSerialPortInfo modem = getTargetPort(GROUND_STATION_MODULE);
     if(!modem.isNull())
     {
-        connectToModule(GROUND_STATION_MODULE, Default, 921600);
+        connectToModule(GROUND_STATION_MODULE, Default, 230400);
         groundStationModem = getModuleWithName(GROUND_STATION_MODULE);
         // reset the radio's internal error count
         groundStationModem->sendNextFrameImmediately = true;
@@ -783,6 +882,11 @@ void Backend::start()
 
     connect(rtcTimer, &QTimer::timeout, [this]()
             {
+                if(graphWindow)
+                {
+                    graphWindow->scroll();
+                }
+
                 currentGroundEpoch = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
                 std::tm* currentLocalDateTime = std::localtime(&currentGroundEpoch);
@@ -809,11 +913,71 @@ void Backend::start()
 //    rssiTimer->start();
 }
 
+void Backend::transmitPacketThroughModem(const HPRC::Packet &packet, uint64_t address)
+{
+    if (!groundStationModem)
+    {
+        return;
+    }
+    size_t size = packet.ByteSizeLong();
+    if (size > 255)
+    {
+        qDebug() << "Can't transmit because the packet is over 255 bytes! " << size << " Bytes is too many!";
+    }
+
+    packet.SerializeToArray(transmitPacketBytes, (int) size);
+
+    // For now send to this address, but an input in the frontend will be added
+    groundStationModem->sendTransmitRequestCommand(address, transmitPacketBytes, size);
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet, size_t *index_io)
+{
+    uint64_t address = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        address |= (uint64_t) packet[*index_io] << (8 * (7 - i));
+        (*index_io)++;
+    }
+
+    return address;
+}
+
+QByteArray Backend::hexToBytes(const QString &hexString)
+{
+    QByteArray rawBytes;
+    QString cleanHexString = hexString;
+    cleanHexString.remove(QRegularExpression("\\s")); // Remove all spaces and newlines
+    rawBytes = QByteArray::fromHex(cleanHexString.toLatin1());
+    return rawBytes;
+}
+
+uint64_t Backend::getAddressBigEndian(const uint8_t *packet)
+{
+    size_t _ = 0;
+
+    return getAddressBigEndian(packet, &_);
+}
+
+void Backend::setGraphWindow(GraphWindow *window)
+{
+    graphWindow = window;
+//    graphTimer = new QTimer();
+//    graphTimer->setInterval(1000);
+//    connect(rtcTimer, &QTimer::timeout, graphWindow, &GraphWindow::scroll);
+//    graphTimer->start();
+}
+
 Backend::Backend(QObject *parent) : QObject(parent)
 {
     loopCount = 0;
     throughputTestTimer = new QTimer();
     connect(throughputTestTimer, &QTimer::timeout, this, &Backend::throughputTestTimerTicked);
+
+    chunkedPacket.bytes = new uint8_t[1048576*50]; // Give 50mb of space in case there is a large piece of data. We should check the data fits this later
+    chunkedPacket.currentBytePointer = chunkedPacket.bytes;
+
 //    stateMaxValues = QList<MaxValues>(6);
 
 //    dummyLogger = new DataLogger();

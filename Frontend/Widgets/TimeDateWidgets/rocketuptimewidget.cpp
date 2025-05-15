@@ -12,12 +12,16 @@ RocketUptimeWidget::RocketUptimeWidget(QWidget *parent) :
     QWidget(parent), ui(new Ui::RocketUptimeWidget) {
     ui->setupUi(this);
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &RocketUptimeWidget::newPacket);
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &RocketUptimeWidget::telemetryAvailable);
 }
 
-void RocketUptimeWidget::newPacket(Backend::Telemetry telemPacket)
+void RocketUptimeWidget::telemetryAvailable(const HPRC::Telemetry& telemetry)
 {
-    uint_fast32_t currentUpTime = telemPacket.data.rocketData->timestamp();
+    if(!telemetry.has_rocketpacket())
+    {
+        return;
+    }
+    uint_fast32_t currentUpTime = telemetry.rocketpacket().timestamp();
 
     emit newUptime(currentUpTime);
 

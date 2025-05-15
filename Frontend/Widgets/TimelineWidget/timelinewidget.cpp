@@ -27,7 +27,6 @@ TimelineWidget::TimelineWidget(QWidget *parent) :
         {
             stateWidget->setPreLaunch();
         }
-
     }
 
     connect(&Backend::getInstance(), &Backend::rocketStateChanged, this, &TimelineWidget::rocketStateChanged);

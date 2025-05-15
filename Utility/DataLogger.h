@@ -11,6 +11,7 @@
 #include <iostream>
 #include "../Constants.h"
 #include "Utility.h"
+#include "generated/telemetry/Packet.pb.h"
 
 #define DEBUG_CSV false
 
@@ -118,19 +119,12 @@ private:
 class DataLogger
 {
 public:
-    struct Packet
-    {
-        std::string data;
-        GroundStation::PacketType packetType;
-    };
 
     explicit DataLogger(QString dirPrefix = "", bool needFiles = true);
 
-    void writeData(const QJsonObject &jsonData, GroundStation::PacketType packetType);
+    void writeTelemetry(const HPRC::Packet& packet);
 
-    void dataReady(const char *data, GroundStation::PacketType packetType);
-
-    void dataReady(const char *data, GroundStation::PacketType packetType, uint8_t rssi);
+    void writeTelemetry(const HPRC::Packet& packet, uint8_t rssi);
 
     void writeToByteFile(const char *text, size_t size);
 
@@ -164,6 +158,8 @@ public:
 private:
     void createDirectory(const QString &dirName);
     void createFiles();
+
+    void _writeTelemetry(const QJsonObject &jsonData, const HPRC::Packet& packet);
 
     bool needToCreateFiles;
 

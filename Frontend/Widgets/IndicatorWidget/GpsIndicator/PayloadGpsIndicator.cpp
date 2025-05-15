@@ -9,11 +9,11 @@ PayloadGpsIndicator::PayloadGpsIndicator(QWidget *parent): LedWidget(parent)
 {
     this->setLabel("Payload GPS");
     this->timeoutDuration_sec = 1;
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](Backend::Telemetry telemetry)
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, [this](const HPRC::Telemetry& telemetry)
     {
-        if(telemetry.packetType == GroundStation::Payload)
+        if(telemetry.Message_case() == HPRC::Telemetry::kPayloadPacket)
         {
-            if(telemetry.data.payloadData->gpslock())
+            if(telemetry.payloadpacket().gpslock())
             {
                 this->resetTimer();
             }

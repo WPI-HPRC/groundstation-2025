@@ -10,6 +10,7 @@
 #include "Backend/Backend.h"
 #include "Backend/APRS/KissClient.h"
 #include "Backend/APRS/DirewolfProcess.h"
+#include "Frontend/Windows/GraphWindow/GraphWindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -60,6 +61,14 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         this->restoreState(settings.value("DOCK_LOCATIONS").toByteArray(),1);
     }
+
+    GraphWindow *graphWindow = new GraphWindow(ui->GraphWindowContainer);
+    graphWindow->setWindowFlags(Qt::Widget);
+    
+    QHBoxLayout *layout = new QHBoxLayout(ui->GraphWindowContainer);
+    layout->addWidget(graphWindow);
+    ui->GraphWindowContainer->setLayout(layout);
+
 }
 
 MainWindow::~MainWindow()

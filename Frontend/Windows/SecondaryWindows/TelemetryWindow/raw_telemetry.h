@@ -26,7 +26,7 @@ public:
     ~Raw_Telemetry() override;
 
 private slots:
-    void telemetryAvailable(Backend::Telemetry telemetry);
+    void telemetryAvailable(HPRC::Telemetry telemetry);
 
 private:
     Ui::Raw_Telemetry *ui;

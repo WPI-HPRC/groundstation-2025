@@ -45,26 +45,24 @@ MapWidget::MapWidget(QWidget *parent) :
     // End comment here
 }
 
-void MapWidget::telemetryAvailable(Backend::Telemetry telemetry)
+void MapWidget::telemetryAvailable(const HPRC::Telemetry &telemetry)
 {
-    if(telemetry.packetType == GroundStation::Payload)
+    if(telemetry.has_payloadpacket())
     {
-        HPRC::PayloadTelemetryPacket *packet = telemetry.data.payloadData;
-        if(packet->gpslock())
+        if(telemetry.payloadpacket().gpslock())
         {
-            double latitude = packet->gpslat()/10e6;
-            double longitude = packet->gpslong()/10e6;
+            double latitude = telemetry.payloadpacket().gpslat()/10e6;
+            double longitude = telemetry.payloadpacket().gpslong()/10e6;
 
             jsInterface->newPayloadPosition(latitude, longitude);
         }
     }
-    if(telemetry.packetType == GroundStation::Rocket)
+    if(telemetry.has_rocketpacket())
     {
-        HPRC::RocketTelemetryPacket *packet = telemetry.data.rocketData;
-        if(packet->gpslock())
+        if(telemetry.rocketpacket().gpslock())
         {
-            double latitude = packet->gpslat()/10e6;
-            double longitude = packet->gpslong()/10e6;
+            double latitude = telemetry.rocketpacket().gpslat()/10e6;
+            double longitude = telemetry.rocketpacket().gpslong()/10e6;
 
             jsInterface->newRocketPosition(latitude, longitude);
         }

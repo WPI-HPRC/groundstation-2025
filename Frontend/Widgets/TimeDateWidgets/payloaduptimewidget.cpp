@@ -12,12 +12,16 @@ PayloadUptimeWidget::PayloadUptimeWidget(QWidget *parent) :
     QWidget(parent), ui(new Ui::PayloadUptimeWidget) {
     ui->setupUi(this);
 
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &PayloadUptimeWidget::newPacket);
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &PayloadUptimeWidget::telemetryAvailable);
 }
 
-void PayloadUptimeWidget::newPacket(Backend::Telemetry telemPacket)
+void PayloadUptimeWidget::telemetryAvailable(const HPRC::Telemetry& telemetry)
 {
-    uint32_t currentUpTime = telemPacket.data.payloadData->timestamp();
+    if(!telemetry.has_payloadpacket())
+    {
+        return;
+    }
+    uint32_t currentUpTime = telemetry.payloadpacket().timestamp();
 
     emit newUptime(currentUpTime);
 

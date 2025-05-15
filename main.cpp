@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     QIcon icon(":/Icons/logo.ico");
 
     MainWindow mainWindow;
+
     mainWindow.setWindowIcon(icon);
     mainWindow.showMaximized();
     mainWindow.setWindowTitle("Main Window");
@@ -26,9 +27,15 @@ int main(int argc, char *argv[])
 //    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     livestreamWindow.showMaximized();
     livestreamWindow.setWindowTitle("Livestream");
+    /*
+    CameraWindow cameraWindow;
+    cameraWindow.setWindowIcon(icon);
+    cameraWindow.showMaximized();
+     */
 
     Backend &backend = Backend::getInstance();
     backend.start();
+
 
     int code = QApplication::exec();
 

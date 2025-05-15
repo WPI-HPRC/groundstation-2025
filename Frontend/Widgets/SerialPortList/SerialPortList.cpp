@@ -32,14 +32,7 @@ SerialPortList::SerialPortList(QWidget *parent) : QTableWidget(parent)
 
     connect(this, &SerialPortList::openSerialPort, &SerialPortManager::getInstance(), &SerialPortManager::openPort);
     connect(this, SIGNAL(closeSerialPort(QString)), &SerialPortManager::getInstance(), SLOT(closePort(QString)));
-
-    /*
-    thread = new QThread;
-    SerialPortManager::getInstance().moveToThread(thread);
-    thread->start();
-     */
 }
-
 void SerialPortList::serialPortsFound(const QList<QSerialPortInfo>& ports)
 {
     this->serialPorts.clear();

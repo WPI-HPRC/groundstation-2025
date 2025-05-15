@@ -27,16 +27,15 @@ Raw_Telemetry::~Raw_Telemetry() {
     delete ui;
 }
 
-void Raw_Telemetry::telemetryAvailable(Backend::Telemetry telemetry){
-    if(telemetry.packetType== GroundStation::Rocket)
+void Raw_Telemetry::telemetryAvailable(HPRC::Telemetry telemetry){
+    if(telemetry.has_rocketpacket())
     {
-        HPRC::RocketTelemetryPacket *data = telemetry.data.rocketData;
-        processRocketTelemetryData(*data);
+        processRocketTelemetryData(telemetry.rocketpacket());
     }
-    else if(telemetry.packetType== GroundStation::Payload)
+    else if(telemetry.has_payloadpacket())
     {
-        HPRC::PayloadTelemetryPacket *data = telemetry.data.payloadData;
-        processPayloadTelemetryData(*data);
+        processPayloadTelemetryData(telemetry.payloadpacket());
+
     }
     //resizing columns
     ui->Column_1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);

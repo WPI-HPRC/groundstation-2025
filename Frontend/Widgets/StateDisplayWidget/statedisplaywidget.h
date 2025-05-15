@@ -30,7 +30,7 @@ public:
     ~StateDisplayWidget() override;
 
 public slots:
-    void telemetryAvailable(Backend::Telemetry telemetry);
+    void telemetryAvailable(const HPRC::Telemetry& telemetry);
 
 private:
     Ui::StateDisplayWidget *ui;
