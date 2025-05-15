@@ -141,6 +141,17 @@ find_package(Qt6 COMPONENTS
         Widgets
         SerialPort
         WebSockets
+        OpenGLWidgets
+        REQUIRED)
+
+find_package(OpenGL)
+
+find_package(Qt6 COMPONENTS
+        Core
+        Gui
+        Widgets
+        SerialPort
+        WebSockets
         3DCore
         3DExtras
         3DInput
@@ -182,6 +193,8 @@ add_executable(groundstation-2025
         Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.ui
         Frontend/Widgets/SerialPortList/SerialPortList.cpp
         Frontend/Widgets/SerialPortList/SerialPortList.h
+        Frontend/Widgets/NavBall/NavBall.cpp
+        Frontend/Widgets/NavBall/NavBall.h
         Utility/SerialPortManager.cpp
         Utility/SerialPortManager.h
         Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.cpp
@@ -312,6 +325,9 @@ target_link_libraries(groundstation-2025
         Qt6::Widgets
         Qt6::SerialPort
         Qt6::WebSockets
+        Qt6::OpenGLWidgets
+
+        ${OPENGL_LIBRARIES}        
         Qt6::3DCore
         Qt6::3DExtras
         Qt6::3DInput
