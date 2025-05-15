@@ -39,6 +39,7 @@ NavBall::NavBall(QWidget *parent) : QWidget(parent), m_view(nullptr), m_rootEnti
 
     // Set the flipped image from the temporary file
     textureImageData->setSource(QUrl::fromLocalFile(tempFilePath));
+    textureImageData->setMirrored(true);
 
     texture->addTextureImage(textureImageData);
 
@@ -101,6 +102,8 @@ void NavBall::onTelemetryData(const HPRC::Telemetry& telemetry) {
     if (telemetry.has_rocketpacket()) {
         const auto &data = telemetry.rocketpacket();
         QQuaternion q(data.w(), data.i(), data.k(), data.j());
-        updateNavball(q);
+
+        QQuaternion remap = QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), -90.0f); // Pitch +90° from Z-forward to Z-down
+        updateNavball(remap * q.conjugated());
     }
 }
