@@ -19,10 +19,10 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
 const double a = 6378137.0;           // semi-major axis in meters
 const double e = 6.69437999014e-3; // Earth's eccentricity squared
 
-struct Vec3  {
+struct Vec1  {
     double x1, y1, z1;
 };
-Vec3 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
+Vec1 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
     double lat = lat_deg * M_PI / 180.0; //Degrees to Radians
     double lon = lon_deg * M_PI / 180.0; //Degrees to Radians
 
@@ -33,10 +33,10 @@ Vec3 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
     return {x1, y1, z1}; //Antenna
 }
 
-struct Vec3  {
+struct Vec2  {
     double x2, y2, z2;
 };
-Vec3 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
+Vec2 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
     double lat = lat_deg * M_PI / 180.0; //Degrees to Radians
     double lon = lon_deg * M_PI / 180.0; //Degrees to Radians
 
