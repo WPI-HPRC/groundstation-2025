@@ -38,14 +38,14 @@ Vec1 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
 struct Vec2  {
     double x2, y2, z2;
 };
-Vec2 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
-    double lat = lat_deg * M_PI / 180.0; //Degrees to Radians
-    double lon = lon_deg * M_PI / 180.0; //Degrees to Radians
+Vec2 gpsToXY2(double lat_deg2, double lon_deg2, double alt_m2) {
+    double lat2 = lat_deg2 * M_PI / 180.0; //Degrees to Radians
+    double lon2 = lon_deg2 * M_PI / 180.0; //Degrees to Radians
 
-    double N = a / sqrt(1 - e * sin(lat) * sin(lat));
-    double x2 = (N + alt_m) * cos(lat) * cos(lon);
-    double y2 = (N + alt_m) * cos(lat) * sin(lon);
-    double z2 = (N * (1 - e) + alt_m) * sin(lat);
+    double N = a / sqrt(1 - e * sin(lat2) * sin(lat2));
+    double x2 = (N + alt_m2) * cos(lat2) * cos(lon2);
+    double y2 = (N + alt_m2) * cos(lat2) * sin(lon2);
+    double z2 = (N * (1 - e) + alt_m2) * sin(lat2);
     return {x2, y2, z2}; //Rocket
 }
 

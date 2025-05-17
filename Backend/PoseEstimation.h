@@ -34,16 +34,13 @@ private:
 
 class UpdateRocketPosition
 {
-    public:
 };
 
 class computeYaw
 {
-    public:
 };
 
 class computePitch
 {
-    public:
 };
 #endif //POSEESTIMATION_H
