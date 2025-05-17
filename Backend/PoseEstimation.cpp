@@ -17,6 +17,7 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
     computePitch();
 }
 
+
 const double a = 6378137.0;           // semi-major axis in meters
 const double e = 6.69437999014e-3; // Earth's eccentricity squared
 
