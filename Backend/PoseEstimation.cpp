@@ -11,6 +11,7 @@
 PoseEstimator::PoseEstimator(const GroundStation::RocketTelemPacket)   //GroundStation::AntennaPosition fix
     :AntennaLon(),AntennaLat(),AntennaAlt(), Yaw(0.0), Pitch(0.0) {} //initialize antenna's location
 
+
 void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
     computeYaw();
     computePitch();
