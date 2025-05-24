@@ -66,6 +66,17 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     {
         Tracker::getInstance().sendEstop_coast();
     });
+
+    connect(ui->GetPoseButton, &QPushButton::released, this, []()
+    {
+        Tracker::getInstance().sendMessage_getPose();
+    });
+
+    connect(ui->HomeButton, &QPushButton::released, this, []()
+    {
+        Tracker::getInstance().sendMessage_home();
+    });
+
     connect(ui->ToggleTrackerButton, &QPushButton::released, this, [this]()
     {
         Tracker::getInstance().enabled = !Tracker::getInstance().enabled;
@@ -117,6 +128,15 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     connect(&Backend::getInstance(), &Backend::foundSerialPorts, ui->TheSerialPortList, &SerialPortList::serialPortsFound);
     connect(&Backend::getInstance(), &Backend::serialPortOpened,  ui->TheSerialPortList, &SerialPortList::serialPortOpened);
     connect(&Backend::getInstance(), &Backend::serialPortClosed,  ui->TheSerialPortList, &SerialPortList::serialPortClosed);
+
+    connect(&Tracker::getInstance(), &Tracker::dataRead, this, [this](QString str)
+    {
+       ui->DataReadBox->append(str);
+    });
+    connect(ui->ClearTextButton, &QPushButton::released, this, [this]()
+    {
+        ui->DataReadBox->clear();
+    });
 }
 
 void TrackerWindow::updateAngleDifferences()

@@ -5,6 +5,7 @@
 #ifndef GROUNDSTATION_2025_TRACKER_H
 #define GROUNDSTATION_2025_TRACKER_H
 #include <QObject>
+#include <QTimer>
 #include "Utility/SerialPort.h"
 
 #define READ_BUFFER_LENGTH 64 // Arbitrary length, but is longer than any currently-defined messages
@@ -43,6 +44,7 @@ public:
 
     void sendMessage_setPose(Pose newDesiredPose);
     void sendMessage_getPose();
+    void sendMessage_home();
     void sendMessage_getGps();
     void sendMessage_getImu();
     void sendEstop_brake();
@@ -60,6 +62,8 @@ signals:
     void portClosed(QSerialPortInfo);
     void portOpened(QSerialPortInfo);
 
+    void dataRead(QString);
+
 private:
     SerialPort *serialPort;
     char readBuffer[READ_BUFFER_LENGTH];
@@ -68,6 +72,8 @@ private:
     void sendString(QString str);
 
     DataLogger *dataLogger;
+
+    QTimer *readTimer;
 
 private:
     explicit Tracker(QObject *parent = nullptr);

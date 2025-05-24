@@ -6,6 +6,14 @@
 Tracker::Tracker(QObject *parent): QObject(parent)
 {
     dataLogger = new DataLogger("tracker_");
+    readTimer = new QTimer(this);
+
+    readTimer->setInterval(10);
+    connect(readTimer, &QTimer::timeout, this, [this]()
+    {
+        read();
+    });
+    readTimer->start();
 }
 
 void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate)
@@ -37,15 +45,29 @@ void Tracker::send(const char *buffer, size_t length_bytes)
 
 void Tracker::read()
 {
-    if(!serialPort)
+    if(!serialPort || !serialPort->isOpen())
     {
         return;
     }
-    size_t bytesRead = serialPort->read(readBuffer, READ_BUFFER_LENGTH - readBufferIndex);
+    size_t bytesRead = serialPort->read(&readBuffer[readBufferIndex], READ_BUFFER_LENGTH - readBufferIndex);
 
+    if(bytesRead == 0)
+    {
+        return;
+    }
+
+    QString str = "";
+    for (int i = 0; i < bytesRead; i++)
+    {
+        str.append(QString::asprintf("%c", readBuffer[i]));
+    }
+    emit dataRead(str);
+
+    handleMessage(readBuffer);
+return;
     for(int i = 0; i < bytesRead; i++)
     {
-        if (readBuffer[readBufferIndex + i == 'E'])
+        if (readBuffer[readBufferIndex + i] == 'E')
         {
             // Now we know a packet has been read completely, so handle it here
             handleMessage(&readBuffer[readBufferIndex]);
@@ -53,11 +75,13 @@ void Tracker::read()
             // Optionally, break here if we only want to read/handle one packet maximum per loop
         }
     }
+/*
     if(readBufferIndex < READ_BUFFER_LENGTH)
     {
-        memcpy(&readBuffer, &readBuffer[readBufferIndex], bytesRead - readBufferIndex);
-        readBufferIndex = bytesRead - readBufferIndex;
+        memcpy(&readBuffer, &readBuffer[readBufferIndex], bytesRead);
+        readBufferIndex = readBuffer;
     }
+    */
 }
 
 
@@ -97,7 +121,7 @@ void Tracker::handleData_pose(const char *buffer)
     int buffer_index = bytesUntilSemicolon(buffer);
 
     float azimuth_degrees = (float)utf8DigitsToInt(buffer, buffer_index) / 100;
-
+    
     char *remainingBuffer = (char *)&buffer[buffer_index + 1];
     buffer_index = bytesUntilSemicolon(remainingBuffer);
 
@@ -153,7 +177,7 @@ void Tracker::handleData(const char *buffer)
 
     switch (dataType)
     {
-        case 'P':
+        case 'L':
         {
             handleData_pose(&buffer[2]);
             break;
@@ -279,6 +303,11 @@ void Tracker::sendEstop_brake()
 void Tracker::sendEstop_coast()
 {
     sendString("G;C;E");
+}
+
+void Tracker::sendMessage_home()
+{
+    sendString("S;H;E");
 }
 
 Tracker::Pose Tracker::poseDifference()
