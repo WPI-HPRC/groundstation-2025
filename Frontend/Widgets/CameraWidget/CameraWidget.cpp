@@ -47,7 +47,7 @@ void CameraWidget::startCamera()
     for (const QCameraDevice &cameraDevice : cameras) {
         if (cameraDevice.isDefault()) {
             camera = new QCamera(cameraDevice);  // Store camera in class member
-            camera->start();  // Start the camera
+//            camera->start();  // Start the camera
 
             captureSession.setCamera(camera);
             viewfinder = new QVideoWidget();

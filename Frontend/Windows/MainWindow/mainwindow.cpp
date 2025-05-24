@@ -12,7 +12,6 @@
 #include "Backend/APRS/DirewolfProcess.h"
 #include "Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.h"
 
-
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::MainWindow)
 {

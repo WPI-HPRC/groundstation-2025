@@ -49,7 +49,7 @@ NavBall::NavBall(QWidget *parent) : QWidget(parent), m_view(nullptr), m_rootEnti
     // Create mesh (a sphere for the navball)
     auto *sphereMesh = new Qt3DExtras::QSphereMesh(m_rootEntity);
 
-    sphereMesh->setRadius(5);
+    sphereMesh->setRadius(7);
     sphereMesh->setRings(64);
     sphereMesh->setSlices(64);
 
