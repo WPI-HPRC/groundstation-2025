@@ -55,10 +55,10 @@
    <item row="4" column="0">
     <widget class="QSlider" name="AirbrakesSlider">
      <property name="minimum">
-      <number>395</number>
+      <number>1395</number>
      </property>
      <property name="maximum">
-      <number>960</number>
+      <number>1660</number>
      </property>
      <property name="orientation">
       <enum>Qt::Orientation::Horizontal</enum>
