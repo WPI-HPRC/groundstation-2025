@@ -8,6 +8,7 @@
 #include "absl/strings/internal/str_format/extension.h"
 #include "Utility/Utility.h"
 
+
 PoseEstimator::PoseEstimator(const GroundStation::RocketTelemPacket)   //GroundStation::AntennaPosition fix
     :AntennaLon(),AntennaLat(),AntennaAlt(), Yaw(0.0), Pitch(0.0) {} //initialize antenna's location
 
@@ -16,6 +17,8 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
     computeYaw();
     computePitch();
 }
+
+
 
 
 const double a = 6378137.0;           // semi-major axis in meters
