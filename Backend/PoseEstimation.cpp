@@ -18,6 +18,8 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
     computePitch();
 }
 
+//TODO: Extract lat_deg, lon_deg, lat_deg2, lon_deg2 from packet and update rocket position
+//reminder lat_deg, lon_deg is for antenna    lat_deg2, lon_deg2 is for rocket
 
 
 
