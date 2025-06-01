@@ -18,10 +18,8 @@ void PoseEstimator::UpdateRocketPosition(GroundStation::RocketTelemPacket) {
     computePitch();
 }
 
-//TODO: Extract lat_deg, lon_deg, lat_deg2, lon_deg2 from packet and update rocket position
-//reminder lat_deg, lon_deg is for antenna    lat_deg2, lon_deg2 is for rocket
-
-
+//REMINDER: Extract lat_deg1, lon_deg1, lat_deg2, lon_deg2 from packet and update rocket position
+//reminder lat_deg1, lon_deg1 is for antenna    lat_deg2, lon_deg2 is for rocket
 
 const double a = 6378137.0;           // semi-major axis in meters
 const double e = 6.69437999014e-3; // Earth's eccentricity squared
@@ -29,17 +27,16 @@ const double e = 6.69437999014e-3; // Earth's eccentricity squared
 struct Vec1  {
     double x1, y1, z1;
 };
-Vec1 gpsToXY(double lat_deg, double lon_deg, double alt_m) {
-    double lat = lat_deg * M_PI / 180.0; //Degrees to Radians
-    double lon = lon_deg * M_PI / 180.0; //Degrees to Radians
+Vec1 gpsToXY(double lat_deg1, double lon_deg1, double alt_m1) {
+    double lat = lat_deg1 * M_PI / 180.0; //Degrees to Radians
+    double lon = lon_deg1 * M_PI / 180.0; //Degrees to Radians
 
     double N = a / sqrt(1 - e * sin(lat) * sin(lat));
-    double x1 = (N + alt_m) * cos(lat) * cos(lon);
-    double y1 = (N + alt_m) * cos(lat) * sin(lon);
-    double z1 = (N * (1 - e) + alt_m) * sin(lat);
+    double x1 = (N + alt_m1) * cos(lat) * cos(lon);
+    double y1 = (N + alt_m1) * cos(lat) * sin(lon);
+    double z1 = (N * (1 - e) + alt_m1) * sin(lat);
     return {x1, y1, z1}; //Antenna
 }
-
 struct Vec2  {
     double x2, y2, z2;
 };
