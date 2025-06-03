@@ -120,8 +120,17 @@ void Tracker::handleData_pose(const char *buffer)
 {
     int buffer_index = bytesUntilSemicolon(buffer);
 
-    float azimuth_degrees = (float)utf8DigitsToInt(buffer, buffer_index) / 100;
-    
+    float azimuth_degrees = 0;
+
+    if(buffer[0] == '-')
+    {
+        azimuth_degrees = -(float)utf8DigitsToInt(&buffer[1], buffer_index-1) / 100;
+    }
+    else
+    {
+        azimuth_degrees = (float)utf8DigitsToInt(buffer, buffer_index) / 100;
+    }
+
     char *remainingBuffer = (char *)&buffer[buffer_index + 1];
     buffer_index = bytesUntilSemicolon(remainingBuffer);
 

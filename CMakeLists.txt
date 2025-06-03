@@ -67,7 +67,9 @@ set(PROTO_SRCS
         Tracker/Tracker.h
         Frontend/Windows/TrackerWindow/trackerwindow.cpp
         Frontend/Windows/TrackerWindow/trackerwindow.h
-        Frontend/Windows/TrackerWindow/trackerwindow.ui)
+        Frontend/Windows/TrackerWindow/trackerwindow.ui
+        Frontend/Widgets/GraphicsWidget/HprcGraphicsWidget.cpp
+        Frontend/Widgets/GraphicsWidget/HprcGraphicsWidget.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
@@ -263,6 +265,8 @@ add_executable(groundstation-2025
         Frontend/Widgets/GraphWidget/GraphWidget.cpp
         Frontend/Widgets/GraphWidget/GraphWidget.h
         Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
+        Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.cpp
+        Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.h
 )
 
 set_target_properties(groundstation-2025 PROPERTIES

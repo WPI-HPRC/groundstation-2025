@@ -7,101 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>859</width>
-    <height>762</height>
+    <height>808</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>TrackerWindow</string>
   </property>
   <layout class="QGridLayout" name="gridLayout" columnstretch="1,1">
-   <item row="9" column="0">
-    <widget class="QTextEdit" name="DataReadBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QTableWidget" name="AnglesTable">
-     <property name="editTriggers">
-      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-     </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
-     </property>
-     <attribute name="horizontalHeaderHighlightSections">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="verticalHeaderVisible">
-      <bool>true</bool>
-     </attribute>
-     <attribute name="verticalHeaderHighlightSections">
-      <bool>false</bool>
-     </attribute>
-     <row>
-      <property name="text">
-       <string>Azimuth</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>Elevation</string>
-      </property>
-     </row>
-     <column>
-      <property name="text">
-       <string>Desired Angles</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Actual Angles</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Difference</string>
-      </property>
-     </column>
-     <item row="0" column="0">
-      <property name="text">
-       <string/>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QWidget" name="widget" native="true">
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Heading</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="HeadingValue">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>0 N</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="7" column="1">
     <widget class="QWidget" name="SetPoseContainer" native="true">
      <layout class="QGridLayout" name="gridLayout_5">
@@ -182,6 +94,167 @@
      </layout>
     </widget>
    </item>
+   <item row="4" column="1">
+    <widget class="QTableWidget" name="AnglesTable">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     </property>
+     <attribute name="horizontalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>Azimuth</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Elevation</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Desired Angles</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Actual Angles</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Difference</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QWidget" name="widget_4" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="HomeButton">
+        <property name="text">
+         <string>Home</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="GetPoseButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Get Pose</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Heading</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="HeadingValue">
+        <property name="frameShape">
+         <enum>QFrame::Shape::Panel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Sunken</enum>
+        </property>
+        <property name="text">
+         <string>0 N</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QWidget" name="GpsData" native="true">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QLabel" name="LatitudeValue">
+        <property name="frameShape">
+         <enum>QFrame::Shape::Panel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Sunken</enum>
+        </property>
+        <property name="text">
+         <string>0.00 N</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="LongitudeValue">
+        <property name="frameShape">
+         <enum>QFrame::Shape::Panel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Sunken</enum>
+        </property>
+        <property name="text">
+         <string>0.00 W</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Latitude</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Longitude</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="ToggleManualModeButton">
+     <property name="text">
+      <string>Disable Manual Control</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="ToggleTrackerButton">
+     <property name="text">
+      <string>Disable Tracker</string>
+     </property>
+    </widget>
+   </item>
    <item row="10" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -194,6 +267,39 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="1">
+    <widget class="QWidget" name="widget_3" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="EstopCoastButton">
+        <property name="text">
+         <string>ESTOP - Coast</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="EstopBrakeButton">
+        <property name="text">
+         <string>ESTOP - BRAKE</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QTextEdit" name="DataReadBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0" rowspan="3">
     <widget class="QWidget" name="widget_2" native="true">
@@ -273,13 +379,6 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QPushButton" name="ToggleManualModeButton">
-     <property name="text">
-      <string>Disable Manual Control</string>
-     </property>
-    </widget>
-   </item>
    <item row="8" column="0">
     <widget class="QPushButton" name="ClearTextButton">
      <property name="text">
@@ -287,104 +386,8 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QWidget" name="GpsData" native="true">
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0">
-       <widget class="QLabel" name="LatitudeValue">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>0.00 N</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="LongitudeValue">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>0.00 W</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Latitude</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Longitude</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QPushButton" name="ToggleTrackerButton">
-     <property name="text">
-      <string>Disable Tracker</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QWidget" name="widget_3" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="EstopCoastButton">
-        <property name="text">
-         <string>ESTOP - Coast</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="EstopBrakeButton">
-        <property name="text">
-         <string>ESTOP - BRAKE</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QWidget" name="widget_4" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QPushButton" name="HomeButton">
-        <property name="text">
-         <string>Home</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="GetPoseButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Get Pose</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+   <item row="9" column="1">
+    <widget class="CirclePositionWidget" name="widget_5" native="true"/>
    </item>
   </layout>
  </widget>
@@ -393,6 +396,12 @@
    <class>SerialPortList</class>
    <extends>QWidget</extends>
    <header>Frontend/Widgets/SerialPortList/SerialPortList.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CirclePositionWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

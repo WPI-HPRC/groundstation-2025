@@ -27,6 +27,9 @@ public:
 private:
     Ui::RemoteControlWindow *ui;
 
+    bool videoIsActive = false;
+    bool acksAreEnabled = true;
+
     uint64_t getDestinationAddress();
 };
 
