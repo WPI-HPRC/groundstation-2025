@@ -45,9 +45,10 @@ void CameraWidget::startCamera()
 {
     const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
     for (const QCameraDevice &cameraDevice : cameras) {
-        if (cameraDevice.isDefault()) {
+        qDebug() << cameraDevice.description();
+        if (cameraDevice.description().contains("ClearClick")) {
             camera = new QCamera(cameraDevice);  // Store camera in class member
-//            camera->start();  // Start the camera
+            camera->start();  // Start the camera
 
             captureSession.setCamera(camera);
             viewfinder = new QVideoWidget();
@@ -63,5 +64,8 @@ void CameraWidget::startCamera()
 void CameraWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    viewfinder->resize(event->size());
+    if(viewfinder)
+    {
+        viewfinder->resize(event->size());
+    }
 }
