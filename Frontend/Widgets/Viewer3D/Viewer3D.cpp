@@ -1,100 +1,97 @@
-//
-// Created by William Scheirey on 11/24/24.
-//
-
 #include "Viewer3D.h"
 #include <QVBoxLayout>
+#include <Qt3DRender/QRenderSettings>
+#include <Qt3DRender/QRenderSurfaceSelector>
+#include <Qt3DRender/QViewport>
+#include <Qt3DRender/QCameraSelector>
+#include <Qt3DRender/QClearBuffers>
+#include <Qt3DExtras/QForwardRenderer>
 
-Viewer3D::Viewer3D(QWidget *parent): QWidget(parent)
-{
+Viewer3D::Viewer3D(QWidget *parent) : QWidget(parent) {
     setMinimumSize(1, 1);
 
-    auto *view = new Qt3DExtras::Qt3DWindow;
+    m_view = new Qt3DExtras::Qt3DWindow;
+//    m_view->defaultFrameGraph()->setParent(nullptr); // Detach default framegraph
 
     auto *rootEntity = new Qt3DCore::QEntity;
 
-    // Create rocket mesh and entity objects
+    // Rocket setup
     auto *rocketEntity = new Qt3DCore::QEntity(rootEntity);
-    auto *rocketMesh = new Qt3DRender::QMesh();
+    auto *rocketMesh = new Qt3DRender::QMesh;
+    rocketMesh->setSource(QUrl("qrc:/Models/HPRC_rocket.stl"));
 
-    // Load the rocket mesh
-    rocketMesh->setSource(QUrl(QStringLiteral("qrc:/Models/HPRC_rocket.stl")));
+    m_rocketMaterial = new Qt3DExtras::QDiffuseSpecularMaterial(rootEntity);
+    m_rocketMaterial->setDiffuse(QColor(255, 0, 0));
+    m_rocketMaterial->setAmbient(QColor(155, 0, 0));
+    m_rocketMaterial->setSpecular(QColor(255, 255, 255));
+    m_rocketMaterial->setShininess(1);
 
-    // Set the material of the rocket
-    auto *rocketMaterial = new Qt3DExtras::QDiffuseSpecularMaterial(rootEntity);
-    rocketMaterial->setDiffuse(QColor(255, 0, 0)); // Set the diffuse color (red in this case)
-    rocketMaterial->setAmbient(QColor(155, 0, 0));
-    rocketMaterial->setSpecular(QColor(255, 255, 255)); // Set the specular color (white)
-    rocketMaterial->setShininess(1); // Set the shininess (adjust to control specular highlights)
-//    rocketMaterial->setNormal()
-
-    auto *rocketTransform = new Qt3DCore::QTransform;
-    rocketTransform->setTranslation(QVector3D(0.0, m_rocketVertOffset, 0.0));
-
-    // Scale the rocket to fit correctly on the screen
-    rocketTransform->setScale3D(QVector3D(m_rocketScale, m_rocketScale, m_rocketScale));
-
-    // Set the rotation of the rocket based on the input quaternion
-    rocketTransform->setRotation(
-            QQuaternion::fromEulerAngles(0.0f, 0.0f, 0.0f) * m_rocketOrientVertically);
+    m_rocketTransform = new Qt3DCore::QTransform;
+    m_rocketTransform->setTranslation(QVector3D(0.0, m_rocketVertOffset, 0.0));
+    m_rocketTransform->setScale3D(QVector3D(m_rocketScale, m_rocketScale, m_rocketScale));
+    m_rocketTransform->setRotation(QQuaternion::fromEulerAngles(0.0f, 0.0f, 0.0f) * m_rocketOrientVertically);
 
     rocketEntity->addComponent(rocketMesh);
-    rocketEntity->addComponent(rocketTransform);
-    rocketEntity->addComponent(rocketMaterial);
-
-    Qt3DCore::QEntity *scene = rootEntity;
+    rocketEntity->addComponent(m_rocketMaterial);
+    rocketEntity->addComponent(m_rocketTransform);
 
     // Camera
-    Qt3DRender::QCamera *camera = view->camera();
+    auto *camera = m_view->camera();
     camera->setPosition(QVector3D(0, 0, m_cameraDistToRocket));
     camera->setViewCenter(QVector3D(0, 0, 0));
 
-    view->setRootEntity(scene);
-    view->defaultFrameGraph()->setClearColor(QWidget::palette().window().color());
+    // Custom FrameGraph
+    auto *surfaceSelector = new Qt3DRender::QRenderSurfaceSelector;
+    surfaceSelector->setSurface(m_view);
 
-    // Store the transform of the rocket
-    m_rocketTransform = rocketTransform;
+    m_clearBuffers = new Qt3DRender::QClearBuffers(surfaceSelector);
+    m_clearBuffers->setBuffers(Qt3DRender::QClearBuffers::ColorDepthBuffer);
+    m_clearBuffers->setClearColor(QWidget::palette().window().color());
 
-    // Store the 3d view
-    m_view = view;
+    auto *viewport = new Qt3DRender::QViewport(m_clearBuffers);
+    viewport->setNormalizedRect(QRectF(0.0f, 0.0f, 1.0f, 1.0f));
 
-    // Store the rocket material
-    m_rocketMaterial = rocketMaterial;
+    auto *cameraSelector = new Qt3DRender::QCameraSelector(viewport);
+    cameraSelector->setCamera(camera);
 
-    QWidget *container = QWidget::createWindowContainer(view, this);
-    container->setContentsMargins(0, 0, 0, 0);
+//    surfaceSelector->setParent(nullptr);
+    m_view->setActiveFrameGraph(surfaceSelector);
+
+    m_view->setRootEntity(rootEntity);
+
+    // Wrap in QWidget
+    QWidget *container = QWidget::createWindowContainer(m_view, this);
     container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    container->setContentsMargins(0, 0, 0, 0);
 
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(container);
     setLayout(layout);
 
-    // Resize the 3D viewer to match the container widget
-    m_view->resize(this->size());
-
-    connect(&Backend::getInstance(), &Backend::telemetryAvailable, this, &Viewer3D::telemetryAvailable);
+    connect(&Backend::getInstance(), &Backend::telemetryAvailable,
+            this, &Viewer3D::telemetryAvailable);
 }
 
-void Viewer3D::orientRocket(QQuaternion orientation) const
-{
-    // Set the rotation of the rocket based on the input quaternion
+void Viewer3D::orientRocket(QQuaternion orientation) const {
     m_rocketTransform->setRotation(orientation * m_rocketOrientVertically);
-    m_view->defaultFrameGraph()->setClearColor(QWidget::palette().window().color());
 }
 
-void Viewer3D::updateColors(QColor panel, QColor highlight) const
-{
-    m_rocketMaterial->setDiffuse(highlight);
-
-    m_view->defaultFrameGraph()->setClearColor(panel);
+void Viewer3D::updateColors(QColor panel, QColor highlight) {
+    if (m_rocketMaterial)
+        m_rocketMaterial->setDiffuse(highlight);
+    if (m_clearBuffers)
+        m_clearBuffers->setClearColor(panel);
 }
 
-void Viewer3D::telemetryAvailable(const HPRC::Telemetry& telemetry) const
-{
-    if (telemetry.has_rocketpacket())
-    {
-        // Switch k and j to get the right orientation. God knows why
-        orientRocket({telemetry.rocketpacket().w(), telemetry.rocketpacket().i(), telemetry.rocketpacket().k(), telemetry.rocketpacket().j()});
+void Viewer3D::telemetryAvailable(const HPRC::Telemetry &telemetry) {
+    if (telemetry.has_rocketpacket()) {
+        QQuaternion q(
+                telemetry.rocketpacket().w(),
+                telemetry.rocketpacket().i(),
+                telemetry.rocketpacket().k(),
+                telemetry.rocketpacket().j()
+        );
+        orientRocket(q);
     }
 }

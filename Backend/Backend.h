@@ -19,7 +19,7 @@
 #include "Utility/DataSimulator/DataSimulator.h"
 #include "Utility/UnitConversions.h"
 #include "Backend/APRS/APRSHandler.h"
-#include "Frontend/Windows/GraphWindow/GraphWindow.h"
+#include "Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.h"
 
 #include "generated/telemetry/RocketTelemetryPacket.pb.h"
 #include "generated/telemetry/PayloadTelemetryPacket.pb.h"

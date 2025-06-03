@@ -434,6 +434,36 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_12">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>NavBall</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_12">
+    <layout class="QGridLayout" name="gridLayout_14">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="NavBall" name="widget_11" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -451,19 +481,19 @@
   <customwidget>
    <class>Raw_Telemetry</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/TelemetryWindow/raw_telemetry.h</header>
+   <header>Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RadioControlsWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RadioPerformanceWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -492,7 +522,7 @@
   <customwidget>
    <class>LogWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/LogWindow/logwindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/LogWindow/logwindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -528,7 +558,13 @@
   <customwidget>
    <class>RemoteControlWindow</class>
    <extends>QWidget</extends>
-   <header>Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h</header>
+   <header>Frontend/Windows/SecondaryWindows/RemoteControlWindow/remotecontrolwindow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>NavBall</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/NavBall/NavBall.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

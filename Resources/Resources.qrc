@@ -408,6 +408,16 @@
 		<file>Maps/src/leaflet.css</file>
 		<file>APRS/run_aprs.sh</file>
 		<file>APRS/direwolf.conf</file>
+		<file>Images/crosshair.png</file>
+		<file>Images/hprc_logo.png</file>
+		<file>Images/IMG_0481.jpg</file>
+		<file>Images/Placeholder4x3.png</file>
+		<file>Images/RocketClipart/rocket drogue.png</file>
+		<file>Images/RocketClipart/rocket with flame.png</file>
+		<file>Images/RocketClipart/rocket main.png</file>
+		<file>Images/RocketClipart/rocket coast.png</file>
+		<file>Images/RocketClipart/PAYLOAD.png</file>
+		<file>Models/navball.jpg</file>
 		<file>Models/HPRC_rocket.stl</file>
 		<file>Models/Starship.stl</file>
 		<file>Models/LIFT_Rocket.stl</file>
@@ -417,5 +427,7 @@
 		<file>Icons/logo.rc</file>
 		<file>SimulationData/SampleRocketData.csv</file>
 		<file>SimulationData/SamplePayloadData.csv</file>
+		<file>Fonts/centurygothic.ttf</file>
+		<file>Fonts/JockeyOne-Regular.ttf</file>
 	</qresource>
 </RCC>

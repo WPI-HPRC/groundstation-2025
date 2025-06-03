@@ -47,6 +47,18 @@ set(PROTO_SRCS
         Frontend/Widgets/IndicatorWidget/GpsIndicator/PayloadGpsIndicator.h
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.cpp
         Frontend/Widgets/IndicatorWidget/GpsIndicator/RocketGpsIndicator.h
+        Frontend/Images/ImageWidget/ImageWidget.cpp
+        Frontend/Images/ImageWidget/ImageWidget.h
+        Frontend/Images/LogoImage.h
+        Frontend/Widgets/GaugeWidget/GaugeWidget.cpp
+        Frontend/Widgets/GaugeWidget/GaugeWidget.h
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.h
+        Frontend/Widgets/GaugeWidget/GyroGauge.cpp
+        Frontend/Widgets/GaugeWidget/GyroGauge.h
+        Frontend/Widgets/GaugeWidget/gaugedisplay.cpp
+        Frontend/Widgets/GaugeWidget/gaugedisplay.h
+        Frontend/Widgets/GaugeWidget/gaugedisplay.ui
         Backend/HPRCWebSocket.cpp
         Backend/HPRCWebSocket.h
         Backend/APRS/KissClient.cpp
@@ -57,9 +69,24 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/aprswidget.cpp
         Frontend/Widgets/AprsWidget/aprswidget.h
         Frontend/Widgets/AprsWidget/AprsWidget.ui
-        Frontend/Windows/CameraWindow/camerawindow.cpp
-        Frontend/Windows/CameraWindow/camerawindow.h
-        Frontend/Windows/CameraWindow/CameraWindow.ui
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.cpp
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.h
+        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.ui
+        Frontend/Widgets/CameraWidget/CameraWidget.cpp
+        Frontend/Widgets/CameraWidget/CameraWidget.h
+        Frontend/Widgets/GaugeWidget/SpeedGauge.cpp
+        Frontend/Widgets/GaugeWidget/SpeedGauge.h
+        Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineWidget.cpp
+        Frontend/Widgets/LivestreamTimelineWidget/LivestreamTimelineWidget.h
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.cpp
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.h
+        Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.ui
+        Frontend/Widgets/LivestreamTimeWidget/LivestreamTimeWidget.cpp
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.cpp
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h
+        Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.ui
+        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.cpp
+        Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h
         Frontend/Widgets/AprsWidget/aprswidget.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h
@@ -121,6 +148,17 @@ find_package(Qt6 COMPONENTS
         Widgets
         SerialPort
         WebSockets
+        OpenGLWidgets
+        REQUIRED)
+
+find_package(OpenGL)
+
+find_package(Qt6 COMPONENTS
+        Core
+        Gui
+        Widgets
+        SerialPort
+        WebSockets
         3DCore
         3DExtras
         3DInput
@@ -128,6 +166,7 @@ find_package(Qt6 COMPONENTS
         WebView
         WebChannel
         WebEngineWidgets
+        SvgWidgets
         Multimedia
         MultimediaWidgets
         Charts
@@ -156,16 +195,18 @@ add_executable(groundstation-2025
         Utility/json_struct.h
         Utility/json_struct.h
         xbee/XBeeDevice.cpp
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.cpp
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.h
-        Frontend/Windows/RadioControlsWindow/RadioControlsWindow.ui
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.cpp
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.h
+        Frontend/Windows/SecondaryWindows/RadioControlsWindow/RadioControlsWindow.ui
         Frontend/Widgets/SerialPortList/SerialPortList.cpp
         Frontend/Widgets/SerialPortList/SerialPortList.h
+        Frontend/Widgets/NavBall/NavBall.cpp
+        Frontend/Widgets/NavBall/NavBall.h
         Utility/SerialPortManager.cpp
         Utility/SerialPortManager.h
-        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
-        Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
         Frontend/Widgets/TimeDateWidgets/DateWidget.ui
@@ -208,12 +249,12 @@ add_executable(groundstation-2025
         Frontend/Widgets/RadioPerformanceWidgets/droppedpacketswidget.h
         Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.cpp
         Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.h
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.cpp
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.ui
-        Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
-        Frontend/Windows/TelemetryWindow/raw_telemetry.h
-        Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.cpp
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.h
+        Frontend/Windows/SecondaryWindows/RadioPerformanceWindow/radioperformancewindow.ui
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.cpp
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/raw_telemetry.h
+        Frontend/Windows/SecondaryWindows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/Viewer3D/Viewer3D.cpp
         Frontend/Widgets/Viewer3D/Viewer3D.h
         Frontend/Windows/MainWindow/mainwindow.cpp
@@ -228,9 +269,9 @@ add_executable(groundstation-2025
         Frontend/Widgets/IndicatorWidget/RocketIndicator/RocketConnectionIndicator.h
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.cpp
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.h
-        Frontend/Windows/LogWindow/logwindow.cpp
-        Frontend/Windows/LogWindow/logwindow.h
-        Frontend/Windows/LogWindow/logwindow.ui
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.cpp
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.h
+        Frontend/Windows/SecondaryWindows/LogWindow/logwindow.ui
         Utility/TelemetryHandler.cpp
         Utility/TelemetryHandler.h
         Frontend/Widgets/DataSimulationButton/DataSimulationButton.cpp
@@ -255,13 +296,20 @@ add_executable(groundstation-2025
         Frontend/Widgets/MapWidget/MapWidget.ui
         Frontend/Widgets/MapWidget/JSInterface.cpp
         Frontend/Widgets/MapWidget/JSInterface.h
+        Frontend/Windows/LivestreamWindow/livestreamwindow.cpp
+        Frontend/Windows/LivestreamWindow/livestreamwindow.h
+        Frontend/Windows/LivestreamWindow/livestreamwindow.ui
+        Frontend/Images/LogoSvg.h
+        Frontend/Images/Placeholder4x3Image.h
+        Frontend/Widgets/GaugeWidget/AccelerationGauge.cpp
+
         Backend/APRS/KissClient.h
-        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.cpp
-        Frontend/Windows/RemoteControlWindow/remotecontrolwindow.h
-        Frontend/Windows/RemoteControlWindow/RemoteControlWindow.ui
-        Frontend/Windows/GraphWindow/GraphWindow.h
-        Frontend/Windows/GraphWindow/GraphWindow.cpp
-        Frontend/Windows/GraphWindow/GraphWindow.ui
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/remotecontrolwindow.cpp
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/remotecontrolwindow.h
+        Frontend/Windows/SecondaryWindows/RemoteControlWindow/RemoteControlWindow.ui
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.h
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.cpp
+        Frontend/Windows/SecondaryWindows/GraphWindow/GraphWindow.ui
         Frontend/Widgets/GraphWidget/GraphWidget.cpp
         Frontend/Widgets/GraphWidget/GraphWidget.h
         Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
@@ -286,6 +334,9 @@ target_link_libraries(groundstation-2025
         Qt6::Widgets
         Qt6::SerialPort
         Qt6::WebSockets
+        Qt6::OpenGLWidgets
+
+        ${OPENGL_LIBRARIES}        
         Qt6::3DCore
         Qt6::3DExtras
         Qt6::3DInput
@@ -293,6 +344,7 @@ target_link_libraries(groundstation-2025
         Qt6::WebEngineWidgets
         Qt6::WebView
         Qt6::WebChannel
+        Qt6::SvgWidgets
         Qt6::Multimedia
         Qt6::MultimediaWidgets
         Qt6::Charts
