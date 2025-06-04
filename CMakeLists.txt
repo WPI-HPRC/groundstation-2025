@@ -315,6 +315,9 @@ add_executable(groundstation-2025
         Frontend/Widgets/GraphWidget/ThreeAxisGraph.h
         Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.cpp
         Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.h
+        Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.cpp
+        Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.h
+        Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.ui
 )
 
 set_target_properties(groundstation-2025 PROPERTIES
