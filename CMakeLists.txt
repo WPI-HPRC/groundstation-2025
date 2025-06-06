@@ -60,7 +60,6 @@ set(PROTO_SRCS
         Frontend/Windows/CameraWindow/camerawindow.cpp
         Frontend/Windows/CameraWindow/camerawindow.h
         Frontend/Windows/CameraWindow/CameraWindow.ui
-        Frontend/Widgets/AprsWidget/aprswidget.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h)
 set(PROTO_HDRS)
@@ -175,18 +174,10 @@ add_executable(groundstation-2025
         Frontend/Widgets/TimeDateWidgets/payloaduptimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
-        Frontend/Widgets/TimeDateWidgets/datewidget.cpp
-        Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Utility/DataSimulator/DataSimulator.cpp
-        Frontend/Widgets/TimeDateWidgets/datewidget.cpp
-        Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/datewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/rocketuptimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/rocketuptimewidget.h
@@ -203,7 +194,7 @@ add_executable(groundstation-2025
         Frontend/Widgets/RadioPerformanceWidgets/rssiwidget.h
         Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.cpp
         Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.h
-        Frontend/Windows/RadioPerformanceWindow/radioperformancewindow.ui
+        Frontend/Windows/RadioPerformanceWindow/RadioPerformanceWindow.ui
         Frontend/Windows/TelemetryWindow/raw_telemetry.cpp
         Frontend/Windows/TelemetryWindow/raw_telemetry.h
         Frontend/Windows/TelemetryWindow/Raw_Telemetry.ui
@@ -223,7 +214,7 @@ add_executable(groundstation-2025
         Frontend/Widgets/IndicatorWidget/PayloadIndicator/PayloadConnectionIndicator.h
         Frontend/Windows/LogWindow/logwindow.cpp
         Frontend/Windows/LogWindow/logwindow.h
-        Frontend/Windows/LogWindow/logwindow.ui
+        Frontend/Windows/LogWindow/LogWindow.ui
         Utility/TelemetryHandler.cpp
         Utility/TelemetryHandler.h
         Frontend/Widgets/DataSimulationButton/DataSimulationButton.cpp
