@@ -3,6 +3,7 @@
 #include "Backend/Backend.h"
 #include "Frontend/Windows/MainWindow/mainwindow.h"
 #include "Frontend/Windows/LivestreamWindow/livestreamwindow.h"
+#include "Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.h"
 
 #include "Frontend/Windows/TrackerWindow/trackerwindow.h"
 
@@ -28,15 +29,20 @@ int main(int argc, char *argv[])
     trackerWindow.show();
     trackerWindow.setWindowTitle("Tracker");
 
+    LivestreamWindow livestreamWindow;
+//    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    livestreamWindow.showMaximized();
+    livestreamWindow.setWindowTitle("Livestream");
+
+    LivestreamControlWindow controlWindow;
+    controlWindow.showMaximized();
+    controlWindow.setWindowTitle("Livestream Control");
+
     /*
     CameraWindow cameraWindow;
     cameraWindow.setWindowIcon(icon);
     cameraWindow.showMaximized();
      */
-    LivestreamWindow livestreamWindow;
-//    livestreamWindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    livestreamWindow.showMaximized();
-    livestreamWindow.setWindowTitle("Livestream");
 
     Backend &backend = Backend::getInstance();
     backend.start();

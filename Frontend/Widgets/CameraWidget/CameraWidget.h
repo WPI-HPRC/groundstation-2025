@@ -18,10 +18,8 @@ class CameraWidget: public QWidget
 {
 public:
     explicit CameraWidget(QWidget *parent = nullptr);
-    static bool checkCameraAvailability();
 
-    void init();
-    void startCamera();
+    void startCamera(const QCameraDevice& cameraDevice);
     void resizeEvent(QResizeEvent *event) override;
 
     QMediaCaptureSession captureSession;  // Move this to class scope

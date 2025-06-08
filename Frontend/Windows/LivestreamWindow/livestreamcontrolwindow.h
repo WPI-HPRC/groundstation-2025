@@ -6,7 +6,7 @@
 #define GROUNDSTATION_2025_LIVESTREAMCONTROLWINDOW_H
 
 #include <QWidget>
-
+#include "Frontend/Widgets/CameraWidget/CameraWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -23,8 +23,13 @@ public:
     explicit LivestreamControlWindow(QWidget *parent = nullptr);
 
     ~LivestreamControlWindow() override;
+    bool cameraIsConnected = false;
 
 private:
+    bool checkCameraAvailability();
+    void init();
+    void populateCameraList();
+    QList<QCameraDevice> cameras;
     Ui::LivestreamControlWindow *ui;
 };
 
