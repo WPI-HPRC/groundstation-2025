@@ -6,6 +6,8 @@
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QMediaFormat>
+#include "Utility/DataLogger.h"
+#include "Utility/Utility.h"
 
 CameraWidget::CameraWidget(QWidget *parent): QWidget(parent)
 {
@@ -26,7 +28,11 @@ void CameraWidget::startRecording()
     format.setVideoCodec(QMediaFormat::VideoCodec::H264);
     format.setAudioCodec(QMediaFormat::AudioCodec::MP3);
     recorder->setMediaFormat(format);
-    recorder->setOutputLocation(QUrl("test.mp4"));
+
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString timeString = currentTime.toString(Constants::LogTimeFormat);
+
+    recorder->setOutputLocation(QUrl("VideoRecording_" + timeString + ".mp4"));
     recorder->record();
 }
 
