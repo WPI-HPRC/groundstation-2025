@@ -11,6 +11,7 @@
 #include <QtMultimedia/QCamera>
 #include <QtMultimedia/QMediaCaptureSession>
 #include <QtMultimediaWidgets/QVideoWidget>
+#include <QMediaRecorder>
 
 #include <QResizeEvent>
 
@@ -20,9 +21,12 @@ public:
     explicit CameraWidget(QWidget *parent = nullptr);
 
     void startCamera(const QCameraDevice& cameraDevice);
+    void startRecording();
+    void stopRecording();
     void resizeEvent(QResizeEvent *event) override;
 
     QMediaCaptureSession captureSession;  // Move this to class scope
+    QMediaRecorder *recorder;
     QCamera *camera;  // Store camera pointer here
     QVideoWidget *viewfinder;
 };

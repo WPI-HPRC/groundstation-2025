@@ -24,6 +24,7 @@ public:
 
     ~LivestreamControlWindow() override;
     bool cameraIsConnected = false;
+    bool recording = false;
 
 private:
     bool checkCameraAvailability();
