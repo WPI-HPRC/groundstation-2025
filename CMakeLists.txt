@@ -318,6 +318,8 @@ add_executable(groundstation-2025
         Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.cpp
         Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.h
         Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.ui
+        Tracker/Pointer.cpp
+        Tracker/Pointer.h
 )
 
 set_target_properties(groundstation-2025 PROPERTIES

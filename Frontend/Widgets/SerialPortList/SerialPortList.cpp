@@ -81,7 +81,19 @@ void SerialPortList::buttonClicked()
         button->setText("Connecting...");
         button->setEnabled(false);
 
-        int baud = parent()->findChild<QComboBox *>("BaudRateDropdown")->currentText().toInt();
+        int baud = 0;
+        if(parent()->findChild<QComboBox *>("BaudRateDropdown"))
+        {
+            baud = parent()->findChild<QComboBox *>("BaudRateDropdown")->currentText().toInt();
+        }
+        else if(parent()->findChild<QComboBox *>("TrackerBaudRateDropdown"))
+        {
+            baud = parent()->findChild<QComboBox *>("TrackerBaudRateDropdown")->currentText().toInt();
+        }
+        else if(parent()->findChild<QComboBox *>("PointerBaudRateDropdown"))
+        {
+            baud = parent()->findChild<QComboBox *>("PointerBaudRateDropdown")->currentText().toInt();
+        }
 
         emit(openSerialPort(portName, Backend::Default, baud));
     }

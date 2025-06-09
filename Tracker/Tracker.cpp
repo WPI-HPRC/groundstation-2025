@@ -3,6 +3,7 @@
 //
 
 #include "Tracker.h"
+#include "Tracker/Pointer.h"
 Tracker::Tracker(QObject *parent): QObject(parent)
 {
     dataLogger = new DataLogger("tracker_");
@@ -14,6 +15,11 @@ Tracker::Tracker(QObject *parent): QObject(parent)
         read();
     });
     readTimer->start();
+
+    connect(&Pointer::getInstance(), &Pointer::newPoseData, this, [this](Pointer::Pose pose)
+    {
+        sendMessage_setPose({pose.azimuth_degrees, pose.elevation_degrees});
+    });
 }
 
 void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate)
