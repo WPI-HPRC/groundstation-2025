@@ -81,7 +81,7 @@ void Pointer::read()
     }
 
     emit dataRead(str);
-    emit newPoseData({yaw, pitch});
+    emit newPoseData(-yaw, pitch);
 }
 
 

@@ -96,7 +96,11 @@ set(PROTO_SRCS
         Frontend/Windows/TrackerWindow/trackerwindow.h
         Frontend/Windows/TrackerWindow/trackerwindow.ui
         Frontend/Widgets/GraphicsWidget/HprcGraphicsWidget.cpp
-        Frontend/Widgets/GraphicsWidget/HprcGraphicsWidget.h)
+        Frontend/Widgets/GraphicsWidget/HprcGraphicsWidget.h
+        Frontend/Widgets/TrackerPositionWidget/AzimuthWidget.cpp
+        Frontend/Widgets/TrackerPositionWidget/AzimuthWidget.h
+        Frontend/Widgets/TrackerPositionWidget/ElevationWidget.cpp
+        Frontend/Widgets/TrackerPositionWidget/ElevationWidget.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files

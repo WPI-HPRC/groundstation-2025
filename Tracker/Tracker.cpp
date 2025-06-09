@@ -18,21 +18,16 @@ Tracker::Tracker(QObject *parent): QObject(parent)
     });
     readTimer->start();
 
-    connect(&Pointer::getInstance(), &Pointer::newPoseData, this, [this](Pointer::Pose pose)
-    {
-        pointerPose = {pose.azimuth_degrees, pose.elevation_degrees};
-        logData();
-        sendMessage_setPose(pointerPose);
-    });
+    connect(&Pointer::getInstance(), &Pointer::newPoseData, this, &Tracker::newPointerPose);
 }
 
 void Tracker::logData()
 {
     QJsonObject json;
-    json.insert("TrackerAzimuth", desiredPose.azimuth_degrees);
-    json.insert("TrackerElevation", desiredPose.elevation_degrees);
-    json.insert("CommandedAzimuth", actualPose.azimuth_degrees);
-    json.insert("CommandedElevation", actualPose.elevation_degrees);
+    json.insert("TrackerAzimuth", actualPose.azimuth_degrees);
+    json.insert("TrackerElevation", actualPose.elevation_degrees);
+    json.insert("CommandedAzimuth", desiredPose.azimuth_degrees);
+    json.insert("CommandedElevation", desiredPose.elevation_degrees);
     json.insert("PointerAzimuth", pointerPose.azimuth_degrees);
     json.insert("PointerElevation", pointerPose.elevation_degrees);
 
@@ -137,6 +132,14 @@ int Tracker::bytesUntilSemicolon(const char *buffer)
     int i = 0;
     while(buffer[i] != ';') { i++; }
     return i;
+}
+
+void Tracker::newPointerPose(float azimuth, float elevation)
+{
+    pointerPose = {azimuth, elevation};
+    sendMessage_setPose(pointerPose);
+    emit newDesiredPose({azimuth, elevation});
+    logData();
 }
 
 void Tracker::handleData_pose(const char *buffer)

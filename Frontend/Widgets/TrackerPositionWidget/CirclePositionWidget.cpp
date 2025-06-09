@@ -4,6 +4,8 @@
 
 #include "CirclePositionWidget.h"
 #include <QPainter>
+#include <cmath>
+#include "Tracker/Tracker.h"
 
 CirclePositionWidget::CirclePositionWidget(QWidget *parent): QWidget(parent)
 {
@@ -56,6 +58,14 @@ void CirclePositionWidget::paintEvent(QPaintEvent *paintEvent)
 
     QPointF valuePosition = rect.center() + QPointF(R * cos(value), -R*sin(value));
     painter.drawEllipse(valuePosition, valueRadius, valueRadius);
+
+    float desiredRadius = size / 15;
+    float R1 = sizeR/2 - penSize + desiredRadius/4;
+
+    QPointF desiredPosition = rect.center() + QPointF(R1 * cos(targetValue*M_PI/180), -R1*sin(targetValue*M_PI/180));
+    painter.setPen(QColor(255,255,255));
+    painter.setBrush(Qt::NoBrush);
+    painter.drawEllipse(desiredPosition, desiredRadius, desiredRadius);
 
     /*
     QPen fillPen(QColor(250, 250, 250), penSize);

@@ -288,7 +288,6 @@ private:
     void updateTimes(const HPRC::RocketTelemetryPacket &rocketData);
 
     WebServer *webServer{};
-    DataLogger *dataLogger{};
 
     QTimer *timer{};
 

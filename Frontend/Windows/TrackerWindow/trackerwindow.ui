@@ -87,9 +87,6 @@
      </layout>
     </widget>
    </item>
-   <item row="9" column="1">
-    <widget class="CirclePositionWidget" name="widget_5" native="true"/>
-   </item>
    <item row="10" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -500,6 +497,30 @@
      </layout>
     </widget>
    </item>
+   <item row="9" column="1">
+    <widget class="QWidget" name="widget_5" native="true">
+     <layout class="QGridLayout" name="gridLayout_7">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="AzimuthWidget" name="widget_7" native="true"/>
+      </item>
+      <item row="0" column="1">
+       <widget class="ElevationWidget" name="widget_8" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -510,9 +531,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>CirclePositionWidget</class>
+   <class>AzimuthWidget</class>
    <extends>QWidget</extends>
-   <header>Frontend/Widgets/TrackerPositionWidget/CirclePositionWidget.h</header>
+   <header>Frontend/Widgets/TrackerPositionWidget/AzimuthWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ElevationWidget</class>
+   <extends>QWidget</extends>
+   <header>Frontend/Widgets/TrackerPositionWidget/ElevationWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

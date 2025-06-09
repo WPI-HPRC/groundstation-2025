@@ -6,6 +6,7 @@
 #define GROUNDSTATION_2025_POINTER_H
 #include <QObject>
 #include <QTimer>
+#include "Tracker/Tracker.h"
 #include "Utility/SerialPort.h"
 
 #define READ_BUFFER_LENGTH 64
@@ -35,7 +36,7 @@ public:
     QSerialPortInfo portInfo{};
 
 signals:
-    void newPoseData(Pose);
+    void newPoseData(float azimuth, float elevation);
 
     void portClosed(QSerialPortInfo);
     void portOpened(QSerialPortInfo);

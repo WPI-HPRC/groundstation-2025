@@ -67,6 +67,9 @@ signals:
 
     void dataRead(QString);
 
+public slots:
+    void newPointerPose(float azimuth, float elevation);
+
 private:
     SerialPort *serialPort;
     char readBuffer[READ_BUFFER_LENGTH];
@@ -95,7 +98,6 @@ private:
     void handleResponse_pose();
     void handleEstopResponse_brake();
     void handleEstopResponse_coast();
-    void logData();
 };
 
 
