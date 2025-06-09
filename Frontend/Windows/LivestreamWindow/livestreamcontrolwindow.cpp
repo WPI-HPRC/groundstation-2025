@@ -73,11 +73,11 @@ LivestreamControlWindow::LivestreamControlWindow(QWidget *parent) :
 
     connect(ui->ToggleRecordingButton, &QPushButton::released, this, [this]()
     {
-        recording = !recording;
-        ui->ToggleRecordingButton->setText(recording ? "Stop Recording" : "Start Recording");
+        recordingCamera = !recordingCamera;
+        ui->ToggleRecordingButton->setText(recordingCamera ? "Stop Recording" : "Start Recording");
         for (QWidget* widget : QApplication::allWidgets()) {
             if (widget->objectName() == "LivestreamVideo") {
-                if(recording)
+                if(recordingCamera)
                 {
                     ((CameraWidget *) widget)->startRecording();
                 }

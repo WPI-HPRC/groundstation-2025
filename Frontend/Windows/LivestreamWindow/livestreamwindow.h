@@ -22,9 +22,6 @@ Q_OBJECT
 
 public:
     explicit LivestreamWindow(QWidget *parent = nullptr);
-
-    CameraWidget *cameraWidget;
-
     ~LivestreamWindow() override;
 
 private:

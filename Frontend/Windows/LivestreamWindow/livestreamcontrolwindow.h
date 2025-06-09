@@ -23,8 +23,7 @@ public:
     explicit LivestreamControlWindow(QWidget *parent = nullptr);
 
     ~LivestreamControlWindow() override;
-    bool cameraIsConnected = false;
-    bool recording = false;
+    bool recordingCamera = false;
 
 private:
     bool checkCameraAvailability();

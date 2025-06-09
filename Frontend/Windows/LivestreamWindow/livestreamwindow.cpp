@@ -14,20 +14,6 @@ LivestreamWindow::LivestreamWindow(QWidget *parent) :
         QMainWindow(parent), ui(new Ui::LivestreamWindow)
 {
     ui->setupUi(this);
-
-//    auto *w = new CameraWidget();
-
-//    auto *mapWidget = new Placeholder4x3Image();
-
-//    QGridLayout *layout = ui->gridLayout;
-//    cameraWidget->viewfinder->setLayout(layout);
-//    cameraWidget->captureSession.setVideoOutput(this->centralWidget());
-//    ui->gridLayout->addWidget(w, 0, 0, -1, -1);
-//    w->lower();
-//    cameraWidget->viewfinder->lower();
-
-//    cameraWidget->lower();
-//    setCentralWidget(cameraWidget->viewfinder);
 }
 
 LivestreamWindow::~LivestreamWindow()
