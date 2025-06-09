@@ -30,6 +30,7 @@ public:
 
     Pose desiredPose{};
     Pose actualPose{};
+    Pose pointerPose{};
     Pose poseDifference();
 
     bool enabled = true;
@@ -39,6 +40,8 @@ public:
     void disconnect();
     void send(const char *buffer, size_t length_bytes);
     void read();
+
+    void logData();
 
     QSerialPortInfo portInfo{};
 
@@ -92,6 +95,7 @@ private:
     void handleResponse_pose();
     void handleEstopResponse_brake();
     void handleEstopResponse_coast();
+    void logData();
 };
 
 

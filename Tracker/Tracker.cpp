@@ -4,6 +4,8 @@
 
 #include "Tracker.h"
 #include "Tracker/Pointer.h"
+#include "Backend/Backend.h"
+
 Tracker::Tracker(QObject *parent): QObject(parent)
 {
     dataLogger = new DataLogger("tracker_");
@@ -18,8 +20,23 @@ Tracker::Tracker(QObject *parent): QObject(parent)
 
     connect(&Pointer::getInstance(), &Pointer::newPoseData, this, [this](Pointer::Pose pose)
     {
-        sendMessage_setPose({pose.azimuth_degrees, pose.elevation_degrees});
+        pointerPose = {pose.azimuth_degrees, pose.elevation_degrees};
+        logData();
+        sendMessage_setPose(pointerPose);
     });
+}
+
+void Tracker::logData()
+{
+    QJsonObject json;
+    json.insert("TrackerAzimuth", desiredPose.azimuth_degrees);
+    json.insert("TrackerElevation", desiredPose.elevation_degrees);
+    json.insert("CommandedAzimuth", actualPose.azimuth_degrees);
+    json.insert("CommandedElevation", actualPose.elevation_degrees);
+    json.insert("PointerAzimuth", pointerPose.azimuth_degrees);
+    json.insert("PointerElevation", pointerPose.elevation_degrees);
+
+    Backend::getInstance().dataLogger.logTrackerData(json);
 }
 
 void Tracker::connectToPort(const QSerialPortInfo &port, int baudRate)

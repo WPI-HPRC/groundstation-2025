@@ -142,6 +142,8 @@ public:
 
     void writeToTextFile(const QString &str);
 
+    void logTrackerData(const QJsonObject &jsonData);
+
     void flushTextFile();
 
     void flushDataFiles();
@@ -170,6 +172,8 @@ private:
     CSVWriter throughputTestLogFile;
 
     CSVWriter transmitStatusLog;
+
+    CSVWriter trackerLog;
 
     QFile byteLog;
     QFile textLog;

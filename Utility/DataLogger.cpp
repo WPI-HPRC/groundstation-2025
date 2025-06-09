@@ -125,6 +125,7 @@ void DataLogger::createFiles()
         transmitStatusLog.open(logDir.path().append("/").append(timeString).append("_transmit_status.csv"));
         linkTestLogFile.open(logDir.path().append("/").append(timeString).append("_linkTest.csv"));
         throughputTestLogFile.open(logDir.path().append("/").append(timeString).append("_throughputTest.csv"));
+        trackerLog.open(logDir.path().append("/").append(timeString).append("_tracker.csv"));
 
         byteLog.setFileName(logDir.path().append("/").append(timeString).append("_bytes.txt"));
         byteLog.open(QIODeviceBase::WriteOnly | QIODeviceBase::Text);
@@ -175,6 +176,12 @@ void DataLogger::logTransmitStatus(const QJsonObject &jsonData)
 {
     transmitStatusLog.write(jsonData);
     transmitStatusLog.file.flush();
+}
+
+void DataLogger::logTrackerData(const QJsonObject &jsonData)
+{
+    trackerLog.write(jsonData);
+    trackerLog.file.flush();
 }
 
 void DataLogger::writeToByteFile(const char *text, size_t size)

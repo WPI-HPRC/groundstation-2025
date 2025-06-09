@@ -748,7 +748,7 @@ bool Backend::connectToModule(const QString& name, RadioModuleType moduleType, i
         return false;
     }
 
-    RadioModule *module = new ServingRadioModule(baudRate, new DataLogger(), targetPort, webServer);
+    RadioModule *module = new ServingRadioModule(baudRate, &dataLogger, targetPort, webServer);
     radioModules.append(module);
     if(!groundStationModem)
     {

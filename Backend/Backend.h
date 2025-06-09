@@ -225,6 +225,8 @@ public:
 
     static QSerialPortInfo getTargetPort(const QString& portName);
 
+    DataLogger dataLogger;
+
 public slots:
     void portOpened(const QSerialPortInfo&, bool);
     void portClosed(const QSerialPortInfo&);
