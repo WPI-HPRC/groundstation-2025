@@ -13,12 +13,24 @@ Pointer::Pointer(QObject *parent): QObject(parent)
     dataLogger = new DataLogger("tracker_");
     readTimer = new QTimer(this);
 
-    readTimer->setInterval(10);
+    readTimer->setInterval(100);
     connect(readTimer, &QTimer::timeout, this, [this]()
     {
         read();
     });
     readTimer->start();
+
+    poseTimer = new QTimer(this);
+    poseTimer->setInterval(100);
+    connect(poseTimer, &QTimer::timeout, this, [this]()
+    {
+        if(lastPose.azimuth_degrees != currentPose.azimuth_degrees || lastPose.elevation_degrees != currentPose.elevation_degrees)
+        {
+            emit newPoseData(currentPose.azimuth_degrees, currentPose.elevation_degrees);
+        }
+    });
+    poseTimer->start();
+
 }
 
 void Pointer::connectToPort(const QSerialPortInfo &port, int baudRate)
@@ -74,14 +86,17 @@ void Pointer::read()
         yaw = (float) utf8DigitsToInt(remainingBuffer, bytesInYaw) / 100.f;
     }
 
+    pitch = qMin(qMax(-pitch, 15.f), 180.f - 15);
+
     QString str = "";
     for (int i = 0; i < bytesRead; i++)
     {
         str.append(QString::asprintf("%c", readBuffer[i]));
     }
 
+    currentPose = {-yaw, pitch};
+
     emit dataRead(str);
-    emit newPoseData(-yaw, pitch);
 }
 
 

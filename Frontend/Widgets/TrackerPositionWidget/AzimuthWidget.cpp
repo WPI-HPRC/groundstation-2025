@@ -15,6 +15,6 @@ AzimuthWidget::AzimuthWidget(QWidget *parent): CirclePositionWidget(parent)
     });
     connect(&Tracker::getInstance(), &Tracker::newPoseData, this, [this](Tracker::Pose pose)
     {
-        updateTargetValue(pose.azimuth_degrees);
+        updateValue(pose.azimuth_degrees);
     });
 }

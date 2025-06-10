@@ -29,6 +29,9 @@ public:
         float elevation_degrees;
     };
 
+    Pose currentPose;
+    Pose lastPose;
+
     void connectToPort(const QSerialPortInfo& port, int baudRate);
     void disconnect();
     void read();
@@ -51,6 +54,7 @@ private:
     DataLogger *dataLogger;
 
     QTimer *readTimer;
+    QTimer *poseTimer;
 
 private:
     explicit Pointer(QObject *parent = nullptr);

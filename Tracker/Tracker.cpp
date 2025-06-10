@@ -78,6 +78,10 @@ void Tracker::read()
     for (int i = 0; i < bytesRead; i++)
     {
         str.append(QString::asprintf("%c", readBuffer[i]));
+        if(readBuffer[i] == 'E')
+        {
+            str.append("\n");
+        }
     }
     emit dataRead(str);
 

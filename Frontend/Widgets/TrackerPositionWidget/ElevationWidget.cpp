@@ -16,6 +16,6 @@ ElevationWidget::ElevationWidget(QWidget *parent): CirclePositionWidget(parent)
     });
     connect(&Tracker::getInstance(), &Tracker::newPoseData, this, [this](Tracker::Pose pose)
     {
-        updateTargetValue(pose.elevation_degrees);
+        updateValue(pose.elevation_degrees);
     });
 }

@@ -56,7 +56,7 @@ void CirclePositionWidget::paintEvent(QPaintEvent *paintEvent)
 
     float R = sizeR/2 - penSize + valueRadius/4;
 
-    QPointF valuePosition = rect.center() + QPointF(R * cos(value), -R*sin(value));
+    QPointF valuePosition = rect.center() + QPointF(R * cos(value*M_PI/180), -R*sin(value*M_PI/180));
     painter.drawEllipse(valuePosition, valueRadius, valueRadius);
 
     float desiredRadius = size / 15;
