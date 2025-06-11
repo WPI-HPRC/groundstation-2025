@@ -35,7 +35,8 @@ DirewolfProcess::DirewolfProcess(QObject *parent): QObject(parent)
 void DirewolfProcess::start()
 {
     QString scriptContents = originalScriptContents;
-    scriptContents.replace("[FREQ]", frequency);
+    scriptContents.replace("[FREQVHF]", frequencyVHF);
+    scriptContents.replace("[FREQUHF]", frequencyUHF);
     scriptContents.replace("direwolf.conf", "/dev/stdin");
 
     process.setArguments(QStringList() << "-c" << scriptContents);
