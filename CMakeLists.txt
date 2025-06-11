@@ -71,7 +71,7 @@ set(PROTO_SRCS
         Frontend/Widgets/AprsWidget/AprsWidget.ui
         Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.cpp
         Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.h
-        Frontend/Windows/SecondaryWindows/CameraWindow/camerawindow.ui
+        Frontend/Windows/SecondaryWindows/CameraWindow/CameraWindow.ui
         Frontend/Widgets/CameraWidget/CameraWidget.cpp
         Frontend/Widgets/CameraWidget/CameraWidget.h
         Frontend/Widgets/GaugeWidget/SpeedGauge.cpp
@@ -81,13 +81,13 @@ set(PROTO_SRCS
         Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.cpp
         Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.h
         Frontend/Widgets/LivestreamTimelineWidget/livestreamtimelinedisplay.ui
-        Frontend/Widgets/LivestreamTimeWidget/LivestreamTimeWidget.cpp
+#        Frontend/Widgets/LivestreamTimeWidget/LivestreamTimeWidget.cpp
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.cpp
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.h
         Frontend/Widgets/LivestreamTimeWidget/livestreamtimewidget.ui
         Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.cpp
         Frontend/Widgets/LivestreamTimeWidget/TimeWidgetFrame.h
-        Frontend/Widgets/AprsWidget/aprswidget.ui
+        Frontend/Widgets/AprsWidget/AprsWidget.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
         Frontend/Widgets/GraphWidget/FourAxisGraph.h
         Tracker/Tracker.cpp
@@ -213,7 +213,7 @@ add_executable(groundstation-2025
         Frontend/Windows/SecondaryWindows/TelemetryWindow/Raw_Telemetry.ui
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
+#        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
@@ -229,11 +229,11 @@ add_executable(groundstation-2025
         Frontend/Widgets/TimeDateWidgets/groundflighttimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
+#        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Utility/DataSimulator/DataSimulator.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.cpp
         Frontend/Widgets/TimeDateWidgets/datewidget.h
-        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
+#        Frontend/Widgets/TimeDateWidgets/DateWidget.ui
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.cpp
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
         Frontend/Widgets/TimeDateWidgets/groundtimewidget.h
