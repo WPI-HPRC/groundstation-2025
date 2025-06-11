@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_LivestreamControlWindow.h" resolved
 
 #include "livestreamcontrolwindow.h"
-#include "ui_LivestreamControlWindow.h"
+#include "ui_livestreamcontrolwindow.h"
 #include "Frontend/Windows/LivestreamWindow/livestreamwindow.h"
 #include <QPermission>
 #include <QApplication>

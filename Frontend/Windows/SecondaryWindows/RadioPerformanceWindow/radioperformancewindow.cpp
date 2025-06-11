@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_RadioPerformanceWindow.h" resolved
 
 #include "radioperformancewindow.h"
-#include "ui_RadioPerformanceWindow.h"
+#include "ui_radioperformancewindow.h"
 
 
 RadioPerformanceWindow::RadioPerformanceWindow(QWidget *parent) :
