@@ -131,11 +131,6 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     connect(&Backend::getInstance(), &Backend::serialPortOpened,  ui->TrackerSerialPortList, &SerialPortList::serialPortOpened);
     connect(&Backend::getInstance(), &Backend::serialPortClosed,  ui->TrackerSerialPortList, &SerialPortList::serialPortClosed);
 
-    connect(&Tracker::getInstance(), &Tracker::dataRead, this, [this](QString str)
-    {
-       ui->DataReadBox->append(str);
-    });
-
     connect(ui->PointerSerialPortList, &SerialPortList::openSerialPort, this, [](const QString& portName, Backend::RadioModuleType _, int baud)
     {
         Pointer::getInstance().connectToPort(Backend::getTargetPort(portName), baud);
@@ -156,16 +151,6 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     connect(&Backend::getInstance(), &Backend::foundSerialPorts, ui->PointerSerialPortList, &SerialPortList::serialPortsFound);
     connect(&Backend::getInstance(), &Backend::serialPortOpened,  ui->PointerSerialPortList, &SerialPortList::serialPortOpened);
     connect(&Backend::getInstance(), &Backend::serialPortClosed,  ui->PointerSerialPortList, &SerialPortList::serialPortClosed);
-
-    connect(&Pointer::getInstance(), &Pointer::dataRead, this, [this](QString str)
-    {
-        ui->DataReadBox->append(str);
-    });
-
-    connect(ui->ClearTextButton, &QPushButton::released, this, [this]()
-    {
-        ui->DataReadBox->clear();
-    });
 }
 
 void TrackerWindow::updateAngleDifferences()

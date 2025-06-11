@@ -324,6 +324,9 @@ add_executable(groundstation-2025
         Frontend/Windows/LivestreamWindow/livestreamcontrolwindow.ui
         Tracker/Pointer.cpp
         Tracker/Pointer.h
+        Frontend/Widgets/IndicatorWidget/TrackerIndicator/TrackerConnectionIndicator.cpp
+        Frontend/Widgets/IndicatorWidget/TrackerIndicator/TrackerConnectionIndicator.h
+        Frontend/Widgets/IndicatorWidget/PointerIndicator/PointerConnectionIndicator.cpp
 )
 
 set_target_properties(groundstation-2025 PROPERTIES

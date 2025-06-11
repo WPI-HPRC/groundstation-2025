@@ -30,13 +30,9 @@ void CirclePositionWidget::paintEvent(QPaintEvent *paintEvent)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    float size = (float)qMin(paintEvent->rect().width(), paintEvent->rect().height());
+    float size = (float)qMin(paintEvent->rect().width(), paintEvent->rect().height()) * 0.9;
 
     float left = paintEvent->rect().left() + 0.5*this->width() - 0.5*size;
-
-    float penSize = 30;
-
-    size -= penSize*2;
 
     float top = paintEvent->rect().top() + 0.5*this->height() - 0.5*size;
 
@@ -46,34 +42,26 @@ void CirclePositionWidget::paintEvent(QPaintEvent *paintEvent)
 
     float valueRadius = size / 20;
 
-    QPen bgPen(QColor(100, 100, 100), penSize);
-    painter.setPen(bgPen);
+    QBrush bgBrush(QColor(150,150,150));
+    painter.setBrush(bgBrush);
     painter.drawEllipse(rect);
 
-    QPen valuePen(QColor(172, 43, 55), penSize + 0.3);
     painter.setPen(QColor(172, 43, 55));
     painter.setBrush(QBrush(QColor(172,43,55)));
 
-    float R = sizeR/2 - penSize + valueRadius/4;
+    float R = sizeR/2 - valueRadius*6;
 
     QPointF valuePosition = rect.center() + QPointF(R * cos(value*M_PI/180), -R*sin(value*M_PI/180));
     painter.drawEllipse(valuePosition, valueRadius, valueRadius);
 
     float desiredRadius = size / 15;
-    float R1 = sizeR/2 - penSize + desiredRadius/4;
+    float R1 = sizeR/2 - valueRadius*6;
 
     QPointF desiredPosition = rect.center() + QPointF(R1 * cos(targetValue*M_PI/180), -R1*sin(targetValue*M_PI/180));
     painter.setPen(QColor(255,255,255));
     painter.setBrush(Qt::NoBrush);
     painter.drawEllipse(desiredPosition, desiredRadius, desiredRadius);
 
-    /*
-    QPen fillPen(QColor(250, 250, 250), penSize);
-    fillPen.setCapStyle(Qt::SquareCap);
-    painter.setPen(fillPen);
-
-    painter.drawArc(rect, startAngle*16, qMax(-maxAngle*16, (int)(-maxAngle*16 * (value/maxValue)) - 1));
-*/
     QWidget::paintEvent(paintEvent);
     this->raise();
 }
