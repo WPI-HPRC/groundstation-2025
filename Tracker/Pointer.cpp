@@ -25,13 +25,13 @@ Pointer::Pointer(QObject *parent): QObject(parent)
     poseTimer->setInterval(10);
     connect(poseTimer, &QTimer::timeout, this, [this]()
     {
-        bool needToUpdatePose = false;
+        bool needToUpdatePose = true;
         if(fabs(currentPose.azimuth_degrees - lastPose.azimuth_degrees) > 3.5)
         {
             commandedPose.azimuth_degrees = currentPose.azimuth_degrees;
             needToUpdatePose = true;
         }
-        if(fabs(currentPose.elevation_degrees - lastPose.elevation_degrees) > 3.5)
+        if(fabs(currentPose.elevation_degrees - lastPose.elevation_degrees) > 10)
         {
             commandedPose.elevation_degrees = currentPose.elevation_degrees;
             needToUpdatePose = true;
