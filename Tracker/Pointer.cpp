@@ -8,6 +8,7 @@
 // Created by William Scheirey on 5/5/25.
 //
 
+
 Pointer::Pointer(QObject *parent): QObject(parent)
 {
     dataLogger = new DataLogger("tracker_");
@@ -21,16 +22,26 @@ Pointer::Pointer(QObject *parent): QObject(parent)
     readTimer->start();
 
     poseTimer = new QTimer(this);
-    poseTimer->setInterval(100);
+    poseTimer->setInterval(10);
     connect(poseTimer, &QTimer::timeout, this, [this]()
     {
-        if(lastPose.azimuth_degrees != currentPose.azimuth_degrees || lastPose.elevation_degrees != currentPose.elevation_degrees)
+        bool needToUpdatePose = false;
+        if(fabs(currentPose.azimuth_degrees - lastPose.azimuth_degrees) > 3.5)
         {
-            emit newPoseData(currentPose.azimuth_degrees, currentPose.elevation_degrees);
+            commandedPose.azimuth_degrees = currentPose.azimuth_degrees;
+            needToUpdatePose = true;
+        }
+        if(fabs(currentPose.elevation_degrees - lastPose.elevation_degrees) > 3.5)
+        {
+            commandedPose.elevation_degrees = currentPose.elevation_degrees;
+            needToUpdatePose = true;
+        }
+        if(needToUpdatePose)
+        {
+            emit newPoseData(commandedPose.azimuth_degrees, commandedPose.elevation_degrees);
         }
     });
     poseTimer->start();
-
 }
 
 void Pointer::connectToPort(const QSerialPortInfo &port, int baudRate)
@@ -74,8 +85,9 @@ void Pointer::read()
     {
         pitch = (float) utf8DigitsToInt(readBuffer, bytesInPitch) / 100.f;
     }
+
     char *remainingBuffer = &readBuffer[bytesInPitch+1];
-    int bytesInYaw = bytesUntilCharacter(remainingBuffer, ';');
+    int bytesInYaw = bytesUntilCharacter(remainingBuffer, ',');
     float yaw = 0;
     if(remainingBuffer[0] == '-')
     {
@@ -85,8 +97,33 @@ void Pointer::read()
     {
         yaw = (float) utf8DigitsToInt(remainingBuffer, bytesInYaw) / 100.f;
     }
+    // ---
 
-    pitch = qMin(qMax(pitch, 15.f), 180.f - 15);
+    remainingBuffer = &remainingBuffer[bytesInYaw+1];
+    int bytesInDPitch = bytesUntilCharacter(remainingBuffer, ',');
+    float dPitch = 0;
+    if(remainingBuffer[0] == '-')
+    {
+        dPitch = - (float) utf8DigitsToInt(&remainingBuffer[1], bytesInDPitch-1) / 100;
+    }
+    else
+    {
+        dPitch = (float) utf8DigitsToInt(remainingBuffer, bytesInDPitch) / 100.f;
+    }
+
+    remainingBuffer = &remainingBuffer[bytesInDPitch+1];
+    int bytesInDYaw = bytesUntilCharacter(remainingBuffer, ';');
+    float dYaw = 0;
+    if(remainingBuffer[0] == '-')
+    {
+        dYaw = - (float) utf8DigitsToInt(&remainingBuffer[1], bytesInDYaw-1) / 100.f;
+    }
+    else
+    {
+        dYaw = (float) utf8DigitsToInt(remainingBuffer, bytesInDYaw) / 100.f;
+    }
+
+    pitch = qMin(qMax(pitch, 2.f), 180.f - 2.f);
 
     QString str = "";
     for (int i = 0; i < bytesRead; i++)
@@ -95,6 +132,9 @@ void Pointer::read()
     }
 
     currentPose = {-yaw, pitch};
+    currentDPose = {-dYaw, dPitch};
+
+//    qDebug << bytesInPitch
 
     emit dataRead(str);
 }

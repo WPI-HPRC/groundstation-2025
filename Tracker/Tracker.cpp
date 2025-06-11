@@ -30,6 +30,8 @@ void Tracker::logData()
     json.insert("CommandedElevation", desiredPose.elevation_degrees);
     json.insert("PointerAzimuth", pointerPose.azimuth_degrees);
     json.insert("PointerElevation", pointerPose.elevation_degrees);
+    json.insert("PointerDAzimuth", Pointer::getInstance().currentDPose.azimuth_degrees);
+    json.insert("PointerDElevation", Pointer::getInstance().currentDPose.elevation_degrees);
 
     Backend::getInstance().dataLogger.logTrackerData(json);
 }
@@ -74,16 +76,20 @@ void Tracker::read()
         return;
     }
 
-    QString str = "";
-    for (int i = 0; i < bytesRead; i++)
+    if(readBuffer[0] == 'A')
     {
-        str.append(QString::asprintf("%c", readBuffer[i]));
-        if(readBuffer[i] == 'E')
+        QString str = "";
+        for (int i = 0; i < bytesRead; i++)
         {
-            str.append("\n");
+            str.append(QString::asprintf("%c", readBuffer[i]));
+            if (readBuffer[i] == 'E')
+            {
+                str.append("\n");
+            }
         }
+        qDebug() << str;
     }
-    emit dataRead(str);
+//    emit dataRead(str);
 
     handleMessage(readBuffer);
 return;

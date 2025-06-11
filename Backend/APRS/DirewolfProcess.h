@@ -16,7 +16,8 @@ public:
     void start();
     void stop();
     QProcess process;
-    QString frequency = "434.55M";
+//    QString frequency = "434.55M";
+    QString frequency = "146.150M";
 
 signals:
     void direwolfOutput(QString);

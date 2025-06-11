@@ -31,6 +31,8 @@ public:
 
     Pose currentPose;
     Pose lastPose;
+    Pose currentDPose;
+    Pose commandedPose;
 
     void connectToPort(const QSerialPortInfo& port, int baudRate);
     void disconnect();
