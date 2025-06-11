@@ -61,7 +61,9 @@ set(PROTO_SRCS
         Frontend/Windows/CameraWindow/camerawindow.h
         Frontend/Windows/CameraWindow/CameraWindow.ui
         Frontend/Widgets/GraphWidget/OneAxisGraph.h
-        Frontend/Widgets/GraphWidget/FourAxisGraph.h)
+        Frontend/Widgets/GraphWidget/FourAxisGraph.h
+        Backend/TrackerTrajectory.cpp
+        Backend/TrackerTrajectory.h)
 set(PROTO_HDRS)
 
 # Loop over all found .proto files
