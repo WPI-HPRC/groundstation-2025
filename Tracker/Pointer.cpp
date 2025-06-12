@@ -25,18 +25,18 @@ Pointer::Pointer(QObject *parent): QObject(parent)
     poseTimer->setInterval(10);
     connect(poseTimer, &QTimer::timeout, this, [this]()
     {
-        bool needToUpdatePose = true;
-        if(fabs(currentPose.azimuth_degrees - lastPose.azimuth_degrees) > 3.5)
+        bool needToUpdate = false;
+        if(commandedPose.azimuth_degrees != currentPose.azimuth_degrees)
         {
             commandedPose.azimuth_degrees = currentPose.azimuth_degrees;
-            needToUpdatePose = true;
+            needToUpdate = true;
         }
-        if(fabs(currentPose.elevation_degrees - lastPose.elevation_degrees) > 10)
+        if(commandedPose.elevation_degrees != currentPose.elevation_degrees)
         {
             commandedPose.elevation_degrees = currentPose.elevation_degrees;
-            needToUpdatePose = true;
+            needToUpdate = true;
         }
-        if(needToUpdatePose)
+        if(needToUpdate)
         {
             emit newPoseData(commandedPose.azimuth_degrees, commandedPose.elevation_degrees);
         }
@@ -134,7 +134,7 @@ void Pointer::read()
     currentPose = {-yaw, pitch};
     currentDPose = {-dYaw, dPitch};
 
-//    qDebug << bytesInPitch
+//    qDebug() << str;
 
     emit dataRead(str);
 }

@@ -28,6 +28,9 @@ public:
         float elevation_degrees;
     };
 
+    Pose lowpassBounds = {5, 5};
+
+    Pose commandedPose{};
     Pose desiredPose{};
     Pose actualPose{};
     Pose pointerPose{};
@@ -52,6 +55,8 @@ public:
     void sendMessage_getImu();
     void sendEstop_brake();
     void sendEstop_coast();
+
+    qint64 sentTime;
 
 signals:
     void newPoseData(Pose);

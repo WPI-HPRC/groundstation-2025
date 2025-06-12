@@ -8,6 +8,7 @@
 #include <QTimer>
 #include "Tracker/Tracker.h"
 #include "Utility/SerialPort.h"
+#include "Utility/DataSimulator/DataSimulator.h"
 
 #define READ_BUFFER_LENGTH 64
 
@@ -29,6 +30,7 @@ public:
         float elevation_degrees;
     };
 
+    Pose lowpassBounds = {5, 5};
     Pose currentPose;
     Pose lastPose;
     Pose currentDPose;

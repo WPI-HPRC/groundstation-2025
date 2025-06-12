@@ -426,6 +426,7 @@
 		<file>Icons/logo.aps</file>
 		<file>Icons/logo.rc</file>
 		<file>SimulationData/SampleRocketData.csv</file>
+		<file>SimulationData/TrackerElevationAngles.csv</file>
 		<file>SimulationData/SamplePayloadData.csv</file>
 		<file>Fonts/centurygothic.ttf</file>
 		<file>Fonts/JockeyOne-Regular.ttf</file>

@@ -144,6 +144,8 @@ public:
 
     void logTrackerData(const QJsonObject &jsonData);
 
+    void logAprsData(const QJsonObject &jsonData);
+
     void flushTextFile();
 
     void flushDataFiles();
@@ -174,6 +176,8 @@ private:
     CSVWriter transmitStatusLog;
 
     CSVWriter trackerLog;
+
+    CSVWriter aprsLog;
 
     QFile byteLog;
     QFile textLog;

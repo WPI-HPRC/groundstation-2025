@@ -6,26 +6,24 @@
 #include "Backend/Backend.h"
 #include "Utility/TelemetryHandler.h"
 #include "protobuf/src/google/protobuf/util/json_util.h"
+#include "Tracker/Tracker.h"
 
 
 DataSimulator::DataSimulator(const QString &filePath, WebServer *webServer, const google::protobuf::Descriptor *descriptor,
                              DataType dataType, QObject *parent)
         : QObject(parent), _webServer(webServer), messageDescriptor(descriptor), dataType(dataType)
 {
-    if (!messageDescriptor)
+    if (messageDescriptor)
     {
-        std::cerr << "Error: messageDescriptor is null!" << std::endl;
-        return;
+        prototype = google::protobuf::MessageFactory::generated_factory()->GetPrototype(messageDescriptor);
+        if (prototype)
+        {
+            nextPacket.reset(prototype->New());
+        }
     }
 
     file = new QFile();
     file->setFileName(filePath);
-
-    prototype = google::protobuf::MessageFactory::generated_factory()->GetPrototype(messageDescriptor);
-    if (prototype)
-    {
-        nextPacket.reset(prototype->New());
-    }
 }
 
 void DataSimulator::start()
@@ -53,7 +51,10 @@ void DataSimulator::start()
     timer->setSingleShot(true);
     connect(timer, &QTimer::timeout, this, &DataSimulator::sendNextLine);
 
-    nextPacket = parseLine(nextLine());
+    if(messageDescriptor)
+    {
+        nextPacket = parseLine(nextLine());
+    }
 
     sendNextLine();
 }
@@ -103,62 +104,79 @@ void DataSimulator::sendNextLine()
     if(shouldStop)
         return;
 
-    std::unique_ptr<google::protobuf::Message> currentPacket = std::move(nextPacket);
-    nextPacket = parseLine(nextLine());
+    uint32_t dt = 0;
 
-    if(!currentPacket || !currentPacket->IsInitialized() || !nextPacket || !nextPacket->IsInitialized())
+    if(dataType == Tracker)
     {
-        std::cout << "Packet was not initialized; restarting" << std::endl;
-        start();
-        return;
-    }
+        QList<QByteArray> line = nextLine();
 
-    const google::protobuf::Reflection *reflection = currentPacket->GetReflection();
-    const google::protobuf::FieldDescriptor *timestampField = messageDescriptor->FindFieldByName("timestamp");
+        float angle = line[1].toFloat();
 
-    if (!timestampField || timestampField->type() != google::protobuf::FieldDescriptor::TYPE_UINT32)
-    {
-        std::cerr << "Error: Timestamp field missing or invalid" << std::endl;
-        start();
-        return;
-    }
-
-    uint32_t currentTimestamp = reflection->GetUInt32(*currentPacket, timestampField);
-    uint32_t nextTimestamp = reflection->GetUInt32(*nextPacket, timestampField);
-
-    uint32_t dt = nextTimestamp - currentTimestamp;
-
-    // If the timestamps don't make sense, skip this line
-    if (dt > 20000)
-    {
-        sendNextLine();
-        return;
-    }
-
-    // Convert current packet to JSON
-    std::string jsonString;
-    absl::Status status = google::protobuf::util::MessageToJsonString(*currentPacket, &jsonString);
-    if (status == absl::OkStatus())
-    {
-//        _webServer->broadcast(QString::fromStdString(jsonString));
+        Tracker::getInstance().newPointerPose(0, angle);
+        nextLine();
+        dt = 1;
     }
     else
     {
-        std::cerr << "Error converting packet to JSON string: " << status << std::endl;
-        return;
-    }
+        std::unique_ptr<google::protobuf::Message> currentPacket = std::move(nextPacket);
+        nextPacket = parseLine(nextLine());
 
-    HPRC::Packet packet;
-    if(dataType == RocketTelemetry)
-    {
-        packet.mutable_telemetry()->mutable_rocketpacket()->CopyFrom(*dynamic_cast<HPRC::RocketTelemetryPacket*>(currentPacket.get()));
-    }
-    else if(dataType == PayloadTelemetry)
-    {
-        packet.mutable_telemetry()->mutable_payloadpacket()->CopyFrom(*dynamic_cast<HPRC::PayloadTelemetryPacket*>(currentPacket.get()));
-    }
+        if (!currentPacket || !currentPacket->IsInitialized() || !nextPacket || !nextPacket->IsInitialized())
+        {
+            std::cout << "Packet was not initialized; restarting" << std::endl;
+            start();
+            return;
+        }
 
-    Backend::getInstance().receivePacket(packet);
+        const google::protobuf::Reflection *reflection = currentPacket->GetReflection();
+        const google::protobuf::FieldDescriptor *timestampField = messageDescriptor->FindFieldByName("timestamp");
+
+        if (!timestampField || timestampField->type() != google::protobuf::FieldDescriptor::TYPE_UINT32)
+        {
+            std::cerr << "Error: Timestamp field missing or invalid" << std::endl;
+            start();
+            return;
+        }
+
+        uint32_t currentTimestamp = reflection->GetUInt32(*currentPacket, timestampField);
+        uint32_t nextTimestamp = reflection->GetUInt32(*nextPacket, timestampField);
+
+        dt = nextTimestamp - currentTimestamp;
+
+        // If the timestamps don't make sense, skip this line
+        if (dt > 20000)
+        {
+            sendNextLine();
+            return;
+        }
+
+        // Convert current packet to JSON
+        std::string jsonString;
+        absl::Status status = google::protobuf::util::MessageToJsonString(*currentPacket, &jsonString);
+        if (status == absl::OkStatus())
+        {
+//        _webServer->broadcast(QString::fromStdString(jsonString));
+        }
+        else
+        {
+            std::cerr << "Error converting packet to JSON string: " << status << std::endl;
+            return;
+        }
+
+        HPRC::Packet packet;
+        if (dataType == RocketTelemetry)
+        {
+            packet.mutable_telemetry()->mutable_rocketpacket()->CopyFrom(
+                    *dynamic_cast<HPRC::RocketTelemetryPacket *>(currentPacket.get()));
+        }
+        else if (dataType == PayloadTelemetry)
+        {
+            packet.mutable_telemetry()->mutable_payloadpacket()->CopyFrom(
+                    *dynamic_cast<HPRC::PayloadTelemetryPacket *>(currentPacket.get()));
+        }
+
+        Backend::getInstance().receivePacket(packet);
+    }
 
     if (file->atEnd())
     {

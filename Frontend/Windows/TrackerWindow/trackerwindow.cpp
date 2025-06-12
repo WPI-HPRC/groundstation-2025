@@ -15,6 +15,8 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    dataSimulator = new DataSimulator(":SimulationData/TrackerElevationAngles.csv", new WebServer(8008), nullptr, DataSimulator::Tracker);
+
     ui->AnglesTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->AnglesTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -101,12 +103,12 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
 
         if(Tracker::getInstance().manualControlEnabled)
         {
-            ui->ToggleManualModeButton->setText("Disable Manual Control");
+            ui->ToggleManualModeButton->setText("Disable Stick Control");
             ui->SetPoseContainer->setEnabled(true);
         }
         else
         {
-            ui->ToggleManualModeButton->setText("Enable Manual Control");
+            ui->ToggleManualModeButton->setText("Enable Stick Control");
             ui->SetPoseContainer->setEnabled(false);
         }
     });
@@ -151,6 +153,36 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     connect(&Backend::getInstance(), &Backend::foundSerialPorts, ui->PointerSerialPortList, &SerialPortList::serialPortsFound);
     connect(&Backend::getInstance(), &Backend::serialPortOpened,  ui->PointerSerialPortList, &SerialPortList::serialPortOpened);
     connect(&Backend::getInstance(), &Backend::serialPortClosed,  ui->PointerSerialPortList, &SerialPortList::serialPortClosed);
+
+    connect(ui->RefreshPortsButton1, &QPushButton::released, []() {
+        Backend::getInstance().getPorts();
+    });
+    connect(ui->RefreshPortsButton2, &QPushButton::released, []() {
+        Backend::getInstance().getPorts();
+    });
+    connect(ui->RunSimButton, &QPushButton::released, [this]()
+    {
+        simRunning = !simRunning;
+        if(simRunning)
+        {
+            dataSimulator->start();
+            ui->RunSimButton->setText("Run Simulation");
+        }
+        else
+        {
+            dataSimulator->stop();
+            ui->RunSimButton->setText("Stop Simulation");
+        }
+    });
+
+    connect(ui->AzimuthLowpassValue, &QSlider::valueChanged, [this](int value){
+        Tracker::getInstance().lowpassBounds.azimuth_degrees = (float)value;
+        ui->AzLowpassValue->setText(QString::number(value));
+    });
+    connect(ui->ElevationLowpassValue, &QSlider::valueChanged, [this](int value){
+        Tracker::getInstance().lowpassBounds.elevation_degrees = (float)value;
+        ui->ElLowpassValue->setText(QString::number(value));
+    });
 }
 
 void TrackerWindow::updateAngleDifferences()

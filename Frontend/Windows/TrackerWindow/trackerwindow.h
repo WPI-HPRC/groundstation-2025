@@ -6,7 +6,7 @@
 #define GROUNDSTATION_2025_TRACKERWINDOW_H
 
 #include <QWidget>
-
+#include "Utility/DataSimulator/DataSimulator.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -23,6 +23,9 @@ public:
     explicit TrackerWindow(QWidget *parent = nullptr);
 
     ~TrackerWindow() override;
+
+    DataSimulator *dataSimulator;
+    bool simRunning = false;
 
 private:
     void updateAngleDifferences();

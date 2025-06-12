@@ -24,7 +24,8 @@ public:
     enum DataType
     {
         RocketTelemetry,
-        PayloadTelemetry
+        PayloadTelemetry,
+        Tracker
     };
 
     DataSimulator(const QString &filePath, WebServer *webServer, const google::protobuf::Descriptor *messageDescriptor, DataType dataType, QObject *parent = nullptr);

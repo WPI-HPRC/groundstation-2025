@@ -3,6 +3,7 @@
 //
 
 #include "Backend/APRS/KissClient.h"
+#include "Backend/Backend.h"
 
 KissClient::KissClient(QObject *parent) : QObject(parent) {
     socket = new QTcpSocket(this);
@@ -46,6 +47,17 @@ void KissClient::onDataReceived()
         QByteArray payload = data.mid(1, data.size() - 2); // Remove KISS frame markers
         currentOutput = {};
         decodeAx25(payload);
+
+        QJsonObject json;
+        json.insert("Callsign", currentOutput.callsign);
+        json.insert("ID", QString::number(currentOutput.ID));
+        json.insert("GPS Lock", currentOutput.data.gpsLock ? "YES" : "NO");
+        json.insert("Satellites", QString::number(currentOutput.data.satellites));
+        json.insert("Altitude", QString::number(currentOutput.data.altitude));
+        json.insert("Longitude", QString::number(currentOutput.data.longitude));
+        json.insert("Latitude", QString::number(currentOutput.data.latitude));
+        Backend::getInstance().dataLogger.logAprsData(json);
+
         emit output(currentOutput);
     }
 }

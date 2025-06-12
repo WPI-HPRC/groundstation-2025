@@ -146,9 +146,14 @@ int Tracker::bytesUntilSemicolon(const char *buffer)
 
 void Tracker::newPointerPose(float azimuth, float elevation)
 {
-    pointerPose = {azimuth, elevation};
-    sendMessage_setPose(pointerPose);
-    emit newDesiredPose({azimuth, elevation});
+    if (manualControlEnabled)
+    {
+        pointerPose = {azimuth, elevation};
+        sendMessage_setPose(pointerPose);
+
+        sentTime = QDateTime::currentMSecsSinceEpoch();
+        emit newDesiredPose({azimuth, elevation});
+    }
     logData();
 }
 
@@ -273,6 +278,7 @@ void Tracker::handleResponse(const char *buffer)
 {
     char responseType = buffer[0];
 
+    qDebug() << responseType;
     switch(responseType)
     {
         case 'P':
@@ -319,10 +325,27 @@ void Tracker::sendString(QString str)
 
 void Tracker::sendMessage_setPose(Pose pose)
 {
-    QString str = QString::asprintf("S;P;%d;%d;E", qRound(pose.azimuth_degrees*100), qRound(pose.elevation_degrees*100));
-    sendString(str);
-    desiredPose = pose;
-    emit newDesiredPose(pose);
+    bool needToUpdate = false;
+    if(fabs(commandedPose.azimuth_degrees - pose.azimuth_degrees) > lowpassBounds.azimuth_degrees )
+    {
+        commandedPose.azimuth_degrees = pose.azimuth_degrees;
+        needToUpdate = true;
+    }
+    if(fabs(commandedPose.elevation_degrees - pose.elevation_degrees) > lowpassBounds.elevation_degrees )
+    {
+        commandedPose.elevation_degrees = pose.elevation_degrees;
+        needToUpdate = true;
+    }
+    if(needToUpdate)
+    {
+        float bound = 0;
+        commandedPose.elevation_degrees = qMin(qMax(commandedPose.elevation_degrees, bound), 180 - bound);
+        QString str = QString::asprintf("S;P;%d;%d;E", qRound(commandedPose.azimuth_degrees * 100),
+                                        qRound(commandedPose.elevation_degrees * 100));
+        sendString(str);
+        desiredPose = pose;
+        emit newDesiredPose(pose);
+    }
 }
 
 void Tracker::sendMessage_getPose()
