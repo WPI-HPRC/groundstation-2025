@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_LivestreamTimeWidget.h" resolved
 
 #include "livestreamtimewidget.h"
-#include "ui_LivestreamTimeWidget.h"
+#include "ui_livestreamtimewidget.h"
 
 
 LivestreamTimeWidget::LivestreamTimeWidget(QWidget *parent) :

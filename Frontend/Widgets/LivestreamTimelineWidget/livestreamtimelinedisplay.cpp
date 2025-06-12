@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_LivestreamTimelineDisplay.h" resolved
 
 #include "livestreamtimelinedisplay.h"
-#include "ui_LivestreamTimelineDisplay.h"
+#include "ui_livestreamtimelinedisplay.h"
 #include "Backend/Backend.h"
 
 #include <QFontDatabase>

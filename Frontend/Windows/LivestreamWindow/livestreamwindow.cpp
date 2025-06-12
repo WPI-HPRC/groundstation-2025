@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_LivestreamWindow.h" resolved
 
 #include "livestreamwindow.h"
-#include "ui_LivestreamWindow.h"
+#include "ui_livestreamwindow.h"
 
 #include "Frontend/Images/Placeholder4x3Image.h"
 #include "Frontend/Widgets/CameraWidget/CameraWidget.h"

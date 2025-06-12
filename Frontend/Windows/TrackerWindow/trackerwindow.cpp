@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_TrackerWindow.h" resolved
 
 #include "trackerwindow.h"
-#include "ui_TrackerWindow.h"
+#include "ui_trackerwindow.h"
 #include "Tracker/Tracker.h"
 #include "Backend/Backend.h"
 #include "Tracker/Pointer.h"

@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_GaugeDisplay.h" resolved
 
 #include "gaugedisplay.h"
-#include "ui_GaugeDisplay.h"
+#include "ui_gaugedisplay.h"
 #include <QFontDatabase>
 
 #include "Frontend/Widgets/GaugeWidget/AccelerationGauge.h"

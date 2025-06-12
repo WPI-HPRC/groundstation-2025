@@ -5,7 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_LogWindow.h" resolved
 
 #include "logwindow.h"
-#include "ui_LogWindow.h"
+#include "ui_logwindow.h"
 #include "Backend/Backend.h"
 #include <QFileDialog>
 #include <QDesktopServices>
