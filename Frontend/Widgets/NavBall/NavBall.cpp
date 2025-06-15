@@ -99,8 +99,8 @@ void NavBall::updateNavball(const QQuaternion &orientation) {
 }
 
 void NavBall::onTelemetryData(const HPRC::Telemetry& telemetry) {
-    if (telemetry.has_rocketpacket()) {
-        const auto &data = telemetry.rocketpacket();
+    if (telemetry.has_payloadpacket()) {
+        const auto &data = telemetry.payloadpacket();
         QQuaternion q(data.w(), data.i(), data.k(), data.j());
 
         QQuaternion remap = QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), -90.0f); // Pitch +90° from Z-forward to Z-down

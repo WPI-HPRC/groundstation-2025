@@ -22,6 +22,11 @@ public:
     Tracker(const Tracker&) = delete;
     Tracker &operator=(const Tracker&) = delete;
 
+    struct GPSData {
+        double lat;
+        double lon;
+    };
+
     struct Pose
     {
         float azimuth_degrees;
@@ -36,8 +41,22 @@ public:
     Pose pointerPose{};
     Pose poseDifference();
 
+    float trackerLat;
+    float trackerLong;
+    float rocketLat;
+    float rocketLong;
+    float trackerHeading;
+    float rocketAltitude;
+
+    bool invertAz = false;
+
+    float elevationLead = 0;
+    void setElevationLead(float lead);
+
     bool enabled = true;
     bool manualControlEnabled = true;
+
+    float zeroAltitude = 0;
 
     void connectToPort(const QSerialPortInfo& port, int baudRate);
     void disconnect();
@@ -57,6 +76,10 @@ public:
     void sendEstop_coast();
 
     qint64 sentTime;
+
+    double gpsToDistance(GPSData gps1, GPSData gps2);
+    double gpsToHeading(GPSData gps1, GPSData gps2);
+    double calculatePitch(double altitude, double groundDist);
 
 signals:
     void newPoseData(Pose);
@@ -85,6 +108,7 @@ private:
     DataLogger *dataLogger;
 
     QTimer *readTimer;
+    QTimer *poseTimer;
 
 private:
     explicit Tracker(QObject *parent = nullptr);

@@ -28,8 +28,7 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     });
     connect(&Tracker::getInstance(), &Tracker::newGpsData, this, [this](float latitude_decimal, float longitude_decimal)
     {
-       ui->LatitudeValue->setText(QString::number(latitude_decimal, 'f', 2));
-       ui->LongitudeValue->setText(QString::number(longitude_decimal, 'f', 2));
+
     });
     connect(&Tracker::getInstance(), &Tracker::newDesiredPose, this, [this](Tracker::Pose pose)
     {
@@ -40,7 +39,7 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
 
     connect(&Tracker::getInstance(), &Tracker::newImuData, [this](float gravityX_gs, float gravityY_gs, float gravityZ_gs, float heading_degrees)
     {
-        ui->HeadingValue->setText(QString::number(heading_degrees));
+//        ui->HeadingValue->setText(QString::number(heading_degrees));
     });
 
     connect(ui->AzimuthDial, &QDial::valueChanged, this, [this](int value)
@@ -182,6 +181,32 @@ TrackerWindow::TrackerWindow(QWidget *parent) :
     connect(ui->ElevationLowpassValue, &QSlider::valueChanged, [this](int value){
         Tracker::getInstance().lowpassBounds.elevation_degrees = (float)value;
         ui->ElLowpassValue->setText(QString::number(value));
+    });
+    connect(ui->ElevationLeadSlider, &QSlider::valueChanged, [this](int value){
+        Tracker::getInstance().setElevationLead((float)value);
+        ui->ElevationLeadValue->setText(QString::number(value));
+    });
+
+    connect(ui->SetInputsButton, &QPushButton::released, this, [this]()
+    {
+        float latitude = ui->LatitudeValue->text().toFloat();
+        float longitude = ui->LongitudeValue->text().toFloat();
+        float heading = ui->HeadingValue->text().toFloat();
+
+        Tracker::getInstance().trackerLat = latitude;
+        Tracker::getInstance().trackerLong = longitude;
+        Tracker::getInstance().trackerHeading = heading;
+
+    });
+
+    connect(ui->InvertAz, &QPushButton::released, this, []()
+    {
+       Tracker::getInstance().invertAz = !Tracker::getInstance().invertAz;
+    });
+
+    connect(ui->ZeroAltitude, &QPushButton::released, this, []()
+    {
+       Tracker::getInstance().zeroAltitude = Backend::getInstance().lastPayloadPacket.altitude();
     });
 }
 

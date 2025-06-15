@@ -19,9 +19,9 @@ AccelerationGauge::AccelerationGauge(QWidget *parent): GaugeDisplay(parent)
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(!telemetry.has_rocketpacket())
+        if(!telemetry.has_payloadpacket())
             return;
-        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
+        const HPRC::PayloadTelemetryPacket& data = telemetry.payloadpacket();
         float totalAccel = sqrt(data.accelx()*data.accelx() + data.accely()*data.accely() + data.accelz()*data.accelz());
         this->gauge->updateValue(totalAccel);
         this->updateNumber(QString::number(round(totalAccel)));

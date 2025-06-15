@@ -23,9 +23,9 @@ SpeedGauge::SpeedGauge(QWidget *parent): GaugeDisplay(parent)
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(!telemetry.has_rocketpacket())
+        if(!telemetry.has_payloadpacket())
             return;
-        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
+        const HPRC::PayloadTelemetryPacket& data = telemetry.payloadpacket();
         float speed = sqrt(data.velx()*data.velx() + data.vely()*data.vely() + data.velz()*data.velz()) * Utility::UnitConversion::MetersPerSecondToMilesPerHour;
 
         this->gauge->updateValue(speed);

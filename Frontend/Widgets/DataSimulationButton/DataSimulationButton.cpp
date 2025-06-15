@@ -11,15 +11,16 @@ DataSimulationButton::DataSimulationButton(QWidget *parent): QPushButton("Start 
     {
        if(this->dataSimulationIsRunning)
        {
+
            this->dataSimulationIsRunning = false;
-           Backend::getInstance().rocketDataSimulator->stop();
+//           Backend::getInstance().rocketDataSimulator->stop();
            Backend::getInstance().payloadDataSimulator->stop();
            setText("Start Data Simulation");
        }
        else
        {
            this->dataSimulationIsRunning = true;
-           Backend::getInstance().rocketDataSimulator->start();
+//           Backend::getInstance().rocketDataSimulator->start();
            Backend::getInstance().payloadDataSimulator->start();
            setText("Stop Data Simulation");
        }

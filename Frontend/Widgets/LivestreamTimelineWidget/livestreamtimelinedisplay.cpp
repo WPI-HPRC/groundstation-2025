@@ -25,9 +25,9 @@ LivestreamTimelineDisplay::LivestreamTimelineDisplay(QWidget *parent) :
 
     connect(&Backend::getInstance(), &Backend::telemetryAvailable, [this](const HPRC::Telemetry& telemetry)
     {
-        if(!telemetry.has_rocketpacket())
+        if(!telemetry.has_payloadpacket())
             return;
-        const HPRC::RocketTelemetryPacket& data = telemetry.rocketpacket();
+        const HPRC::PayloadTelemetryPacket& data = telemetry.payloadpacket();
 
         this->ui->Timeline->updateValue(Utility::UnitConversion::meters2feet(data.altitude()));
         this->ui->AltitudeLabel->setText(QString::asprintf("%d ft", (int)(Utility::UnitConversion::meters2feet(data.altitude()))));

@@ -426,8 +426,11 @@
 		<file>Icons/logo.aps</file>
 		<file>Icons/logo.rc</file>
 		<file>SimulationData/SampleRocketData.csv</file>
+		<file>SimulationData/RasAero.CSV</file>
 		<file>SimulationData/TrackerElevationAngles.csv</file>
 		<file>SimulationData/SamplePayloadData.csv</file>
+		<file>SimulationData/IREC2025.csv</file>
+		<file>SimulationData/IREC2025.xlsx</file>
 		<file>Fonts/centurygothic.ttf</file>
 		<file>Fonts/JockeyOne-Regular.ttf</file>
 	</qresource>

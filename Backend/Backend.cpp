@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include "Constants.h"
+#include "Tracker/Tracker.h"
 
 QMap<std::string, Backend::ConversionFunction> Backend::metricToEnglish = {
         {"altitude", &Utility::UnitConversion::meters2feet},
@@ -506,8 +507,8 @@ void Backend::handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet)
         }
 
         currentStateMaxValues.minAltitude = lastRocketPacket.altitude();
-        emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
-
+//        emit rocketStateChanged(currentStateMaxValues, lastRocketPacket.state(), packet->state());
+//
         if(lastRocketPacket.state() != 6)
         {
             stateMaxValues.insert(lastRocketPacket.state(), currentStateMaxValues);
@@ -534,8 +535,18 @@ void Backend::handleRocketTelemetry(HPRC::RocketTelemetryPacket *packet)
 
 void Backend::handlePayloadTelemetry(HPRC::PayloadTelemetryPacket *packet)
 {
+
+    if(packet->gpslock())
+    {
+        Tracker::getInstance().rocketLat = packet->gpslat();
+        Tracker::getInstance().rocketLong = packet->gpslong();
+    }
+    Tracker::getInstance().rocketAltitude = packet->altitude();
     updateMaxPayloadValues(maxPayloadValues, *packet);
     lastPayloadPacket = *packet;
+
+    emit rocketStateChanged(currentStateMaxValues, lastPayloadPacket.state(), packet->state());
+
     if(convertToEnglish)
     {
         doConversions(packet, metricToEnglish);
@@ -842,7 +853,7 @@ void Backend::start()
 
 //    webServer = new WebServer(8001);
   
-    QString simulationFile = ":/SimulationData/SamplePayloadData.csv";
+    QString simulationFile = ":/SimulationData/IREC2025.csv";
 
     payloadDataSimulator = new DataSimulator(
             simulationFile,

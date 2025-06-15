@@ -18,7 +18,26 @@ Tracker::Tracker(QObject *parent): QObject(parent)
     });
     readTimer->start();
 
+    poseTimer = new QTimer(this);
+    poseTimer->setInterval(20);
+    connect(poseTimer, &QTimer::timeout, [this]()
+    {
+       float heading = gpsToHeading({trackerLat, trackerLong}, {rocketLat, rocketLong});
+       float az = (trackerHeading - heading);
+       float dist = gpsToDistance({trackerLat, trackerLong}, {rocketLat, rocketLong});
+       float elevation = calculatePitch(rocketAltitude - zeroAltitude, dist);
+
+       if(!manualControlEnabled)
+       {
+           sendMessage_setPose({invertAz ? -az : az, elevation});
+       }
+    });
+    poseTimer->start();
     connect(&Pointer::getInstance(), &Pointer::newPoseData, this, &Tracker::newPointerPose);
+
+    rocketLat = 31.0460779;
+    rocketLong = -103.5398149;
+    rocketAltitude = 0;
 }
 
 void Tracker::logData()
@@ -61,6 +80,12 @@ void Tracker::send(const char *buffer, size_t length_bytes)
         return;
     }
     serialPort->write(buffer, length_bytes);
+}
+
+void Tracker::setElevationLead(float lead)
+{
+    // COULD FORCE UPDATE HERE??
+    elevationLead = lead;
 }
 
 void Tracker::read()
@@ -151,8 +176,8 @@ void Tracker::newPointerPose(float azimuth, float elevation)
         pointerPose = {azimuth, elevation};
         sendMessage_setPose(pointerPose);
 
-        sentTime = QDateTime::currentMSecsSinceEpoch();
-        emit newDesiredPose({azimuth, elevation});
+//        sentTime = QDateTime::currentMSecsSinceEpoch();
+//        emit newDesiredPose({azimuth, elevation});
     }
     logData();
 }
@@ -261,6 +286,8 @@ void Tracker::handleData(const char *buffer)
 
 void Tracker::handleResponse_pose()
 {
+
+//    qDebug() << (QDateTime::currentMSecsSinceEpoch() - sentTime);
     emit newPoseResponse();
 }
 
@@ -325,7 +352,8 @@ void Tracker::sendString(QString str)
 
 void Tracker::sendMessage_setPose(Pose pose)
 {
-    bool needToUpdate = false;
+    pose.elevation_degrees += elevationLead;
+    bool needToUpdate = true;
     if(fabs(commandedPose.azimuth_degrees - pose.azimuth_degrees) > lowpassBounds.azimuth_degrees )
     {
         commandedPose.azimuth_degrees = pose.azimuth_degrees;
@@ -344,7 +372,8 @@ void Tracker::sendMessage_setPose(Pose pose)
                                         qRound(commandedPose.elevation_degrees * 100));
         sendString(str);
         desiredPose = pose;
-        emit newDesiredPose(pose);
+        Pose asdfk = {desiredPose.azimuth_degrees, desiredPose.elevation_degrees - elevationLead};
+        emit newDesiredPose(asdfk);
     }
 }
 
@@ -381,4 +410,38 @@ void Tracker::sendMessage_home()
 Tracker::Pose Tracker::poseDifference()
 {
     return {desiredPose.azimuth_degrees - actualPose.azimuth_degrees, desiredPose.elevation_degrees - actualPose.elevation_degrees};
+}
+
+double Tracker::gpsToDistance(GPSData gps1, GPSData gps2) {
+
+    float R = 6371e3;
+    float phi1 = qDegreesToRadians(gps1.lat);
+    float phi2 = qDegreesToRadians(gps2.lat);
+
+    float deltaPhi = qDegreesToRadians(gps2.lat - gps1.lat);
+    float deltaLamda = qDegreesToRadians(gps2.lon - gps1.lon);
+
+    float a = sin(deltaPhi/2) * sin(deltaPhi/2) + cos(phi1) * cos(phi2) * sin(deltaLamda/2) * sin(deltaLamda/2);
+    float c = 2 * atan2(sqrt(a), sqrt(1-a));
+
+    return R * c;
+
+
+    double dLon = qDegreesToRadians((gps2.lon - gps1.lon));
+    double y = sin(dLon) * cos(qDegreesToRadians(gps2.lat));
+    double x = cos(qDegreesToRadians(gps1.lat)) * sin(qDegreesToRadians(gps2.lat)) -
+               sin(qDegreesToRadians(gps1.lat)) * cos(qDegreesToRadians(gps2.lat))*cos(dLon);
+    return sqrt((x*x) + (y*y));
+}
+
+double Tracker::gpsToHeading(GPSData gps1, GPSData gps2) {
+    double dLon = qDegreesToRadians(gps2.lon - gps1.lon);
+    double y = sin(dLon) * cos(qDegreesToRadians(gps2.lat));
+    double x = cos(qDegreesToRadians(gps1.lat)) * sin(qDegreesToRadians(gps2.lat)) -
+               sin(qDegreesToRadians(gps1.lat)) * cos(qDegreesToRadians(gps2.lat))*cos(dLon);
+    return qRadiansToDegrees(atan2(y, x));
+}
+
+double Tracker::calculatePitch(double altitude, double groundDist) {
+    return qRadiansToDegrees(atan2(altitude, groundDist));
 }

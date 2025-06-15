@@ -134,8 +134,6 @@ void Pointer::read()
     currentPose = {-yaw, pitch};
     currentDPose = {-dYaw, dPitch};
 
-//    qDebug() << str;
-
     emit dataRead(str);
 }
 
